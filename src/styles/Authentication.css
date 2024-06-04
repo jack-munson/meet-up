@@ -1,0 +1,74 @@
+.auth-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 600px;
+    width: 450px;
+    border: 3px solid #D9D9D9;
+    border-radius: 30px;
+}
+
+.auth-logo {
+    width: 180px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    height: auto;
+}
+
+.signin-button {
+    height: 40px;
+    width: 350px;
+    margin: 10px;
+    background-color: #373737;
+    color: white;
+}
+
+.signin-google-button {
+    height: 40px;
+    width: 350px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #EEEEEE;
+    color: #373737;
+}
+
+.signup-button {
+    height: 40px;
+    width: 350px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #0040B4;
+    color: white;
+}
+
+.instruction-small {
+    margin: 20px;
+    font-size: 14px;
+}
+
+.instruction-medium {
+    margin: 10px;
+    font-size: 18px;
+}
+
+.instruction-large {
+    margin: 10px;
+    font-size: 14px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+input {
+    height: 20px;
+    width: 330px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+}
