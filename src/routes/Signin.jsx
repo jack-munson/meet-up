@@ -44,6 +44,8 @@ export function Signin() {
         })
     }
 
+
+
     return (
         <div className="auth-box">
             <form action="">
@@ -57,7 +59,7 @@ export function Signin() {
                     Google
                     </button>
                 <span className="instruction-medium">Don't have an account?</span>
-                <button className="signup-button">Sign up</button>
+                <button className="signup-button" onClick={() => navigate("/signup")}>Sign up</button>
             </form>
         </div>
     )
