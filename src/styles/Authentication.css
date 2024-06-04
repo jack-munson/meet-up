@@ -53,7 +53,7 @@
 .signin-button {
     height: 40px;
     width: 350px;
-    margin: 10px;
+    margin-top: 10px;
     background-color: #373737;
     font-family: 'Inter', sans-serif;
     color: white;
@@ -75,8 +75,8 @@
     justify-content: center;
     height: 40px;
     width: 350px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 30px;
     background-color: #EEEEEE;
     font-family: 'Inter', sans-serif;
     color: #373737;

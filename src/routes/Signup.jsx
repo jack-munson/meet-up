@@ -65,7 +65,7 @@ export function Signup() {
                     <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password"/>
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                 </div>
-                <button className="signup-button" style={{ marginBottom: '10px' }} type="button" onClick={(e) => {handleSignUp(e)}}>Sign Up</button>
+                <button className="signup-button" style={{ marginBottom: '0px' }} type="button" onClick={(e) => {handleSignUp(e)}}>Sign Up</button>
                 <span className="instruction-small">or continue with</span>
                 <button className="signin-google-button" onClick={(e) => {handleGoogle(e)}}>
                     <img src={GoogleLogo} alt="Google logo" className="google-logo" />
