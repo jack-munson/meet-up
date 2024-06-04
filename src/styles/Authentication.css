@@ -37,6 +37,17 @@
     right: 35px;
     top: 10px;
     cursor: pointer;
+    color: #373737;
+}
+
+.eye-icon:hover {
+    width: 20px;
+    height: auto;
+    position: absolute;
+    right: 35px;
+    top: 10px;
+    cursor: pointer;
+    color: #0040B4;
 }
 
 .signin-button {
@@ -140,6 +151,7 @@ input {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     cursor: text;
+    color: #373737;
 }
 
 input:focus, input.form-control:focus {
