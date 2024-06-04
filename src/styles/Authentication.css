@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 .auth-box {
     display: flex;
     align-items: center;
@@ -20,6 +22,7 @@
     width: 350px;
     margin: 10px;
     background-color: #373737;
+    font-family: 'Inter', sans-serif;
     color: white;
 }
 
@@ -29,6 +32,7 @@
     margin-top: 10px;
     margin-bottom: 20px;
     background-color: #EEEEEE;
+    font-family: 'Inter', sans-serif;
     color: #373737;
 }
 
@@ -38,22 +42,31 @@
     margin-top: 10px;
     margin-bottom: 20px;
     background-color: #0040B4;
+    font-family: 'Inter', sans-serif;
     color: white;
 }
 
 .instruction-small {
     margin: 20px;
     font-size: 14px;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
 }
 
 .instruction-medium {
-    margin: 10px;
+    margin-top: 10px;
     font-size: 18px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
 }
 
 .instruction-large {
     margin: 10px;
-    font-size: 14px;
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
 }
 
 form {
@@ -71,4 +84,6 @@ input {
     padding: 10px;
     border: 2px solid #E0E0E0;
     border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
 }
