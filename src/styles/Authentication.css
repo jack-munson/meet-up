@@ -17,6 +17,12 @@
     height: auto;
 }
 
+.google-logo {
+    width: 30px;
+    height: auto;
+    margin-right: 1px;
+}
+
 .signin-button {
     height: 40px;
     width: 350px;
@@ -27,6 +33,9 @@
 }
 
 .signin-google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 40px;
     width: 350px;
     margin-top: 10px;
