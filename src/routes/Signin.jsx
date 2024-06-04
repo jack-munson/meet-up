@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from 'firebase/auth'
 import MainLogo from "../public/MeetUp-main-logo.png"
+import GoogleLogo from "../public/google-logo.webp"
 import "../styles/Authentication.css"
 
 export function Signin() {
@@ -51,7 +52,10 @@ export function Signin() {
                 <input onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="Password"/>
                 <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
                 <span className="instruction-small">or continue with</span>
-                <button className="signin-google-button" onClick={(e) => {handleGoogle(e)}}>Google</button>
+                <button className="signin-google-button" onClick={(e) => {handleGoogle(e)}}>
+                    <img src={GoogleLogo} alt="Google logo" className="google-logo" />
+                    Google
+                    </button>
                 <span className="instruction-medium">Don't have an account?</span>
                 <button className="signup-button">Sign up</button>
             </form>
