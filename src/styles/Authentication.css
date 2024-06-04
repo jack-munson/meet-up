@@ -2,6 +2,7 @@
 
 .auth-box {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 600px;
@@ -23,6 +24,21 @@
     margin-right: 1px;
 }
 
+.input-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+  }
+
+.eye-icon {
+    width: 20px;
+    height: auto;
+    position: absolute;
+    right: 35px;
+    top: 10px;
+    cursor: pointer;
+}
+
 .signin-button {
     height: 40px;
     width: 350px;
@@ -30,6 +46,16 @@
     background-color: #373737;
     font-family: 'Inter', sans-serif;
     color: white;
+}
+
+.signin-button:hover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 3px solid #373737;
+    color: #373737;
+    cursor: pointer;
 }
 
 .signin-google-button {
@@ -45,6 +71,15 @@
     color: #373737;
 }
 
+.signin-google-button:hover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 3px solid #EEEEEE;
+    color: #0040B4;
+}
+
 .signup-button {
     height: 40px;
     width: 350px;
@@ -53,6 +88,15 @@
     background-color: #0040B4;
     font-family: 'Inter', sans-serif;
     color: white;
+}
+
+.signup-button:hover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 3px solid #0040B4;
+    color: #0040B4;
 }
 
 .instruction-small {
@@ -95,4 +139,38 @@ input {
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
+    cursor: text;
+}
+
+input:focus, input.form-control:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    color: #373737;
+}
+
+.signin-button:focus {
+    outline: none;
+    outline-width: 0px;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.signup-button:focus {
+    outline: none;
+    outline-width: 0px;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.signin-google-button:focus {
+    outline: none;
+    outline-width: 0px;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }

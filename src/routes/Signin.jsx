@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from 'firebase/auth'
+import { Icon } from 'react-icons-kit'
+import { eyeOff } from 'react-icons-kit/feather/eyeOff'
+import { eye } from 'react-icons-kit/feather/eye'
 import MainLogo from "../public/MeetUp-main-logo.png"
 import GoogleLogo from "../public/google-logo.webp"
 import "../styles/Authentication.css"
@@ -8,6 +11,8 @@ import "../styles/Authentication.css"
 export function Signin() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
     const auth = getAuth()
     const navigate = useNavigate()
 
@@ -20,8 +25,14 @@ export function Signin() {
             navigate('/home')
         })
         .catch((error) => {
-            // Error
             console.log(error)
+            if (error.code === "auth/invalid-email") {
+                // "Invalid email, please try again"
+            }
+            else if (error.code == "auth/invalid-credential") {
+                // "Those credentials do not match any known user. Please try again."
+            }
+            // Error
         })
     }
 
@@ -44,14 +55,27 @@ export function Signin() {
         })
     }
 
+    const handleToggle = () => {
+        if (type==='password'){
+           setIcon(eye);
+           setType('text')
+        } else {
+           setIcon(eyeOff)
+           setType('password')
+        }
+    }
+
 
 
     return (
         <div className="auth-box">
+            <img className="auth-logo" src={MainLogo} alt="MeetUp logo"></img>
             <form action="">
-                <img className="auth-logo" src={MainLogo} alt="MeetUp logo"></img>
                 <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com"/>
-                <input onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="Password"/>
+                <div className="input-container">
+                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password"></input>
+                    <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
+                </div>
                 <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
                 <span className="instruction-small">or continue with</span>
                 <button className="signin-google-button" onClick={(e) => {handleGoogle(e)}}>
