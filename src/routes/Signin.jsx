@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import MainLogo from "../public/MeetUp-main-logo.png"
+import "../styles/Authentication.css"
 
 export function Signin() {
     const [email, setEmail] = useState('')
@@ -23,14 +25,16 @@ export function Signin() {
     }
 
     return (
-        <div>
-            <h1>
-            This is the sign in page
-            </h1>
+        <div className="auth-box">
             <form action="">
-                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="Email"/>
+                <img className="auth-logo" src={MainLogo} alt="MeetUp logo"></img>
+                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com"/>
                 <input onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="Password"/>
-                <button type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
+                <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
+                <span className="instruction-small">or continue with</span>
+                <button className="signin-google-button">Google</button>
+                <span className="instruction-medium">Don't have an account?</span>
+                <button className="signup-button">Sign up</button>
             </form>
         </div>
     )
