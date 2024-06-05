@@ -2,6 +2,7 @@ import './App.css'
 import { Signin } from './routes/Signin'
 import { Signup } from './routes/Signup'
 import { Home } from './routes/Home'
+import { Front } from './routes/Front'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import { Protected } from './routes/Protected'
@@ -10,7 +11,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Protected><Home/></Protected>
+      element: <Front/>
     },
     {
       path: "/home",

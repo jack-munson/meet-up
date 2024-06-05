@@ -69,7 +69,7 @@ export function Signin() {
 
     return (
         <div className="auth-box">
-            <img className="auth-logo" src={MainLogo} alt="MeetUp logo"></img>
+            <img className="auth-logo" onClick={() => navigate("/")} src={MainLogo} alt="MeetUp logo"></img>
             <form action="">
                 <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com"/>
                 <div className="input-container">
