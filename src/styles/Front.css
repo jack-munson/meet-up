@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
 .front-page {
     width: 100vw;
 }
@@ -10,6 +12,64 @@
     height: 100vh;
 }
 
+.welcome-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    max-height: 600px;
+    margin-top: 100px;
+    margin-left: 200px; /* To align with heading content */
+    font-family: "Lexend", sans-serif;
+}
+
+.welcome-text-main {
+    font-size: 75px;
+    font-weight: bold;
+    margin-top: -30px;
+    margin-bottom: -20px;
+    color: #373737;
+}
+
+.welcome-text-sub {
+    font-size: 30px;
+    margin-top: 10px;
+    color: #373737;
+}
+
+.welcome-message-text-steps {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+    font-family: "Lexend", sans-serif;
+}
+
+.message-step {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.step-number {
+    color: #0040B4;
+    font-size: 36px;
+}
+
+.step-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.step-message {
+    font-size: 32px;
+    margin-left: 20px;
+    margin-bottom: -15px;
+}
+
+/* Important for making sure everything is centered */
 #root {
     max-width: 100%;
     padding: 0;
