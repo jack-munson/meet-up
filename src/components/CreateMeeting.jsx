@@ -16,12 +16,50 @@ export function CreateMeeting(){
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
-    const [invites, setInvites] = useState([])
+    const [invites, setInvites] = useState(['', '', '', '', '', ''])
     const [recurring, setRecurring] = useState(false)
+
+    const handleNewInvite = (index, email) => {
+        const newInvites = [...invites];
+        newInvites[index] = email;
+        setInvites(newInvites);
+    }
 
     const handleCheckboxChange = () => {
         setRecurring(!recurring); // Toggle the value of 'checked'
-      };
+    };
+
+    const handleCreate = (e) => {
+        e.preventDefault()
+
+        if (!meetingTitle) {
+            alert("Meeting title is required");
+            return
+        }
+        if (!meetingDescription) {
+            alert("Meeting description is required");
+            return
+        }
+        if (!startTime || !endTime) {
+            alert("Start and end times are required");
+            return
+        }
+        const filteredInvites = invites.filter(email => email)
+        if (filteredInvites.length < 1) {
+            alert("Please invite at least one attendee");
+            return
+        }
+        
+        console.log({
+            meetingTitle,
+            meetingDescription,
+            startTime,
+            endTime,
+            invites,
+            filteredInvites,
+            recurring
+        })
+    }
 
     
 
@@ -31,7 +69,7 @@ export function CreateMeeting(){
                 <input onChange={(e) => {setMeetingTitle(e.target.value)}} className="meeting-title-input" type="text" placeholder="Meeting Title"/>
                 <img className="edit-icon" src={EditIcon} alt="Edit"/>
             </div>
-            <form action="">
+            <form action="" className="meeting-form">
                 <div className="meeting-description-text">What is your meeting about?</div>
                 <textarea onChange={(e) => {setMeetingDescription(e.target.value)}} className="meeting-description-input" type="text" placeholder="In this meeting we'll be discussing..."/>
                 <div className="meeting-description-text">What times would you like to meet between?</div>
@@ -58,18 +96,28 @@ export function CreateMeeting(){
                 </div>
                 <div className="meeting-description-text">Who would you like to invite?</div>
                 <div className="invites">
-                    <input className="invite-input" type="text" placeholder="email@domain.com"/>
+                    {invites.map((email, index) => (
+                        <input
+                            key={index}
+                            className="invite-input"
+                            type="text"
+                            placeholder="email@domain.com"
+                            value={email}
+                            onChange={(e) => handleNewInvite(index, e.target.value)}
+                        />
+                    ))}
+                    {/* <input className="invite-input" type="text" placeholder="email@domain.com"/>
                     <input className="invite-input" placeholder="email@domain.com"/>
                     <input className="invite-input" placeholder="email@domain.com"/>
                     <input className="invite-input" placeholder="email@domain.com"/>
                     <input className="invite-input" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/>
+                    <input className="invite-input" placeholder="email@domain.com"/> */}
                 </div>
                 <div className="meeting-recurring">
                     <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
-                    <div>This meeting is recurring</div>
+                    <div className="meeting-description-text" style={{ marginTop: '0px', marginLeft: '0px' }}>This meeting is recurring</div>
                 </div>
-                <button className="create-meeting-button">Create meeting</button>
+                <button className="create-meeting-button" onClick={(e) => {handleCreate(e)}}>Create meeting</button>
             </form>
         </div>
     )
