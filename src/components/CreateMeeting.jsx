@@ -26,7 +26,7 @@ export function CreateMeeting(){
     }
 
     const handleCheckboxChange = () => {
-        setRecurring(!recurring); // Toggle the value of 'checked'
+        setRecurring(!recurring);
     };
 
     const handleCreate = (e) => {
@@ -55,7 +55,6 @@ export function CreateMeeting(){
             meetingDescription,
             startTime,
             endTime,
-            invites,
             filteredInvites,
             recurring
         })
@@ -106,12 +105,6 @@ export function CreateMeeting(){
                             onChange={(e) => handleNewInvite(index, e.target.value)}
                         />
                     ))}
-                    {/* <input className="invite-input" type="text" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/>
-                    <input className="invite-input" placeholder="email@domain.com"/> */}
                 </div>
                 <div className="meeting-recurring">
                     <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
