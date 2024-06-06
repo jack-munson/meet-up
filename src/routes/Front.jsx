@@ -25,15 +25,15 @@ export function Front() {
                             <div className="step-messages">
                                 <div className="step-message">Once everyone has input their </div>
                                 <div className="step-message">availability, let our algorithm </div>
-                                <div className="step-message">find the best time for your group </div>
-                                <div className="step-message">to meet.</div>
+                                <div className="step-message">find the best time for your </div>
+                                <div className="step-message">group to meet.</div>
                             </div>
                         </div>
                         <div className="message-step">
                             <div className="step-number">3.</div>
                             <div className="step-messages">
                                 <div className="step-message">Choose a time and generate </div>
-                                <div className="step-message">a Zoom or Google Meet link </div>
+                                <div className="step-message">a Zoom or GoogleMeet link </div>
                                 <div className="step-message">right from MeetUp.</div>
                             </div>
                         </div>

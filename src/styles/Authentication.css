@@ -52,6 +52,9 @@
 }
 
 .signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 40px;
     width: 350px;
     margin-top: 10px;
@@ -93,6 +96,9 @@
 }
 
 .signup-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 40px;
     width: 350px;
     margin-top: 10px;
@@ -143,6 +149,9 @@ form {
 }
 
 input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     height: 20px;
     width: 330px;
     margin-bottom: 10px;
