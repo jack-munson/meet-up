@@ -1,7 +1,8 @@
-import "./CreateMeeting.css"
 import EditIcon from "../public/MeetUp-edit-icon.png"
+import { useNavigate } from 'react-router-dom'
 import React, { useState } from "react"
 import Select from 'react-select'
+import "./CreateMeeting.css"
 
 const times = [];
 for (let hour = 0; hour < 24; hour++) {
@@ -18,6 +19,7 @@ export function CreateMeeting(){
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
     const [invites, setInvites] = useState(['', '', '', '', '', ''])
     const [recurring, setRecurring] = useState(false)
+    const navigate = useNavigate()
 
     const handleNewInvite = (index, email) => {
         const newInvites = [...invites];
@@ -27,45 +29,56 @@ export function CreateMeeting(){
 
     const handleCheckboxChange = () => {
         setRecurring(!recurring);
-    };
+    }
 
     const handleCreate = (e) => {
-        e.preventDefault()
+
+        e.preventDefault();
 
         if (!meetingTitle) {
-            alert("Meeting title is required");
+            alert("Meeting title is required")
             return
         }
         if (!meetingDescription) {
-            alert("Meeting description is required");
+            alert("Meeting description is required")
             return
         }
-        if (!startTime || !endTime) {
-            alert("Start and end times are required");
+        if (!startTime) {
+            alert("Start time is required")
             return
         }
-        const filteredInvites = invites.filter(email => email)
-        if (filteredInvites.length < 1) {
-            alert("Please invite at least one attendee");
+        if (!endTime) {
+            alert("End time is required")
             return
         }
-        
-        console.log({
-            meetingTitle,
-            meetingDescription,
-            startTime,
-            endTime,
-            filteredInvites,
-            recurring
-        })
-    }
 
+        const filteredInvites = invites.filter(email => email);
+        if (filteredInvites.length === 0) {
+            alert("At least one invitee is required")
+            return
+        }
+
+        console.log({
+                meetingTitle,
+                meetingDescription,
+                startTime,
+                endTime,
+                filteredInvites,
+                recurring
+        })
+        navigate('/home')
+    }
+    
     
 
     return (
         <div className="create-meeting-box">
             <div className="meeting-box-header">
-                <input onChange={(e) => {setMeetingTitle(e.target.value)}} className="meeting-title-input" type="text" placeholder="Meeting Title"/>
+                <input 
+                    onChange={(e) => {setMeetingTitle(e.target.value)}}
+                    className="meeting-title-input" 
+                    type="text" 
+                    placeholder="Meeting Title"/>
                 <img className="edit-icon" src={EditIcon} alt="Edit"/>
             </div>
             <form action="" className="meeting-form">
@@ -110,7 +123,7 @@ export function CreateMeeting(){
                     <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
                     <div className="meeting-description-text" style={{ marginTop: '0px', marginLeft: '0px' }}>This meeting is recurring</div>
                 </div>
-                <button className="create-meeting-button" onClick={(e) => {handleCreate(e)}}>Create meeting</button>
+                <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
             </form>
         </div>
     )

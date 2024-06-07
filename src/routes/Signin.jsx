@@ -71,7 +71,7 @@ export function Signin() {
         <div className="auth-box">
             <img className="auth-logo" onClick={() => navigate("/")} src={MainLogo} alt="MeetUp logo"></img>
             <form action="">
-                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com"/>
+                <input onChange={(e) => {setEmail(e.target.value)}} type="email" placeholder="email@domain.com"/>
                 <div className="input-container">
                     <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password"></input>
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
