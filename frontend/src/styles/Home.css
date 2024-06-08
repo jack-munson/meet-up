@@ -36,6 +36,28 @@
     cursor: pointer;
 }
 
+.sub-header-icon:hover {
+    width: 40px;
+    height: auto;
+    background-color: white;
+    outline: 3px solid #0040B4;
+    outline-offset: -3px;
+    color: #0040B4;
+    border-radius: 9px;
+    margin-right: 200px;
+    cursor: pointer;
+}
+
+.sub-header-icon:focus {
+    width: 40px;
+    height: auto;
+    background-color: #0040B4;
+    color: white;
+    border-radius: 9px;
+    margin-right: 200px;
+    cursor: pointer;
+}
+
 .overlay {
     position: fixed;
     top: 0;
@@ -68,7 +90,6 @@
     background-color: #E0E0E0;
     color: #373737;
     position: absolute;
-    border: 3px solid #E0E0E0;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
     bottom: -90px;
@@ -82,7 +103,8 @@
     color: white;
     font-size: 16px;
     font-family: 'Inter', sans-serif;
-    border: 3px solid #DA2A2A;
+    outline: 3px solid #DA2A2A;
+    outline-offset: -2px;
     position: absolute;
     bottom: -90px;;
 }

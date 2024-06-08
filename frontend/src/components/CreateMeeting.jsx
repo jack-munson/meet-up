@@ -14,7 +14,7 @@ for (let hour = 0; hour < 24; hour++) {
     times.push({ value: hour, label: timeString });
 }
 
-export function CreateMeeting({customClassName}){
+export function CreateMeeting({customClassName, onCreateSuccess}){
     const [meetingTitle, setMeetingTitle] = useState('')
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
@@ -80,10 +80,13 @@ export function CreateMeeting({customClassName}){
             console.log('userId: ', response.data.userId)
             console.log('meetingTitle: ', response.data.meetingTitle)
             console.log('meetingId: ', response.data.meetingId)
+            if (onCreateSuccess) {
+                onCreateSuccess()
+            }
             navigate('/home');
         } catch (error) {
             console.error('Error creating meeting (CreateMeeting.jsx):', error);
-            alert('Error creating meeting. Please try again later.');
+            navigate('/signin')
         }
     }
     

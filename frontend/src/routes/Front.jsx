@@ -23,10 +23,10 @@ export function Front() {
                         <div className="message-step">
                             <div className="step-number">2.</div>
                             <div className="step-messages">
-                                <div className="step-message">Once everyone has input their </div>
-                                <div className="step-message">availability, let our algorithm </div>
-                                <div className="step-message">find the best time for your </div>
-                                <div className="step-message">group to meet.</div>
+                                <div className="step-message">Once everyone has input </div>
+                                <div className="step-message">their availability, let our </div>
+                                <div className="step-message">algorithm find the best time </div>
+                                <div className="step-message">for your group to meet.</div>
                             </div>
                         </div>
                         <div className="message-step">

@@ -33,7 +33,7 @@
 }
 
 .welcome-text-sub {
-    font-size: 30px;
+    font-size: 20pt;
     margin-top: 10px;
     color: #373737;
 }
@@ -65,7 +65,7 @@
 }
 
 .step-message {
-    font-size: 32px;
+    font-size: 25pt;
     margin-left: 20px;
     margin-bottom: -15px;
 }

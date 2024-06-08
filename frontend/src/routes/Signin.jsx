@@ -27,10 +27,10 @@ export function Signin() {
         .catch((error) => {
             console.log(error)
             if (error.code === "auth/invalid-email") {
-                // "Invalid email, please try again"
+                alert("Invalid email, please try again")
             }
             else if (error.code == "auth/invalid-credential") {
-                // "Those credentials do not match any known user. Please try again."
+                alert("Those credentials do not match any known user. Please try again.")
             }
             // Error
         })
