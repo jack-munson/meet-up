@@ -26,6 +26,23 @@ const createMeeting = async (userId, title, description, startTime, endTime, inv
     }
 };
 
+const createUser = async (userId, firstName, lastName, email) => {
+    const client = await pool.connect();
+
+    try {
+        const query = `
+            INSERT INTO users (user_id, first_name, last_name, email)
+            VALUES ($1, $2, $3, $4)
+            RETURNING user_id, first_name, last_name, email
+        `;
+        const values = [userId, firstName, lastName, email];
+        const result = await client.query(query, values);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
-    createMeeting
+    createMeeting, createUser
 };

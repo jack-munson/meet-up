@@ -20,4 +20,26 @@ router.post('/create-meeting', async (req, res) => {
     }
 });
 
+router.post('/create-user', async (req, res) => {
+    try {
+        const { userId, firstName, lastName, email } = req.body;
+
+        const user = await db.createUser(userId, firstName, lastName, email);
+
+        res.status(201).json({ message: 'User created successfully: ', userId: user.user_id, firstName: user.first_name, lastName: user.last_name, email: user.email });
+    } catch(error) {
+        console.error('Error creating user (Routes.js): ', error);
+        res.status(500).json({ error: 'Internal server error'});
+    }
+})
+
 module.exports = router;
+
+// curl -X POST http://localhost:3000/api/create-user \
+//      -H "Content-Type: application/json" \
+//      -d '{
+//            "userId": "testid123",
+//            "firstName": "John",
+//            "lastName": "Doe",
+//            "email": "john.doe@example.com"
+//          }'
