@@ -1,6 +1,7 @@
 import EditIcon from "../public/MeetUp-edit-icon.png"
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from "react"
+import axios from "axios"
 import Select from 'react-select'
 import "./CreateMeeting.css"
 
@@ -31,7 +32,7 @@ export function CreateMeeting({customClassName}){
         setRecurring(!recurring);
     }
 
-    const handleCreate = (e) => {
+    const handleCreate = async (e) => {
 
         e.preventDefault();
 
@@ -58,15 +59,25 @@ export function CreateMeeting({customClassName}){
             return
         }
 
-        console.log({
-                meetingTitle,
-                meetingDescription,
-                startTime,
-                endTime,
-                filteredInvites,
-                recurring
-        })
-        navigate('/home')
+        try {
+            const meetingData = {
+                title: meetingTitle,
+                description: meetingDescription,
+                startTime: startTime.label,
+                endTime: endTime.label,
+                invites: filteredInvites,
+                recurring: recurring
+            };
+    
+            // Send a POST request to your backend API
+            const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData);
+    
+            console.log('Meeting created successfully (CreateMeeting.jsx):', response.data);
+            navigate('/home');
+        } catch (error) {
+            console.error('Error creating meeting (CreateMeeting.jsx):', error);
+            alert('Error creating meeting. Please try again later.');
+        }
     }
     
     
