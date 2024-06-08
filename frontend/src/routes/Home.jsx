@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { HomeHeader } from "../components/HomeHeader"
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
-import { IoAddOutline } from "../../frontend/node_modules/react-icons/io5"
+import { IoAddOutline } from "react-icons/io5"
 import "../styles/Home.css"
 
 export function Home() {
