@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.home-page {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.sub-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 150px;
+    width: 100vw;
+    margin-bottom: 50px;
+}
+
+.sub-header-text {
+    font-size: 40px;
+    font-weight: 500;
+    color: #373737;
+    margin-left: 200px;
+}
+
+.sub-header-icon {
+    width: 40px;
+    height: auto;
+    background-color: #0040B4;
+    color: white;
+    border-radius: 9px;
+    margin-right: 200px;
+    cursor: pointer;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.create-meeting-container {
+    display: flex;
+    flex-direction: column;
+    width: 550px;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-create-meeting {
+    border: none;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+.close-button {
+    background-color: #E0E0E0;
+    color: #373737;
+    border: 3px solid #E0E0E0;
+    position: fixed;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    bottom: 60px;
+}
+
+.close-button:hover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    border: 3px solid #DA2A2A;
+    position: fixed;
+    bottom: 60px;
+}
+
+.close-button:focus {
+    outline: none;
+    outline-width: 0px;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: #DA2A2A;
+    color: white;
+    position: fixed;
+    bottom: 60px;
+}

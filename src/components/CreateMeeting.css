@@ -11,6 +11,7 @@
     height: 610px;
     border: 3px solid #D9D9D9;
     border-radius: 30px;
+    background-color: white;
 }
 
 .meeting-form {
@@ -41,7 +42,7 @@
     font-size: 35px;        
     font-weight: 500;
     margin-left: 35px;
-    margin-right: 30px;
+    margin-right: 35px;
     margin-bottom: 0px;
     padding: 0px;
     padding-bottom: 0px;
@@ -54,7 +55,7 @@
 
 .edit-icon {
     height: 40px;
-    margin-right: 30px;
+    margin-right: 35px;
 }
 
 .meeting-description-text {
@@ -65,7 +66,7 @@
 }
 
 .meeting-description-input {
-    width: 470px;
+    width: 460px;
     height: 70px;
     margin-left: 35px;
     font-family: "Inter", sans-serif;
@@ -141,7 +142,7 @@
 }
 
 .invite-input {
-    width: 220px;
+    width: 213px;
 }
 
 .meeting-recurring {

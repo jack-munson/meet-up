@@ -3,6 +3,7 @@ import { Signin } from './routes/Signin'
 import { Signup } from './routes/Signup'
 import { Home } from './routes/Home'
 import { Front } from './routes/Front'
+import { Profile } from './routes/Profile'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import { Protected } from './routes/Protected'
@@ -24,6 +25,10 @@ function App() {
     {
       path: "/signup",
       element: <Signup></Signup>
+    },
+    {
+      path: "/profile",
+      element: <Protected><Profile/></Protected>
     }
   ])
 

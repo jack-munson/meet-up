@@ -12,7 +12,7 @@ for (let hour = 0; hour < 24; hour++) {
     times.push({ value: hour, label: timeString });
 }
 
-export function CreateMeeting(){
+export function CreateMeeting({customClassName}){
     const [meetingTitle, setMeetingTitle] = useState('')
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
@@ -72,7 +72,7 @@ export function CreateMeeting(){
     
 
     return (
-        <div className="create-meeting-box">
+        <div className={`create-meeting-box ${customClassName}`}>
             <div className="meeting-box-header">
                 <input 
                     onChange={(e) => {setMeetingTitle(e.target.value)}}
