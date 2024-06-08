@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import Select from 'react-select'
 import "./CreateMeeting.css"
+import { getAuth } from "firebase/auth"
 
 const times = [];
 for (let hour = 0; hour < 24; hour++) {
@@ -20,6 +21,8 @@ export function CreateMeeting({customClassName}){
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
     const [invites, setInvites] = useState(['', '', '', '', '', ''])
     const [recurring, setRecurring] = useState(false)
+    const auth = getAuth();
+    const user = auth.currentUser; 
     const navigate = useNavigate()
 
     const handleNewInvite = (index, email) => {
@@ -61,6 +64,7 @@ export function CreateMeeting({customClassName}){
 
         try {
             const meetingData = {
+                userId: user.uid,
                 title: meetingTitle,
                 description: meetingDescription,
                 startTime: startTime.label,
@@ -72,7 +76,10 @@ export function CreateMeeting({customClassName}){
             // Send a POST request to your backend API
             const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData);
     
-            console.log('Meeting created successfully (CreateMeeting.jsx):', response.data);
+            console.log('Meeting created successfully (CreateMeeting.jsx)');
+            console.log('userId: ', response.data.userId)
+            console.log('meetingTitle: ', response.data.meetingTitle)
+            console.log('meetingId: ', response.data.meetingId)
             navigate('/home');
         } catch (error) {
             console.error('Error creating meeting (CreateMeeting.jsx):', error);
