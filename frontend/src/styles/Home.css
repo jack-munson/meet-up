@@ -2,8 +2,11 @@
 
 .home-page {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     width: 100vw;
+    height: 100vh;
 }
 
 .sub-header {
@@ -11,10 +14,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    position: fixed;
-    top: 150px;
-    width: 100vw;
+    margin-top: 150px;
     margin-bottom: 50px;
+    width: 100vw;
 }
 
 .sub-header-text {
@@ -50,6 +52,7 @@
 .create-meeting-container {
     display: flex;
     flex-direction: column;
+    position: relative;
     width: 550px;
     align-items: center;
     justify-content: center;
@@ -64,11 +67,11 @@
 .close-button {
     background-color: #E0E0E0;
     color: #373737;
+    position: absolute;
     border: 3px solid #E0E0E0;
-    position: fixed;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    bottom: 60px;
+    bottom: -90px;
 }
 
 .close-button:hover {
@@ -80,8 +83,8 @@
     font-size: 16px;
     font-family: 'Inter', sans-serif;
     border: 3px solid #DA2A2A;
-    position: fixed;
-    bottom: 60px;
+    position: absolute;
+    bottom: -90px;;
 }
 
 .close-button:focus {
@@ -92,6 +95,6 @@
     -webkit-box-shadow: none;
     background-color: #DA2A2A;
     color: white;
-    position: fixed;
-    bottom: 60px;
+    position: absolute;
+    bottom: -90px;;
 }
