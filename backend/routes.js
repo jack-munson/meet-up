@@ -5,16 +5,11 @@ const db = require('./database')
 
 router.use(bodyParser.json())
 
-// Route to handle meeting creation
 router.post('/create-meeting', async (req, res) => {
     try {
         const { userId, title, description, startTime, endTime, invites, recurring } = req.body
         
         const result = await db.createMeeting(userId, title, description, startTime, endTime, invites, recurring)
-
-        if (!result) {
-            throw new Error('Failed to update user meetings.')
-        }
         
         res.status(201).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
     } catch (error) {

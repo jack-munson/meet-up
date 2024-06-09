@@ -20,7 +20,6 @@ export function Signin() {
         e.preventDefault()
         signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
-            // Success
             console.log(user)
             navigate('/home')
         })
@@ -32,7 +31,6 @@ export function Signin() {
             else if (error.code == "auth/invalid-credential") {
                 alert("Those credentials do not match any known user. Please try again.")
             }
-            // Error
         })
     }
 

@@ -39,7 +39,6 @@ export function Signup() {
             
             navigate('/home'); 
         } catch (error) {
-            console.error('Error creating user (CreateMeeting.jsx):', error);
             alert('Error signing up. Please try again later.');
         }
     }
@@ -62,7 +61,7 @@ export function Signup() {
             }
 
             const response = await axios.post('http://localhost:3000/api/create-user', userData)
-            console.log(response.data)
+
             navigate('/home')
         } catch {
             console.error('Error during Google sign-in:', error)
