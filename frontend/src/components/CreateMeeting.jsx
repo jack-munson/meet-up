@@ -26,13 +26,13 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     const navigate = useNavigate()
 
     const handleNewInvite = (index, email) => {
-        const newInvites = [...invites];
-        newInvites[index] = email;
-        setInvites(newInvites);
+        const newInvites = [...invites]
+        newInvites[index] = email
+        setInvites(newInvites)
     }
 
     const handleCheckboxChange = () => {
-        setRecurring(!recurring);
+        setRecurring(!recurring)
     }
 
     const handleCreate = async (e) => {
@@ -73,18 +73,16 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                 recurring: recurring
             };
     
-            // Send a POST request to your backend API
-            const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData);
+            const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData)
     
-            console.log('Meeting created successfully (CreateMeeting.jsx)');
-            console.log('userMeetings: ', response.data.userMeetings)
+            console.log('Meeting created successfully (CreateMeeting.jsx)')
             
             if (onCreateSuccess) {
-                onCreateSuccess()
+                onCreateSuccess(response.data.newMeeting)
             }
             navigate('/home');
         } catch (error) {
-            console.error('Error creating meeting (CreateMeeting.jsx):', error);
+            console.error('Error creating meeting (CreateMeeting.jsx):', error)
             // navigate('/signin')
         }
     }

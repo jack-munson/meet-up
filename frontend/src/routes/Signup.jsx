@@ -28,47 +28,45 @@ export function Signup() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             userId = userCredential.user.uid
 
-            const meetingData = {
+            const userData = {
                 userId: userId,
                 firstName: firstName,
                 lastName: lastName,
                 email: email
             };
     
-            // Send a POST request to your backend API
-            const response = await axios.post('http://localhost:3000/api/create-user', meetingData);
-            console.log('firstName: ', response.data.firstName)
-            console.log('lastName: ', response.data.lastName)
-            console.log('email: ', response.data.email)
-            console.log('userId: ', response.data.userId)
+            const response = await axios.post('http://localhost:3000/api/create-user', userData);
+            
             navigate('/home'); 
         } catch (error) {
             console.error('Error creating user (CreateMeeting.jsx):', error);
             alert('Error signing up. Please try again later.');
         }
-        // .then((user) => {
-        //     // Success...
-        //     navigate("/home")
-        //     console.log(user)
-        // })
-        // .catch((error) => {
-        //     // Error
-        //     console.log(error)
-        // })
     }
 
     async function handleGoogle(e) {
         e.preventDefault()
         const provider = new GoogleAuthProvider()
-        signInWithPopup(auth, provider)
-        .then(function (result) {
+        try {
+            const result = await signInWithPopup(auth, provider)
             const user = result.user
+
+            const { uid, displayName, email} = user
+            const [firstName, lastName] = displayName.split(' ')
+
+            const userData = {
+                userId: uid,
+                firstName: firstName,
+                lastName: lastName || '',
+                email: email
+            }
+
+            const response = await axios.post('http://localhost:3000/api/create-user', userData)
+            console.log(response.data)
             navigate('/home')
-            console.log(user)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+        } catch {
+            console.error('Error during Google sign-in:', error)
+        }
     }
 
     const handleToggle = () => {

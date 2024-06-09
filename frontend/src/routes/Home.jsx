@@ -15,10 +15,14 @@ export function Home() {
 
     const handleCreateMeeting = () => {
         setIsCreateMeetingOpen(true)
-        console.log("New")
     }
 
     const handleCloseCreateMeeting = () => {
+        setIsCreateMeetingOpen(false)
+    }
+
+    const addMeeting = (newMeeting) => {
+        setMeetings(prevMeetings => [...prevMeetings, newMeeting])
         setIsCreateMeetingOpen(false)
     }
 
@@ -29,15 +33,14 @@ export function Home() {
                 const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
                         params: { userId: user.uid }
                     });
-                setMeetings(response.data.meetings);
-                console.log("Home.jsx: ", meetings)
+                setMeetings(response.data.meetings)
             } catch (error) {
-                console.error('Error fetching meetings:', error);
+                console.error('Error fetching meetings:', error)
             }
         };
 
-        fetchMeetings();
-    }, [user]);
+        fetchMeetings()
+    }, [user, isCreateMeetingOpen])
     
     return (
         <div className="home-page">
@@ -49,7 +52,7 @@ export function Home() {
             {isCreateMeetingOpen && (
                 <div className="overlay">
                     <div className="create-meeting-container">
-                        <CreateMeeting customClassName="custom-create-meeting" onCreateSuccess={handleCloseCreateMeeting}/>
+                        <CreateMeeting customClassName="custom-create-meeting" onCreateSuccess={addMeeting}/>
                         <button onClick={handleCloseCreateMeeting} className="close-button">Cancel</button>
                     </div>
                 </div>

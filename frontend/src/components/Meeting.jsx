@@ -15,10 +15,10 @@ export function Meeting({ title, invites, scheduledDay, scheduledTime }) {
                 <div className="divider"> </div>
                 <div className="scheduled-info">
                     <div className="scheduled-day">
-                        {scheduledDay}
+                        {scheduledDay || "No meeting"}
                     </div>
                     <div className="scheduled-time">
-                        {scheduledTime}
+                        {scheduledTime || "scheduled"}
                     </div>
                 </div>
             </div>
