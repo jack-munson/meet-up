@@ -77,16 +77,15 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
             const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData);
     
             console.log('Meeting created successfully (CreateMeeting.jsx)');
-            console.log('userId: ', response.data.userId)
-            console.log('meetingTitle: ', response.data.meetingTitle)
-            console.log('meetingId: ', response.data.meetingId)
+            console.log('userMeetings: ', response.data.userMeetings)
+            
             if (onCreateSuccess) {
                 onCreateSuccess()
             }
             navigate('/home');
         } catch (error) {
             console.error('Error creating meeting (CreateMeeting.jsx):', error);
-            navigate('/signin')
+            // navigate('/signin')
         }
     }
     

@@ -9,10 +9,14 @@ router.use(bodyParser.json());
 router.post('/create-meeting', async (req, res) => {
     try {
         const { userId, title, description, startTime, endTime, invites, recurring } = req.body;
-
+        
         const result = await db.createMeeting(userId, title, description, startTime, endTime, invites, recurring);
 
-        res.status(201).json({ message: 'Meeting created successfully. meetingId: ', userId: result.user_id, meetingTitle: result.title, meetingId: result.id });
+        if (!result) {
+            throw new Error('Failed to update user meetings.');
+        }
+        
+        res.status(201).json({ message: 'Meeting created successfully', userMeetings: result.user_meetings });
     } catch (error) {
         console.error('Error creating meeting (Routes.js):', error);
 
