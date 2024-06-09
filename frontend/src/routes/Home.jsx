@@ -1,12 +1,17 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { HomeHeader } from "../components/HomeHeader"
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
 import { IoAddOutline } from "react-icons/io5"
 import "../styles/Home.css"
+import axios from "axios"
+import { getAuth } from "firebase/auth"
 
 export function Home() {
     const [isCreateMeetingOpen, setIsCreateMeetingOpen] = useState(false)
+    const [meetings, setMeetings] = useState([])
+    const auth = getAuth()
+    const user = auth.currentUser; 
 
     const handleCreateMeeting = () => {
         setIsCreateMeetingOpen(true)
@@ -16,6 +21,23 @@ export function Home() {
     const handleCloseCreateMeeting = () => {
         setIsCreateMeetingOpen(false)
     }
+
+    useEffect(() => {
+        const fetchMeetings = async () => {
+            try {
+                console.log(user.uid)
+                const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
+                        params: { userId: user.uid }
+                    });
+                setMeetings(response.data.meetings);
+                console.log("Home.jsx: ", meetings)
+            } catch (error) {
+                console.error('Error fetching meetings:', error);
+            }
+        };
+
+        fetchMeetings();
+    }, [user]);
     
     return (
         <div className="home-page">
@@ -32,8 +54,17 @@ export function Home() {
                     </div>
                 </div>
             )}
-            <Meeting></Meeting>
-            <Meeting></Meeting>
+            <div className="meetings">
+                {meetings.map(meeting => (
+                    <Meeting
+                        key={meeting.id}
+                        title={meeting.title}
+                        invites={meeting.invites}
+                        scheduledDay={meeting.scheduledDay}
+                        scheduledTime={meeting.scheduledTime}
+                    />
+                ))}
+            </div>
         </div>
     )
 }

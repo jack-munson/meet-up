@@ -57,6 +57,23 @@ const createUser = async (userId, firstName, lastName, email) => {
     }
 };
 
+const getMeetingsByUserId = async (userId) => {
+    const client = await pool.connect();
+
+    try {
+        const query = `
+            SELECT * FROM meetings
+            WHERE user_id = $1
+        `;
+        const values = [userId];
+        const result = await client.query(query, values);
+        console.log(result.rows)
+        return result.rows;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
-    createMeeting, createUser
+    createMeeting, createUser, getMeetingsByUserId
 };

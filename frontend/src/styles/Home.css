@@ -9,6 +9,11 @@
     height: 100vh;
 }
 
+.meetings {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 .sub-header {
     display: flex;
     flex-direction: row;

@@ -35,7 +35,22 @@ router.post('/create-user', async (req, res) => {
         console.error('Error creating user (Routes.js): ', error);
         res.status(500).json({ error: 'Internal server error'});
     }
-})
+});
+
+router.get('/get-meetings', async (req, res) => {
+    const { userId } = req.query;
+
+    try {
+        console.log("routes.js: ", userId)
+        const meetings = await db.getMeetingsByUserId(userId);
+
+        console.log(meetings)
+        res.status(200).json({ meetings });
+    } catch (error) {
+        console.error('Error fetching meetings (Routes.js):', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 module.exports = router;
 
