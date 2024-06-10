@@ -63,6 +63,13 @@
     cursor: pointer;
 }
 
+.no-meetings-blurb {
+    color: #0040B4;
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 250px;
+}
+
 .overlay {
     position: fixed;
     top: 0;

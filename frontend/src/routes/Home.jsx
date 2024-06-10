@@ -57,6 +57,11 @@ export function Home() {
                     </div>
                 </div>
             )}
+            {meetings.length === 0 && (
+                <div className="no-meetings-blurb">
+                    Looks like you don't have any meetings yet!
+                </div>
+            )}
             <div className="meetings">
                 {meetings.map(meeting => (
                     <Meeting

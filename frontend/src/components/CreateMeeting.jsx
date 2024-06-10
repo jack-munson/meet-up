@@ -96,6 +96,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                     onChange={(e) => {setMeetingTitle(e.target.value)}}
                     className="meeting-title-input" 
                     type="text" 
+                    maxlength="60"
                     placeholder="Meeting Title"/>
                 <img className="edit-icon" src={EditIcon} alt="Edit"/>
             </div>
