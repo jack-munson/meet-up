@@ -1,6 +1,9 @@
 import "./Meeting.css"
+import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 
 export function Meeting({ title, invites, scheduledDay, scheduledTime }) {
+    const inviteList = Array.isArray(invites) ? invites : []
+
     return (
         <div className="meeting-container">
             <div className="meeting-info">
@@ -8,7 +11,14 @@ export function Meeting({ title, invites, scheduledDay, scheduledTime }) {
                     {title}
                 </div>
                 <div className="meeting-info-invites">
-                    {invites}
+                    {inviteList.map((invite, index) => (
+                        <div key={index} className="invite">
+                            <BsPersonFill className="invite-icon"/>
+                        </div>
+                    ))}
+                    <div>
+                        <BsPlusCircle className="add-invite-icon"/>
+                    </div>
                 </div>
             </div>
             <div className="scheduled">
