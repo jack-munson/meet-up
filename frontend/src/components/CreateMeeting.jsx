@@ -21,6 +21,9 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
     const [invites, setInvites] = useState(['', '', '', '', '', ''])
     const [recurring, setRecurring] = useState(false)
+    const [showTitleError, setShowTitleError] = useState(false)
+    const [showDescriptionError, setShowDescriptionError] = useState(false)
+    const [showInvitesError, setShowInvitesError] = useState(false)
     const auth = getAuth();
     const user = auth.currentUser; 
     const navigate = useNavigate()
@@ -40,26 +43,23 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         e.preventDefault();
 
         if (!meetingTitle) {
-            alert("Meeting title is required")
-            return
+            setShowTitleError(true);
+            return;
+        } else {
+            setShowTitleError(false);
         }
+
         if (!meetingDescription) {
-            alert("Meeting description is required")
-            return
-        }
-        if (!startTime) {
-            alert("Start time is required")
-            return
-        }
-        if (!endTime) {
-            alert("End time is required")
-            return
+            setShowDescriptionError(true);
+            return;
+        } else {
+            setShowDescriptionError(false);
         }
 
         const filteredInvites = invites.filter(email => email);
         if (filteredInvites.length === 0) {
             alert("At least one invitee is required")
-            return
+            return;
         }
 
         try {
@@ -91,13 +91,17 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
 
     return (
         <div className={`create-meeting-box ${customClassName}`}>
-            <div className="meeting-box-header">
+            <div className={`meeting-box-header ${showTitleError ? 'error' : ''}`}>
                 <input 
-                    onChange={(e) => {setMeetingTitle(e.target.value)}}
+                    onChange={(e) => {setMeetingTitle(e.target.value); setShowTitleError(!e.target.value.trim())}}
                     className="meeting-title-input" 
                     type="text" 
-                    maxlength="55"
-                    placeholder="Meeting Title"/>
+                    maxLength="55"
+                    placeholder="Meeting Title"
+                />
+                {showTitleError && (
+                    <span className="error-tooltip">Meeting title is required</span>
+                )}
                 <img className="edit-icon" src={EditIcon} alt="Edit"/>
             </div>
             <form action="" className="meeting-form">

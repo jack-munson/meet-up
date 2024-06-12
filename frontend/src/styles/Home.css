@@ -34,6 +34,7 @@
 .sub-header-icon {
     width: 40px;
     height: auto;
+    transition: background-color 0.3s;
     background-color: #0040B4;
     color: white;
     border-radius: 9px;
@@ -100,6 +101,7 @@
 
 .close-button {
     background-color: #E0E0E0;
+    transition: background-color 0.3s;
     color: #373737;
     position: absolute;
     font-family: 'Inter', sans-serif;

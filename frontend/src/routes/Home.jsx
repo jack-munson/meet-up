@@ -33,7 +33,8 @@ export function Home() {
                 const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
                         params: { userId: user.uid }
                     });
-                setMeetings(response.data.meetings)
+                const sortedMeetings = response.data.meetings.sort((a, b) => a.id - b.id);
+                setMeetings(sortedMeetings);
             } catch (error) {
                 console.error('Error fetching meetings:', error)
             }
@@ -66,6 +67,7 @@ export function Home() {
                 {meetings.map(meeting => (
                     <Meeting
                         key={meeting.id}
+                        meetingId={meeting.id}
                         title={meeting.title}
                         invites={meeting.invites}
                         scheduledDay={meeting.scheduledDay}
