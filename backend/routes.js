@@ -26,7 +26,7 @@ router.post('/create-user', async (req, res) => {
         const user = await db.createUser(userId, firstName, lastName, email)
 
         res.status(201).json({ message: 'User created successfully: ', userId: user.user_id, firstName: user.first_name, lastName: user.last_name, email: user.email })
-    } catch(error) {
+    } catch (error) {
         console.error('Error creating user (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error'})
     }
@@ -41,6 +41,18 @@ router.get('/get-meetings', async (req, res) => {
         res.status(200).json({ meetings: meetings })
     } catch (error) {
         console.error('Error fetching meetings (Routes.js):', error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+router.post('/add-invite', async (req, res) => {
+    try {
+        const { meetingId, newInvite} = req.body
+
+        const response = await db.addInvite(meetingId, newInvite)
+
+        res.status(200).json({ message: 'Invite added successfully' })
+    } catch (error) {
         res.status(500).json({ error: 'Internal server error' })
     }
 })
