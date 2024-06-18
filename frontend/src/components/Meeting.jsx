@@ -2,15 +2,16 @@ import "./Meeting.css"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md";
 import { useState } from "react"
-import Icon from "react-icons-kit";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime }) {
+export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime, onClick }) {
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
     const inviteList = Array.isArray(invites) ? invites : []
 
-    const handleAddInviteClick = () => {
+    const handleAddInviteClick = (e) => {
+        e.stopPropagation()
         setShowInviteModal(!showInviteModal)
     }
 
@@ -18,7 +19,15 @@ export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime
         setNewInvite(e.target.value)
     }
 
-    const handleAddNewInvite = async () => {
+    const handleInputClick = (e) => {
+        if (e.target.tagName === 'INPUT') {
+            e.stopPropagation();
+        }
+    }
+
+    const handleAddNewInvite = async (e) => {
+        e.stopPropagation()
+
         if (newInvite) {
             try {
                 console.log(newInvite)
@@ -42,7 +51,7 @@ export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime
     }
 
     return (
-        <div className="meeting-container">
+        <div className="meeting-container" onClick={onClick}>
             <div className="meeting-info">
                 <div className="meeting-info-title">
                     {title}
@@ -66,7 +75,8 @@ export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime
                                             type="email" 
                                             value={newInvite} 
                                             style={{marginBottom: "0px"}}
-                                            onChange={handleInviteChange} 
+                                            onChange={(e) => handleInviteChange(e)}
+                                            onClick={handleInputClick}
                                             placeholder="email@domain.com" 
                                         />
                                     </div>

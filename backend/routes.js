@@ -40,8 +40,21 @@ router.get('/get-meetings', async (req, res) => {
 
         res.status(200).json({ meetings: meetings })
     } catch (error) {
-        console.error('Error fetching meetings (Routes.js):', error)
+        console.error('Error fetching meetings (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+router.get('/get-meeting-details', async (req, res) => {
+    const { meetingId } = req.query
+
+    try {
+        const meeting = await db.getMeetingDetails(meetingId)
+        console.log("Meeting (routes.js): ", meeting)
+        res.status(200).json({ meeting: meeting})
+    } catch (error) {
+        console.error('Error fetching meeting details (Routes.js): ', error)
+        res.status(500).json({ error: 'Internal server error '})
     }
 })
 

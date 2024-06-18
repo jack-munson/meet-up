@@ -72,6 +72,25 @@ const getMeetingsByUserId = async (userId) => {
     }
 }
 
+const getMeetingDetails = async (meetingId) => {
+    const client = await pool.connect()
+
+    try {
+        console.log("MeetingID (database.js): ", meetingId)
+        const query = `
+            SELECT * FROM meetings
+            WHERE id = $1
+        `
+        const values = [meetingId]
+        const result = await client.query(query, values)
+        
+        return result.rows[0]
+    }
+    finally {
+        client.release()
+    }
+}
+
 const addInvite = async (meetingId, newInvite) => {
     const client = await pool.connect()
 
@@ -91,5 +110,5 @@ const addInvite = async (meetingId, newInvite) => {
 }
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite
+    createMeeting, createUser, getMeetingsByUserId, addInvite, getMeetingDetails
 };

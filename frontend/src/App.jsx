@@ -7,6 +7,7 @@ import { Profile } from './routes/Profile'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import { Protected } from './routes/Protected'
+import { MeetingPage } from './routes/MeetingPage'
 
 function App() {
   const router = createBrowserRouter([
@@ -29,6 +30,10 @@ function App() {
     {
       path: "/profile",
       element: <Protected><Profile/></Protected>
+    },
+    {
+      path: "/meeting/:meetingId",
+      element: <Protected><MeetingPage/></Protected>,
     }
   ])
 

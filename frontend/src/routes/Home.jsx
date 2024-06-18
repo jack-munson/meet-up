@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 import { HomeHeader } from "../components/HomeHeader"
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
@@ -11,7 +12,8 @@ export function Home() {
     const [isCreateMeetingOpen, setIsCreateMeetingOpen] = useState(false)
     const [meetings, setMeetings] = useState([])
     const auth = getAuth()
-    const user = auth.currentUser; 
+    const user = auth.currentUser
+    const navigate = useNavigate()
 
     const handleCreateMeeting = () => {
         setIsCreateMeetingOpen(true)
@@ -26,17 +28,20 @@ export function Home() {
         setIsCreateMeetingOpen(false)
     }
 
+    const handleMeetingClick = (meetingId) => {
+        navigate(`/meeting/${meetingId}`)
+    }
+
     useEffect(() => {
         const fetchMeetings = async () => {
             try {
-                console.log(user.uid)
                 const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
                         params: { userId: user.uid }
                     });
                 const sortedMeetings = response.data.meetings.sort((a, b) => a.id - b.id);
                 setMeetings(sortedMeetings);
             } catch (error) {
-                console.error('Error fetching meetings:', error)
+                console.error('Error fetching meetings: ', error)
             }
         };
 
@@ -72,6 +77,7 @@ export function Home() {
                         invites={meeting.invites}
                         scheduledDay={meeting.scheduledDay}
                         scheduledTime={meeting.scheduledTime}
+                        onClick={() => handleMeetingClick(meeting.id)}
                     />
                 ))}
             </div>

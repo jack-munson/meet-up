@@ -1,0 +1,25 @@
+.meeting-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.meeting-sub-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 150px;
+    margin-bottom: 50px;
+    width: 100vw;
+}
+
+.meeting-sub-header-text {
+    font-size: 40px;
+    font-weight: 500;
+    color: #373737;
+    margin-left: 200px;
+}
