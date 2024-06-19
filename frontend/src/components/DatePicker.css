@@ -1,0 +1,91 @@
+.rmdp-week-day {
+    color: #0040B4 !important;
+    font-size: 12px !important;
+}
+
+.rmdp-day span:not(.highlight) {
+    color: #373737 !important;
+    font-size: 15px !important;
+}
+
+.rmdp-day.rmdp-disabled span:not(.highlight) {
+    color: #E0E0E0 !important; 
+    cursor: not-allowed;
+}
+
+.rmdp-day.rmdp-disabled:hover span:not(.highlight) {
+    color: #E0E0E0 !important; 
+    cursor: not-allowed !important;
+}
+
+.rmdp-day.rmdp-selected span:not(.highlight) {
+    background-color: #0040B4 !important;
+    color: white !important;
+    transition: background-color 0.3s !important;
+    box-shadow: none !important;
+}
+
+.rmdp-day.rmdp-selected:hover span:not(.highlight) {
+    transition: background-color 0.3s !important;
+    background-color: #0040B4 !important;
+    color: white !important;
+}
+
+.rmdp-day:hover span:not(.highlight) {
+    color: #373737 !important;
+    background-color: #E0E0E0 !important;
+    transition: background-color 0.3s !important;
+}
+
+.rmdp-day.rmdp-disabled:hover span:not(.highlight) {
+    background: none !important;
+}
+
+.rmdp-header-values {
+    color: #373737 !important;
+    font-weight: 500 !important;
+    cursor: default !important;
+}
+
+.rmdp-arrow-container {
+    position: absolute !important;
+}
+
+.rmdp-arrow-container:hover {
+    background-color: #0040B4 !important;
+    transition: background-color 0.3s !important;
+    box-shadow: none !important;
+}
+
+.rmdp-arrow-container:hover .rmdp-arrow {
+    border-color: white !important;
+}
+
+.rmdp-arrow-container:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.rmdp-arrow {
+    border: solid #0040B4 !important;
+    border-width: 0 2px 2px 0 !important;
+    display: inline-block !important;
+    height: 3px !important;
+    margin-top: 5px !important;
+    padding: 2px !important;
+    width: 3px !important;
+}
+
+.rmdp-arrow-container.disabled:hover {
+    background: none !important;
+    cursor: not-allowed;
+}
+
+.rmdp-arrow-container.disabled .rmdp-arrow, .rmdp-arrow-container.disabled:hover .rmdp-arrow {
+    border: solid #E0E0E0 !important;
+    border-width: 0 2px 2px 0 !important;
+}
+
+.rmdp-day.rmdp-day-hidden:hover {
+    visibility: hidden !important;
+}

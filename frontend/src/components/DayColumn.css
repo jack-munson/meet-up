@@ -1,0 +1,26 @@
+.day-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-cell-hour {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-slot-30 {
+    width: 175px;
+    height: 30px;
+    border: 1px solid #373737;
+}
+
+.time-slot-15 {
+    width: 100%;
+    height: 50%;
+}
+
+.time-slot-15:hover {
+    width: 100%;
+    height: 50%;
+    background-color: #373737;
+}

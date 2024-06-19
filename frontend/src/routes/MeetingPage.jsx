@@ -8,6 +8,8 @@ import { HomeHeader } from "../components/HomeHeader"
 import "../styles/MeetingPage.css"
 import { EditMeeting } from "../components/EditMeeting"
 import { DeleteMeeting } from "../components/DeleteMeeting"
+import { Calendar } from "../components/Calendar"
+import { DatePicker } from "../components/DatePicker"
 
 export function MeetingPage() {
     const { meetingId } = useParams()
@@ -80,6 +82,7 @@ export function MeetingPage() {
                     <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleCloseDeleteMeetingClick}/>
                 </div>
             )}
+            <DatePicker></DatePicker>
         </div>
     )
 }

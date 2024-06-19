@@ -1,0 +1,14 @@
+.availability-viewer {
+    display: flex;
+}
+
+.times {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}
+
+.calendar-container {
+    display: flex;
+    border: 1px solid #373737;
+}
