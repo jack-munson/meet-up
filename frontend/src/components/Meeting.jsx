@@ -65,7 +65,7 @@ export function Meeting({ meetingId, title, invites, scheduledDay, scheduledTime
                             </div>
                         ))}
                     </div>
-                    {inviteList.length < 6 && (
+                    {inviteList.length < 8 && (
                         <div className="add-invite-container">
                             <BsPlusCircle className="add-invite-icon" onClick={handleAddInviteClick}/>
                             {showInviteModal && (

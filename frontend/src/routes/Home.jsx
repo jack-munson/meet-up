@@ -53,7 +53,7 @@ export function Home() {
             <HomeHeader></HomeHeader>
             <div className="sub-header">
                 <div className="sub-header-text">Your Meetings</div>
-                <IoAddOutline onClick={() => {handleCreateMeeting()}} className="sub-header-icon"></IoAddOutline>
+                <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
             </div>
             {isCreateMeetingOpen && (
                 <div className="overlay">

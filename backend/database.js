@@ -109,6 +109,21 @@ const addInvite = async (meetingId, newInvite) => {
     }
 }
 
+const deleteMeeting = async (meetingId) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            DELETE FROM meetings
+            WHERE id = $1
+        `
+        const values = [meetingId]
+        await client.query(query, values)
+    } finally {
+        client.release()
+    }
+}
+
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, getMeetingDetails
+    createMeeting, createUser, getMeetingsByUserId, addInvite, getMeetingDetails, deleteMeeting
 };

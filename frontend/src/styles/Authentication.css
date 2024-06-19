@@ -74,6 +74,19 @@
     cursor: pointer;
 }
 
+.signin-button:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 350px;
+    margin-top: 10px;
+    background-color: #373737;
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
 .signin-google-button {
     display: flex;
     align-items: center;
@@ -97,6 +110,20 @@
     color: #0040B4;
 }
 
+.signin-google-button:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 350px;
+    margin-top: 0px;
+    margin-bottom: 30px;
+    background-color: #EEEEEE;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
+}
+
 .signup-button {
     display: flex;
     align-items: center;
@@ -118,6 +145,20 @@
     background-color: white;
     border: 3px solid #0040B4;
     color: #0040B4;
+}
+
+.signup-button:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 350px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #0040B4;
+    font-family: 'Inter', sans-serif;
+    color: white;
 }
 
 .instruction-small {

@@ -70,4 +70,16 @@ router.post('/add-invite', async (req, res) => {
     }
 })
 
+router.delete('/delete-meeting', async (req, res) => {
+    try {
+        const { meetingId } = req.body
+
+        await db.deleteMeeting(meetingId)
+
+        res.status(200).json({ message: 'Meeting deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
 module.exports = router

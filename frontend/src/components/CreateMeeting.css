@@ -60,14 +60,14 @@
 
 .meeting-description-text {
     margin-left: 35px;
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 10px;
     color: #373737;
 }
 
 .meeting-description-input {
     width: 460px;
-    height: 70px;
+    height: 50px;
     margin-left: 35px;
     font-family: "Inter", sans-serif;
     font-size: 14px;
@@ -144,6 +144,7 @@
 
 .invite-input {
     width: 213px;
+    height: fit-content;
 }
 
 .meeting-recurring {
@@ -196,6 +197,21 @@
     background-color: white;
     border: 3px solid #0040B4;
     color: #0040B4;
+}
+
+.create-meeting-button:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 350px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 100px;
+    background-color: #0040B4;
+    font-family: 'Inter', sans-serif;
+    color: white;
 }
 
 .meeting-description-input:focus {

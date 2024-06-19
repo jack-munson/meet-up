@@ -19,13 +19,13 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
-    const [invites, setInvites] = useState(['', '', '', '', '', ''])
+    const [invites, setInvites] = useState(['', '', '', '', '', '', '', ''])
     const [recurring, setRecurring] = useState(false)
     const [showTitleError, setShowTitleError] = useState(false)
     const [showDescriptionError, setShowDescriptionError] = useState(false)
     const [showInvitesError, setShowInvitesError] = useState(false)
-    const auth = getAuth();
-    const user = auth.currentUser; 
+    const auth = getAuth()
+    const user = auth.currentUser
     const navigate = useNavigate()
 
     const handleNewInvite = (index, email) => {
@@ -39,7 +39,6 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     }
 
     const handleCreate = async (e) => {
-
         e.preventDefault();
 
         if (!meetingTitle) {
@@ -71,7 +70,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                 endTime: endTime.label,
                 invites: filteredInvites,
                 recurring: recurring
-            };
+            }
     
             const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData)
     
@@ -83,7 +82,6 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
             navigate('/home');
         } catch (error) {
             console.error('Error creating meeting (CreateMeeting.jsx):', error)
-            // navigate('/signin')
         }
     }
     

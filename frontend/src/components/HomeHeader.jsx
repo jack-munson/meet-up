@@ -19,7 +19,7 @@ export function HomeHeader(){
 
     return (
         <div className="banner">
-            <img src={MainLogo} className="header-logo" alt="MeetUp logo" />
+            <img src={MainLogo} className="header-logo" alt="MeetUp logo" onClick={() => navigate("/")}/>
             <div className = "nav-buttons">
                 <div className="menu-button" onClick={() => navigate("/home")}>MEETINGS</div>
                 <div className="menu-button" onClick={() => navigate("/profile")}>PROFILE</div>
