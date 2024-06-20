@@ -1,9 +1,28 @@
+.rmdp-week {
+    column-gap: 18px;
+}
+
 .rmdp-week-day {
     color: #0040B4 !important;
     font-size: 12px !important;
 }
 
+.rmdp-day span {
+    width: 30px;
+    height: 30px;
+}
+
 .rmdp-day span:not(.highlight) {
+    color: #373737 !important;
+    font-size: 15px !important;
+}
+
+.rmdp-day.rmdp-today span:not(.highlight) {
+    background-color: white !important;
+    color: #373737 !important;
+    font-size: 15px !important;
+}
+.rmdp-day.rmdp-today:hover span:not(.highlight) {
     color: #373737 !important;
     font-size: 15px !important;
 }
@@ -39,6 +58,10 @@
 
 .rmdp-day.rmdp-disabled:hover span:not(.highlight) {
     background: none !important;
+}
+
+.rmdp-header {
+    padding: 3px 0 !important;
 }
 
 .rmdp-header-values {
