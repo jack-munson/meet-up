@@ -90,63 +90,111 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
 
     return (
         <div className={`create-meeting-box ${customClassName}`}>
-            <div className={`meeting-box-header ${showTitleError ? 'error' : ''}`}>
-                <input 
-                    onChange={(e) => {setMeetingTitle(e.target.value); setShowTitleError(!e.target.value.trim())}}
-                    className="meeting-title-input" 
-                    type="text" 
-                    maxLength="55"
-                    placeholder="Meeting Title"
-                />
-                {showTitleError && (
-                    <span className="error-tooltip">Meeting title is required</span>
-                )}
-                <img className="edit-icon" src={EditIcon} alt="Edit"/>
+            <input 
+                onChange={(e) => {setMeetingTitle(e.target.value)}}
+                className="meeting-title-input" 
+                type="text" 
+                maxLength="55"
+                placeholder="Enter meeting title"
+            />
+            <div className="meeting-form">
+                <div className="meeting-description">
+                    <div className="meeting-description-text">What is your meeting about?</div>
+                    <textarea 
+                        onChange={(e) => {setMeetingDescription(e.target.value)}} 
+                        className="meeting-description-input" 
+                        type="text" 
+                        placeholder="In this meeting we'll be discussing..."
+                    />
+                </div>
+
+                <div className="meeting-time">
+                    <div className="meeting-description-text">What times would you like to meet between?</div>
+                    <div className="meeting-times">
+                        <Select 
+                            onChange={(e) => {setStartTime(e)}} 
+                            className="meeting-time-input" 
+                            classNamePrefix= "react-select" 
+                            options={times} 
+                            isSearchable={false} 
+                            value={startTime}
+                            menuPlacement="top">
+                        </Select>
+                        <div>to</div>
+                        <Select 
+                            onChange={(e) => {setEndTime(e)}} 
+                            className="meeting-time-input" 
+                            classNamePrefix= "react-select" 
+                            options={times} 
+                            isSearchable={false} 
+                            value={endTime}
+                            menuPlacement="top">
+                        </Select>
+                    </div>
+                </div>
+
             </div>
-            <form action="" className="meeting-form">
-                <div className="meeting-description-text">What is your meeting about?</div>
-                <textarea onChange={(e) => {setMeetingDescription(e.target.value)}} className="meeting-description-input" type="text" placeholder="In this meeting we'll be discussing..."/>
-                <div className="meeting-description-text">What times would you like to meet between?</div>
-                <div className="meeting-times">
-                    <Select 
-                        onChange={(e) => {setStartTime(e)}} 
-                        className="meeting-time-input" 
-                        classNamePrefix= "react-select" 
-                        options={times} 
-                        isSearchable={false} 
-                        value={startTime}
-                        menuPlacement="top">
-                    </Select>
-                    <div>to</div>
-                    <Select 
-                        onChange={(e) => {setEndTime(e)}} 
-                        className="meeting-time-input" 
-                        classNamePrefix= "react-select" 
-                        options={times} 
-                        isSearchable={false} 
-                        value={endTime}
-                        menuPlacement="top">
-                    </Select>
-                </div>
-                <div className="meeting-description-text">Who would you like to invite?</div>
-                <div className="invites">
-                    {invites.map((email, index) => (
-                        <input
-                            key={index}
-                            className="invite-input"
-                            type="text"
-                            placeholder="email@domain.com"
-                            value={email}
-                            onChange={(e) => handleNewInvite(index, e.target.value)}
-                        />
-                    ))}
-                </div>
-                <div className="meeting-recurring">
-                    <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
-                    <div className="meeting-description-text" style={{ marginTop: '0px', marginLeft: '0px' }}>This meeting is recurring</div>
-                </div>
-                <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
-            </form>
+            <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
         </div>
     )
 }
+
+{/* <div className={`create-meeting-box ${customClassName}`}>
+    <div className={`meeting-box-header ${showTitleError ? 'error' : ''}`}>
+        <input 
+            onChange={(e) => {setMeetingTitle(e.target.value); setShowTitleError(!e.target.value.trim())}}
+            className="meeting-title-input" 
+            type="text" 
+            maxLength="55"
+            placeholder="Meeting Title"
+        />
+        {showTitleError && (
+            <span className="error-tooltip">Meeting title is required</span>
+        )}
+        <img className="edit-icon" src={EditIcon} alt="Edit"/>
+    </div>
+    <form action="" className="meeting-form">
+        <div className="meeting-description-text">What is your meeting about?</div>
+        <textarea onChange={(e) => {setMeetingDescription(e.target.value)}} className="meeting-description-input" type="text" placeholder="In this meeting we'll be discussing..."/>
+        <div className="meeting-description-text">What times would you like to meet between?</div>
+        <div className="meeting-times">
+            <Select 
+                onChange={(e) => {setStartTime(e)}} 
+                className="meeting-time-input" 
+                classNamePrefix= "react-select" 
+                options={times} 
+                isSearchable={false} 
+                value={startTime}
+                menuPlacement="top">
+            </Select>
+            <div>to</div>
+            <Select 
+                onChange={(e) => {setEndTime(e)}} 
+                className="meeting-time-input" 
+                classNamePrefix= "react-select" 
+                options={times} 
+                isSearchable={false} 
+                value={endTime}
+                menuPlacement="top">
+            </Select>
+        </div>
+        <div className="meeting-description-text">Who would you like to invite?</div>
+        <div className="invites">
+            {invites.map((email, index) => (
+                <input
+                    key={index}
+                    className="invite-input"
+                    type="text"
+                    placeholder="email@domain.com"
+                    value={email}
+                    onChange={(e) => handleNewInvite(index, e.target.value)}
+                />
+            ))}
+        </div>
+        <div className="meeting-recurring">
+            <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
+            <div className="meeting-description-text" style={{ marginTop: '0px', marginLeft: '0px' }}>This meeting is recurring</div>
+        </div>
+        <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
+    </form>
+</div> */}
