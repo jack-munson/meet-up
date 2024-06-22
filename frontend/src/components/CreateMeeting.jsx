@@ -42,8 +42,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     }
 
     const handleDateChange = (newValue) => {
-        setDates(newValue)
-        console.log(newValue)
+        setDates(newValue.map(date => date.toDate().getTime())); // Convert dates to timestamps
     }
 
     const handleCreate = async (e) => {
@@ -56,8 +55,8 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                 userId: user.uid,
                 title: meetingTitle,
                 description: meetingDescription,
-                startTime: startTime.label,
-                endTime: endTime.label,
+                startTime: startTime.value,
+                endTime: endTime.value,
                 frequency: frequency,
                 days: selectedDays
             }

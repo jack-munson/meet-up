@@ -184,10 +184,13 @@
 
 .meeting-time-input .react-select__menu { 
     /* Menu behind options */
-    font-size: 14px; /* Adjust the font size of the dropdown items */
-    height: 150px; /* Adjust the height of the control box */
+    font-size: 14px;
+    height: 150px;
     cursor: pointer;
     z-index: 1000;
+    border: none !important;
+    outline: none !important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 2px;
 }
 
 .meeting-time-input .react-select__menu-list {
@@ -236,7 +239,7 @@
 .frequency-option {
     border: none !important;
     outline: none !important;
-    color: #373737 !important;
+    color: #828282 !important;
     transition: background-color 0.6s;
     text-transform: none !important;
 }
@@ -310,7 +313,7 @@
 
 .day.selected {
     background-color: #1E965C;
-    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 0px;
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
     color: white;
 }
 

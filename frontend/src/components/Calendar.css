@@ -1,14 +1,22 @@
 .availability-viewer {
     display: flex;
+    border: none !important;
+    outline: none !important;
 }
 
 .times {
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
-    gap: 38px;
+    align-items: flex-end;
+    gap: 34px;
+}
+
+.days-grid {
+    display: flex;
+    padding-left: 10px;
 }
 
 .calendar-container {
     display: flex;
-    border: 1px solid #373737;
 }

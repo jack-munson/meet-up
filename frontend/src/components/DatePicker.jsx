@@ -9,7 +9,7 @@ export function DatePicker({ handleDateChange, dates}) {
 
   return (
     <Calendar 
-        value={dates} 
+        value={dates.map(date => new Date(date))} 
         onChange={handleDateChange} 
         multiple="true"
         disableMonthPicker
@@ -17,8 +17,7 @@ export function DatePicker({ handleDateChange, dates}) {
         minDate={today}
         maxDate={oneYearLater}
         mapDays={({ date }) => {
-            const isPastDate = date.valueOf() < today.valueOf();
-  
+            const isPastDate = date.valueOf() < today.valueOf()
             if (isPastDate) {
               return {
                 disabled: true,

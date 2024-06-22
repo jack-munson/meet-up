@@ -9,7 +9,6 @@ import "../styles/MeetingPage.css"
 import { EditMeeting } from "../components/EditMeeting"
 import { DeleteMeeting } from "../components/DeleteMeeting"
 import { Calendar } from "../components/Calendar"
-import { DatePicker } from "../components/DatePicker"
 
 export function MeetingPage() {
     const { meetingId } = useParams()
@@ -54,6 +53,7 @@ export function MeetingPage() {
                     params: { meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
+                console.log("MeetingPage.jsx: ", response.data.meeting)
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
             }
@@ -82,7 +82,7 @@ export function MeetingPage() {
                     <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleCloseDeleteMeetingClick}/>
                 </div>
             )}
-            <DatePicker></DatePicker>
+            <Calendar meetingDetails={meetingDetails}></Calendar>
         </div>
     )
 }

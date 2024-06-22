@@ -47,7 +47,7 @@
     background-color: #1E965C !important;
     color: white !important;
     transition: background-color 0.3s !important;
-    box-shadow: none !important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 5px 2px !important;
 }
 
 .rmdp-day.rmdp-selected:hover span:not(.highlight) {
