@@ -9,16 +9,16 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 })
 
-const createMeeting = async (userId, title, description, startTime, endTime, invites, recurring) => {
+const createMeeting = async (userId, title, description, startTime, endTime, frequency, days) => {
     const client = await pool.connect()
     
     try {
         const meetingQuery = `
-            INSERT INTO meetings (user_id, title, description, start_time, end_time, invites, recurring)
+            INSERT INTO meetings (user_id, title, description, start_time, end_time, frequency, days)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING user_id, title, id
+            RETURNING user_id, title, id, description, frequency, days
         `
-        const meetingValues = [userId, title, description, startTime, endTime, invites, recurring]
+        const meetingValues = [userId, title, description, startTime, endTime, frequency, days]
         const meetingResult = await client.query(meetingQuery, meetingValues)
         const newMeeting =  meetingResult.rows[0]
 

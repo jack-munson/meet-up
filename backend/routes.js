@@ -7,9 +7,9 @@ router.use(bodyParser.json())
 
 router.post('/create-meeting', async (req, res) => {
     try {
-        const { userId, title, description, startTime, endTime, invites, recurring } = req.body
+        const { userId, title, description, startTime, endTime, frequency, days } = req.body
         
-        const result = await db.createMeeting(userId, title, description, startTime, endTime, invites, recurring)
+        const result = await db.createMeeting(userId, title, description, startTime, endTime, frequency, days)
         
         res.status(201).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
     } catch (error) {
