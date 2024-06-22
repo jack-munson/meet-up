@@ -6,13 +6,12 @@
     align-items: center;
     justify-content: center;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 10px 0px;
-    margin-right: 200px; /* To align with heading content */
-    margin-top: 100px;
     width: 500px;
     height: fit-content;
+    transition: height 1s ease-out;
     border-radius: 30px;
     background-color: white;
-    gap: 20px;
+    gap: 25px;
 }
 
 .meeting-form {
@@ -20,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 20px;
+    gap: 25px;
 }
 
 .meeting-title-input {     
@@ -30,7 +29,7 @@
     outline: 2px solid white;     
     outline-offset: -2px;       
     transition: outline-color 0.3s ease-out;  
-    height: 40px; 
+    height: 30px; 
     width: 430px;      
     font-family: "Inter", sans-serif;
     font-size: 20px;        
@@ -38,6 +37,7 @@
     padding: 10px;
     margin-bottom: 0px !important;
     color: #373737 !important;
+    margin-top: 25px;
 }
 
 .meeting-title-input:focus {     
@@ -46,7 +46,7 @@
     outline: 2px solid #1E965C !important;
     outline-offset: -2px;   
     transition: outline-color 0.5s ease-in!important;     
-    height: 40px; 
+    height: 30px; 
     width: 430px;   
     font-family: "Inter", sans-serif;
     font-size: 20px;        
@@ -63,16 +63,19 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
 }
 
 .meeting-description-text {
-    font-size: 16px;
+    font-size: 17px;
+    font-weight: 450;
     color: #373737;
+    cursor: default;
 }
 
 .meeting-description-input {
     width: 425px;
-    height: 50px;
+    height: 55px;
     border: none;
     border-radius: 10px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
@@ -80,7 +83,7 @@
     outline-offset: -2px;       
     transition: outline-color 0.3s ease-out; 
     font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     border: 2px solid #E0E0E0;
     border-radius: 8px;
     padding: 10px;
@@ -90,7 +93,7 @@
 
 .meeting-description-input:focus {
     width: 425px;
-    height: 50px;
+    height: 55px;
     border: none;
     border-radius: 10px;
     box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
@@ -98,7 +101,7 @@
     outline-offset: -2px;   
     transition: outline-color 0.5s ease-in!important;   
     font-family: "Inter", sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     border: 2px solid #E0E0E0;
     border-radius: 8px;
     padding: 10px;
@@ -114,6 +117,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
 }
 
 .meeting-times {
@@ -127,7 +131,25 @@
 .meeting-time-input {
     width: 110px;
     cursor: pointer;
-    color: #373737;
+}
+
+.meeting-time-input .react-select__single-value {
+    font-size: 15px;
+    color: #373737 !important
+}
+
+.meeting-time-input .react-select__indicator-separator {
+    background-color: #E0E0E0 !important;
+}
+
+.meeting-time-input .react-select__dropdown-indicator {
+    color: #E0E0E0 !important;
+    transition: transform 0.5s !important;
+}
+
+.meeting-time-input .react-select__control--menu-is-open .react-select__dropdown-indicator {
+    color: #828282 !important;
+    transform: rotate(180deg) !important;
 }
 
 .meeting-time-input .react-select__control {
@@ -148,7 +170,7 @@
     border-radius: 8px;
     font-size: 14px;
     border-radius: 10px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
     outline: 2px solid #1E965C !important;     
     outline-offset: -2px;       
     transition: outline-color 0.5s ease-in !important; 
@@ -165,6 +187,7 @@
     font-size: 14px; /* Adjust the font size of the dropdown items */
     height: 150px; /* Adjust the height of the control box */
     cursor: pointer;
+    z-index: 1000;
 }
 
 .meeting-time-input .react-select__menu-list {
@@ -177,6 +200,7 @@
 .meeting-time-input .react-select__option { 
     /* Actual dropdown option */
     transition: background-color 0.3s !important;
+    color: #373737;
     font-size: 14px; 
     cursor: pointer;
 }
@@ -187,10 +211,110 @@
 
 .react-select__option--is-selected, .react-select__option:active {
     background-color: #1E965C !important;
+    color: white !important;
+}
+
+.meeting-frequency {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.frequency-options {
+    display: flex;
+    align-items: center;
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    outline: 2px solid white !important;     
+    outline-offset: -2px;       
+    gap: 1px;
+    transition: outline-color 0.3s ease-out;
+}
+
+.frequency-option {
+    border: none !important;
+    outline: none !important;
+    color: #373737 !important;
+    transition: background-color 0.6s;
+    text-transform: none !important;
+}
+
+.frequency-option.one-time {
+    border: none!;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+}
+
+.frequency-option.recurring {
+    border: none !important;
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.frequency-option:hover {
+    border: none !important;
+    background-color: #E0E0E0 !important;
+}
+
+.frequency-option:focus {
+    border: none !important;
+    color: white !important;
+    background-color: #1E965C !important;
+}
+
+.frequency-option.Mui-selected {
+    border: none !important;
+    color: white !important;
+    background-color: #1E965C !important;
+}
+
+.day-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.days-of-the-week {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    width: 35px;
+    height: 35px;
+    border-radius: 20px;
+    background-color: #E0E0E0;
+    color: #373737;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease-out !important; 
+}
+
+.day:hover {
+    background-color: #828282;
     color: white;
 }
 
-.create-meeting-button {
+.day.selected {
+    background-color: #1E965C;
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 0px;
+    color: white;
+}
+
+.create-meeting-button, .create-meeting-button:focus {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -200,14 +324,18 @@
     background-color: #1E965C;
     font-family: 'Inter', sans-serif;
     color: white;
+    margin-bottom: 25px;
+    border: none !important;
+    outline: none !important;
 }
 
-.create-meeting-button:hover {
+.create-meeting-button:hover, .create-meeting-button:hover:focus {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: white;
-    border: 3px solid #1E965C;
+    border: 3px solid #1E965C !important;
+    outline: none !important;
     color: #1E965C;
 }
 

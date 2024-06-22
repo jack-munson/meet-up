@@ -6,6 +6,7 @@ import Select from 'react-select'
 import "./CreateMeeting.css"
 import { getAuth } from "firebase/auth"
 import { DatePicker } from './DatePicker'
+import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
 const times = [];
 for (let hour = 0; hour < 24; hour++) {
@@ -20,47 +21,35 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
     const [endTime, setEndTime] = useState({ value: 17, label: '5 pm' })
-    const [invites, setInvites] = useState(['', '', '', '', '', '', '', ''])
-    const [recurring, setRecurring] = useState(false)
-    const [showTitleError, setShowTitleError] = useState(false)
-    const [showDescriptionError, setShowDescriptionError] = useState(false)
-    const [showInvitesError, setShowInvitesError] = useState(false)
+    const [frequency, setFrequency] = useState('one-time')
+    const [days, setDays] = useState([])
+    const [dates, setDates] = useState([])
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
 
-    const handleNewInvite = (index, email) => {
-        const newInvites = [...invites]
-        newInvites[index] = email
-        setInvites(newInvites)
+    const handleFrequencyChange = (event, newFreq) => {
+        setFrequency(newFreq)
     }
 
-    const handleCheckboxChange = () => {
-        setRecurring(!recurring)
+    const toggleDay = (day) => {
+        console.log(days)
+        if (days.includes(day)) {
+            setDays(days.filter((d) => d !== day))
+        } else {
+            setDays([...days, day])
+        }
+    }
+
+    const handleDateChange = (newValue) => {
+        setDates(newValue)
+        console.log(newValue)
     }
 
     const handleCreate = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        if (!meetingTitle) {
-            setShowTitleError(true);
-            return;
-        } else {
-            setShowTitleError(false);
-        }
-
-        if (!meetingDescription) {
-            setShowDescriptionError(true);
-            return;
-        } else {
-            setShowDescriptionError(false);
-        }
-
-        const filteredInvites = invites.filter(email => email);
-        if (filteredInvites.length === 0) {
-            alert("At least one invitee is required")
-            return;
-        }
+        const selectedDays = frequency === 'one-time' ? dates : days
 
         try {
             const meetingData = {
@@ -69,13 +58,15 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                 description: meetingDescription,
                 startTime: startTime.label,
                 endTime: endTime.label,
-                invites: filteredInvites,
-                recurring: recurring
+                frequency: frequency,
+                days: selectedDays
             }
     
             const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData)
     
             console.log('Meeting created successfully (CreateMeeting.jsx)')
+            console.log(response.data.newMeeting)
+            console.log(response.data.userMeetings)
             
             if (onCreateSuccess) {
                 onCreateSuccess(response.data.newMeeting)
@@ -106,6 +97,35 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                         type="text" 
                         placeholder="In this meeting we'll be discussing..."
                     />
+                </div>
+                
+                <div className="meeting-frequency">
+                    <div className="meeting-description-text">Is this a one-time or recurring meeting?</div>
+                    <ToggleButtonGroup className="frequency-options" onChange={handleFrequencyChange} value={frequency} exclusive>
+                        <ToggleButton className="frequency-option one-time" disableRipple value="one-time">One-time</ToggleButton>
+                        <ToggleButton className="frequency-option recurring" disableRipple value="recurring">Recurring</ToggleButton>
+                    </ToggleButtonGroup>
+                </div>
+
+                <div className="day-selection">
+                    {frequency === 'one-time' ? (
+                        <div className="meeting-description-text">What dates might work?</div>
+                    ) : (
+                        <div className="meeting-description-text">What days might work?</div>
+                    )}
+                    {frequency === 'one-time' ? (
+                        <DatePicker handleDateChange={handleDateChange} dates={dates}/>
+                    ) : (
+                        <div className="days-of-the-week">
+                            <div className={`day ${days.includes("sunday") ? "selected" : ""}`} onClick={() => toggleDay("sunday")}>S</div>
+                            <div className={`day ${days.includes("monday") ? "selected" : ""}`} onClick={() => toggleDay("monday")}>M</div>
+                            <div className={`day ${days.includes("tuesday") ? "selected" : ""}`} onClick={() => toggleDay("tuesday")}>T</div>
+                            <div className={`day ${days.includes("wednesday") ? "selected" : ""}`} onClick={() => toggleDay("wednesday")}>W</div>
+                            <div className={`day ${days.includes("thursday") ? "selected" : ""}`} onClick={() => toggleDay("thursday")}>T</div>
+                            <div className={`day ${days.includes("friday") ? "selected" : ""}`} onClick={() => toggleDay("friday")}>F</div>
+                            <div className={`day ${days.includes("saturday") ? "selected" : ""}`} onClick={() => toggleDay("saturday")}>S</div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="meeting-time">

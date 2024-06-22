@@ -1,9 +1,14 @@
+.rmdp-wrapper {
+    border-radius: 10px !important;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px !important;
+}
+
 .rmdp-week {
     column-gap: 18px;
 }
 
 .rmdp-week-day {
-    color: #0040B4 !important;
+    color: #1E965C !important;
     font-size: 12px !important;
 }
 
@@ -18,13 +23,14 @@
 }
 
 .rmdp-day.rmdp-today span:not(.highlight) {
-    background-color: white !important;
-    color: #373737 !important;
-    font-size: 15px !important;
+    background: none !important;
+    color: #E0E0E0 !important; 
+    cursor: not-allowed;
 }
 .rmdp-day.rmdp-today:hover span:not(.highlight) {
-    color: #373737 !important;
-    font-size: 15px !important;
+    background: none !important;
+    color: #E0E0E0 !important; 
+    cursor: not-allowed;
 }
 
 .rmdp-day.rmdp-disabled span:not(.highlight) {
@@ -38,7 +44,7 @@
 }
 
 .rmdp-day.rmdp-selected span:not(.highlight) {
-    background-color: #0040B4 !important;
+    background-color: #1E965C !important;
     color: white !important;
     transition: background-color 0.3s !important;
     box-shadow: none !important;
@@ -46,7 +52,7 @@
 
 .rmdp-day.rmdp-selected:hover span:not(.highlight) {
     transition: background-color 0.3s !important;
-    background-color: #0040B4 !important;
+    background-color: #1E965C !important;
     color: white !important;
 }
 
@@ -75,7 +81,7 @@
 }
 
 .rmdp-arrow-container:hover {
-    background-color: #0040B4 !important;
+    background-color: #1E965C !important;
     transition: background-color 0.3s !important;
     box-shadow: none !important;
 }
@@ -90,7 +96,7 @@
 }
 
 .rmdp-arrow {
-    border: solid #0040B4 !important;
+    border: solid #1E965C !important;
     border-width: 0 2px 2px 0 !important;
     display: inline-block !important;
     height: 3px !important;

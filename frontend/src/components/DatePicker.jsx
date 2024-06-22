@@ -2,20 +2,14 @@ import React, { useState } from "react"
 import {Calendar} from "react-multi-date-picker"
 import "./DatePicker.css"
 
-export function DatePicker() {
-  const [selectedDates, setSelectedDates] = useState([]);
+export function DatePicker({ handleDateChange, dates}) {
   const today = new Date();
   const oneYearLater = new Date();
   oneYearLater.setMonth(oneYearLater.getMonth() + 12);
 
-  const handleDateChange = (newValue) => {
-    setSelectedDates(newValue)
-    console.log(newValue)
-  }
-
   return (
     <Calendar 
-        value={selectedDates} 
+        value={dates} 
         onChange={handleDateChange} 
         multiple="true"
         disableMonthPicker
@@ -27,7 +21,7 @@ export function DatePicker() {
   
             if (isPastDate) {
               return {
-                disabled: true
+                disabled: true,
               };
             }
           }}
