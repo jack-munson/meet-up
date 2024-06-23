@@ -5,11 +5,11 @@
 }
 
 .times {
-    margin-top: 30px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 34px;
+    gap: 36px
 }
 
 .days-grid {

@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const db = require('./database')
+require('dotenv').config()
+const nodemailer = require('nodemailer')
 
 router.use(bodyParser.json())
 
@@ -58,16 +60,53 @@ router.get('/get-meeting-details', async (req, res) => {
     }
 })
 
+async function sendInviteEmail(email, token) {
+    const inviteLink = `http://localhost:5176/invite/${token}`;
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        type: 'OAuth2',
+        user: process.env.AUTH_USER,
+        accessToken: process.env.AUTH_ACCESS_TOKEN
+      }
+    });
+  
+    const mailOptions = {
+      from: process.env.AUTH_USER,
+      to: email,
+      subject: 'You are invited!',
+      text: `You have been invited to a meeting. Click the link to join: ${inviteLink}`
+    };
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Error sending invite email (routes.js): ", error)
+    }
+}
+
 router.post('/add-invite', async (req, res) => {
     try {
         const { meetingId, newInvite} = req.body
 
-        const response = await db.addInvite(meetingId, newInvite)
+        await db.addInvite(meetingId, newInvite)
+        const token = await db.createInvite(meetingId, newInvite)
+        await sendInviteEmail(newInvite, token)
 
         res.status(200).json({ message: 'Invite added successfully' })
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' })
+        res.status(500).json({ error: 'Internal server error: ', error })
     }
+})
+
+router.get('/invite/:token', async (req, res) => {
+    const { token } = req.params;
+    const invite = await db.query('SELECT * FROM Invites WHERE token = $1', [token]);
+
+    if (invite.rows.length === 0) {
+        return res.status(404).send('Invalid invite token');
+    }
+
+    res.redirect(`/signin?token=${token}`);
 })
 
 router.delete('/delete-meeting', async (req, res) => {

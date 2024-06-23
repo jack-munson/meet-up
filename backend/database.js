@@ -1,4 +1,5 @@
 const { Pool } = require('pg')
+const { v4: uuidv4 } = require('uuid')
 require('dotenv').config()
 
 const pool = new Pool({
@@ -109,6 +110,23 @@ const addInvite = async (meetingId, newInvite) => {
     }
 }
 
+const createInvite = async (meetingId, email) => {
+    const client = await pool.connect()
+    const token = uuidv4()
+    
+    try {
+        const query = `
+            INSERT INTO invites (token, meeting_id, email)
+            VALUES ($1, $2, $3)
+        `
+        const values = [token, meetingId, email]
+        await client.query(query, values)
+        return token
+    } finally {
+        client.release()
+    }
+}
+
 const deleteMeeting = async (meetingId) => {
     const client = await pool.connect()
 
@@ -125,5 +143,5 @@ const deleteMeeting = async (meetingId) => {
 }
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, getMeetingDetails, deleteMeeting
+    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, getMeetingDetails, deleteMeeting
 };

@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from "react"
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from 'firebase/auth'
 import { Icon } from 'react-icons-kit'
 import { eyeOff } from 'react-icons-kit/feather/eyeOff'
@@ -15,13 +15,28 @@ export function Signin() {
     const [icon, setIcon] = useState(eyeOff);
     const auth = getAuth()
     const navigate = useNavigate()
+    const location = useLocation()
+    const [inviteToken, setInviteToken] = useState('')
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const token = queryParams.get('token');
+        if (token) {
+            setInviteToken(token);
+        }
+    }, [location.search])
 
     async function handleSignIn(e) {
         e.preventDefault()
         signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
             console.log(user)
-            navigate('/home')
+            if (inviteToken) {
+                handleInviteAcceptance(user, inviteToken)
+            }
+            else {
+                navigate('/home')
+            }
         })
         .catch((error) => {
             console.log(error)
@@ -45,12 +60,28 @@ export function Signin() {
                 navigate('/signup')
             }
             else {
-                navigate('/home')
+                if (inviteToken) {
+                    handleInviteAcceptance(user, inviteToken);
+                } else {
+                    navigate('/home');
+                }
             }
         })
         .catch((error) => {
             console.log(error)
         })
+    }
+
+    async function handleInviteAcceptance(user, token) {
+        try {
+            await axios.post('http://localhost:3000/api/accept-invite', {
+                userId: user.uid,
+                token: token
+            });
+            navigate('/home');
+        } catch (error) {
+            console.error('Error accepting invite: ', error);
+        }
     }
 
     const handleToggle = () => {
