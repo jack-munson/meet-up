@@ -20,6 +20,7 @@ export function MeetingPage() {
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
+    const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const navigate = useNavigate()
 
     const handleAddInviteClick = (e) => {
@@ -51,6 +52,10 @@ export function MeetingPage() {
 
     const handleCloseDeleteMeetingClick = () => {
         setIsDeleteMeetingOpen(false)
+    }
+
+    const isAccepted = (invite) => {
+        return acceptedList.includes(invite)
     }
 
     const handleAddNewInvite = async (e) => {
@@ -125,7 +130,7 @@ export function MeetingPage() {
                     <div className="invite-icons">
                         {inviteList.map((invite, index) => (
                             <div key={index} className="invite">
-                                <BsPersonFill className="invite-icon"/>
+                                <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
                                 <span className="tooltip">{invite}</span>
                             </div>
                         ))}

@@ -143,17 +143,17 @@ const validateInvite = async (token) => {
     }
 }
 
-const acceptInvite = async (userId, meetingId) => {
+const acceptInvite = async (userId, email, meetingId) => {
     const client = await pool.connect()
 
     try {
         const query = `
             UPDATE meetings
-            SET accepted = array_append(accepted, $1)
-            WHERE id = $2
+            SET accepted = array_cat(accepted, ARRAY[$1, $2])
+            WHERE id = $3
             RETURNING accepted
-        `
-        const values = [userId, meetingId]
+        `;
+        const values = [userId, email, meetingId];
         const result = await client.query(query, values)
         return result.rows[0]
     } finally {

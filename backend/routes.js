@@ -82,7 +82,7 @@ async function sendInviteEmail(email, token) {
       from: process.env.AUTH_USER,
       to: email,
       subject: 'You are invited!',
-      text: `You have been invited to a meeting. Click the link to join: ${inviteLink}`
+      text: `You have been invited to a MeetUp. Click on the link to join: ${inviteLink}`
     };
     try {
         await transporter.sendMail(mailOptions);
@@ -124,14 +124,15 @@ router.get('/invite/:token', async (req, res) => {
 })
 
 router.post('/accept-invite', async (req, res) => {
-    const { userId, token } = req.body
+    const { userId, token, email } = req.body
     console.log("userId (routes.js): ", userId)
-    console.log("token (routes.js): ", userId)
+    console.log("token (routes.js): ", token)
+    console.log("email (routes.js): ", email)
     
     try {
         const meeting = await db.getMeetingId(token)
         console.log("Meeting (routes.js): ", meeting)
-        await db.acceptInvite(userId, meeting.meeting_id)
+        await db.acceptInvite(userId, email, meeting.meeting_id)
 
         res.status(200).json({ message: 'Invite accepted successfully' })
     } catch (error) {

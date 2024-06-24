@@ -114,8 +114,9 @@
 
 .invite-icon-accepted {
     height: 25px;
+    margin-top: 6px;
     width: auto;
-    background-color: green;
+    background-color: #1E965C;
     color: white;
     padding: 5px;
     border: 3px solid white;

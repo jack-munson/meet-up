@@ -87,6 +87,7 @@ export function Signin() {
             console.log(user.uid)
             await axios.post('http://localhost:3000/api/accept-invite', {
                 userId: user.uid,
+                email: user.email,
                 token: token
             });
             navigate('/home');
