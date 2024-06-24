@@ -145,6 +145,7 @@ export function MeetingPage() {
                                             type="email" 
                                             value={newInvite} 
                                             style={{marginBottom: "0px"}}
+                                            className="invite-modal-popout"
                                             onChange={(e) => handleInviteChange(e)}
                                             onClick={handleInputClick}
                                             placeholder="email@domain.com" 
