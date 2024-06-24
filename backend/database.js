@@ -63,7 +63,7 @@ const getMeetingsByUserId = async (userId) => {
     try {
         const query = `
             SELECT * FROM meetings
-            WHERE user_id = $1
+            WHERE user_id = $1 OR $1 = ANY(accepted)
         `
         const values = [userId]
         const result = await client.query(query, values)
@@ -77,7 +77,6 @@ const getMeetingDetails = async (meetingId) => {
     const client = await pool.connect()
 
     try {
-        console.log("MeetingID (database.js): ", meetingId)
         const query = `
             SELECT * FROM meetings
             WHERE id = $1
@@ -127,6 +126,59 @@ const createInvite = async (meetingId, email) => {
     }
 }
 
+const validateInvite = async (token) => {
+    const client = await pool.connect()
+    
+    try {
+        const query = `
+            SELECT * FROM invites
+            WHERE token = $1
+        `;
+        const values = [token]
+        const result = await client.query(query, values)
+        console.log(result.rows[0])
+        return result.rows.length > 0 ? result.rows[0] : null
+    } finally {
+        client.release()
+    }
+}
+
+const acceptInvite = async (userId, meetingId) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            UPDATE meetings
+            SET accepted = array_append(accepted, $1)
+            WHERE id = $2
+            RETURNING accepted
+        `
+        const values = [userId, meetingId]
+        const result = await client.query(query, values)
+        return result.rows[0]
+    } finally {
+        client.release()
+    }
+}
+
+const getMeetingId = async (token) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            SELECT meeting_id FROM invites
+            WHERE token = $1
+        `
+        const values = [token]
+        console.log(token)
+        const result = await client.query(query, values)
+        console.log("database.js: ", result)
+        return result.rows[0]
+    } finally {
+        client.release()
+    }
+}
+
 const deleteMeeting = async (meetingId) => {
     const client = await pool.connect()
 
@@ -143,5 +195,5 @@ const deleteMeeting = async (meetingId) => {
 }
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, getMeetingDetails, deleteMeeting
+    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting
 };

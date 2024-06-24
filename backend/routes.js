@@ -26,7 +26,7 @@ router.post('/create-user', async (req, res) => {
         const { userId, firstName, lastName, email } = req.body
 
         const user = await db.createUser(userId, firstName, lastName, email)
-
+        console.log(user)
         res.status(201).json({ message: 'User created successfully: ', userId: user.user_id, firstName: user.first_name, lastName: user.last_name, email: user.email })
     } catch (error) {
         console.error('Error creating user (Routes.js): ', error)
@@ -100,13 +100,37 @@ router.post('/add-invite', async (req, res) => {
 
 router.get('/invite/:token', async (req, res) => {
     const { token } = req.params;
-    const invite = await db.query('SELECT * FROM Invites WHERE token = $1', [token]);
-
-    if (invite.rows.length === 0) {
-        return res.status(404).send('Invalid invite token');
+    
+    try {
+        const invite = await db.validateInvite(token)
+        console.log(invite)
+        if (invite) {
+            res.status(200).json({ message: 'Invite valid', valid: true, token: token })
+        }
+        else {
+            res.status(404).json({ valid: false, message: 'Invalid invite' })
+        }
+    } catch (error) {
+        console.error('Error processing invitation: ', error)
+        res.status(500).json({ valid: false, message: 'Internal server error' })
     }
+})
 
-    res.redirect(`/signin?token=${token}`);
+router.post('/accept-invite', async (req, res) => {
+    const { userId, token } = req.body
+    console.log("userId (routes.js): ", userId)
+    console.log("token (routes.js): ", userId)
+    
+    try {
+        const meeting = await db.getMeetingId(token)
+        console.log("Meeting (routes.js): ", meeting)
+        await db.acceptInvite(userId, meeting.meeting_id)
+
+        res.status(200).json({ message: 'Invite accepted successfully' })
+    } catch (error) {
+        console.error("Error accepting invite: ", error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
 })
 
 router.delete('/delete-meeting', async (req, res) => {

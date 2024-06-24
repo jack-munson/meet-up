@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import { Protected } from './routes/Protected'
 import { MeetingPage } from './routes/MeetingPage'
+import { Invite } from './routes/Invite'
 
 function App() {
   const router = createBrowserRouter([
@@ -34,6 +35,10 @@ function App() {
     {
       path: "/meeting/:meetingId",
       element: <Protected><MeetingPage/></Protected>,
+    },
+    {
+      path: "/invite/:token",
+      element: <Invite/>
     }
   ])
 

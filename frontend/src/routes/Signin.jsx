@@ -6,6 +6,7 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
 import MainLogo from "../public/MeetUp-main-logo.png"
 import GoogleLogo from "../public/google-logo.webp"
+import axios from "axios"
 import "../styles/Authentication.css"
 
 export function Signin() {
@@ -32,7 +33,7 @@ export function Signin() {
         .then((user) => {
             console.log(user)
             if (inviteToken) {
-                handleInviteAcceptance(user, inviteToken)
+                handleInviteAcceptance(user.user, inviteToken)
             }
             else {
                 navigate('/home')
@@ -74,6 +75,8 @@ export function Signin() {
 
     async function handleInviteAcceptance(user, token) {
         try {
+            console.log("User: ", user)
+            console.log(user.uid)
             await axios.post('http://localhost:3000/api/accept-invite', {
                 userId: user.uid,
                 token: token

@@ -36,7 +36,7 @@ export function Signup() {
             };
     
             const response = await axios.post('http://localhost:3000/api/create-user', userData);
-            
+            console.log(response)
             navigate('/home'); 
         } catch (error) {
             alert('Error signing up. Please try again later.');
