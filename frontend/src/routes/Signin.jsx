@@ -18,12 +18,20 @@ export function Signin() {
     const navigate = useNavigate()
     const location = useLocation()
     const [inviteToken, setInviteToken] = useState('')
+    const [meetingTitle, setMeetingTitle] = useState('')
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const token = queryParams.get('token');
         if (token) {
-            setInviteToken(token);
+            setInviteToken(token)
+            const fetchMeetingTitle = async () => {
+                const response = await axios.get(`http://localhost:3000/api/get-meeting-details`, {
+                params: { token: token }
+                })
+                setMeetingTitle(response.data.meeting.title)
+            }
+            fetchMeetingTitle()
         }
     }, [location.search])
 
@@ -102,6 +110,12 @@ export function Signin() {
     return (
         <div className="auth-box">
             <img className="auth-logo" onClick={() => navigate("/")} src={MainLogo} alt="MeetUp logo"></img>
+            {inviteToken && (
+                <div className="invitation-text">
+                    <div className="invited-text">You have been invited to join</div>
+                    <div className="invited-meeting-title">{meetingTitle}</div>
+                </div>
+            )}
             <form action="">
                 <input onChange={(e) => {setEmail(e.target.value)}} type="email" placeholder="email@domain.com"/>
                 <div className="input-container">
@@ -110,7 +124,7 @@ export function Signin() {
                 </div>
                 <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
                 <span className="instruction-small">or continue with</span>
-                <button className="signin-google-button" onClick={(e) => {handleGoogle(e)}}>
+                <button className="signin-google-button" style={{ marginBottom: '25px' }} onClick={(e) => {handleGoogle(e)}}>
                     <img src={GoogleLogo} alt="Google logo" className="google-logo" />
                     Google
                     </button>

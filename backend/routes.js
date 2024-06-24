@@ -48,12 +48,19 @@ router.get('/get-meetings', async (req, res) => {
 })
 
 router.get('/get-meeting-details', async (req, res) => {
-    const { meetingId } = req.query
+    const { meetingId, token } = req.query
 
     try {
-        const meeting = await db.getMeetingDetails(meetingId)
+        let meeting;
+        if (meetingId) {
+            meeting = await db.getMeetingDetails(meetingId)
+        } else if (token) {
+            const idFromToken = await db.getMeetingId(token)
+            console.log("idFromToken (routes.js): ", idFromToken.meeting_id)
+            meeting = await db.getMeetingDetails(idFromToken.meeting_id)
+        }
         console.log("Meeting (routes.js): ", meeting)
-        res.status(200).json({ meeting: meeting})
+        res.status(200).json({ meeting })
     } catch (error) {
         console.error('Error fetching meeting details (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error '})

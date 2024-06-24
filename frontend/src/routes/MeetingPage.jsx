@@ -98,7 +98,7 @@ export function MeetingPage() {
         const fetchMeetingDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/get-meeting-details`, {
-                    params: { meetingId }
+                    params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
                 console.log("MeetingPage.jsx: ", response.data.meeting)

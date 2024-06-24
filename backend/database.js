@@ -170,9 +170,9 @@ const getMeetingId = async (token) => {
             WHERE token = $1
         `
         const values = [token]
-        console.log(token)
+        console.log("Token (getMeetingId): ", token)
         const result = await client.query(query, values)
-        console.log("database.js: ", result)
+        console.log("getMeetingId in database.js: ", result)
         return result.rows[0]
     } finally {
         client.release()

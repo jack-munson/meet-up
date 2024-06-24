@@ -13,8 +13,7 @@
 
 .auth-logo {
     width: 180px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     height: auto;
     cursor: pointer;
 }
@@ -95,7 +94,6 @@
     height: 40px;
     width: 350px;
     margin-top: 0px;
-    margin-bottom: 30px;
     background-color: #EEEEEE;
     font-family: 'Inter', sans-serif;
     color: #373737;
@@ -132,7 +130,6 @@
     height: 40px;
     width: 350px;
     margin-top: 10px;
-    margin-bottom: 20px;
     background-color: #0040B4;
     font-family: 'Inter', sans-serif;
     color: white;
@@ -239,4 +236,25 @@ input:focus, input.form-control:focus {
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
+}
+
+.invitation-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.invited-text {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
+}
+
+.invited-meeting-title {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: #373737;
 }
