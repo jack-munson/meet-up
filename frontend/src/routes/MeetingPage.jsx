@@ -11,16 +11,20 @@ import { DeleteMeeting } from "../components/DeleteMeeting"
 import { Calendar } from "../components/Calendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
+import { getAuth } from "firebase/auth"
 
 export function MeetingPage() {
     const { meetingId } = useParams()
     const [meetingDetails, setMeetingDetails] = useState('')
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false)
     const [isDeleteMeetingOpen, setIsDeleteMeetingOpen] = useState(false)
+    const [isEditingAvailability, setIsEditingAvailability] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
+    const auth = getAuth()
+    const user = auth.currentUser
     const navigate = useNavigate()
 
     const handleAddInviteClick = (e) => {
@@ -56,6 +60,10 @@ export function MeetingPage() {
 
     const isAccepted = (invite) => {
         return acceptedList.includes(invite)
+    }
+
+    const handleEditingAvailability = () => {
+        setIsEditingAvailability(!isEditingAvailability)
     }
 
     const handleAddNewInvite = async (e) => {
@@ -98,6 +106,29 @@ export function MeetingPage() {
 
         setIsDeleteMeetingOpen(false)
     }
+
+    const handleAvailabilityChange = async (day, time) => {
+        console.log("Day: ", day)
+        console.log("Time: ", time)
+
+        try {
+            const availability = {
+                userId: user.uid,
+                meetingId: meetingDetails.id, 
+                day: day, 
+                time: time
+            }
+
+            const response = await axios.post('http://localhost:3000/api/add-availability', availability)
+            console.log("MeetingPage.jsx (handleAvailabilityChange): ", response.data.availability)
+        } catch (error) {
+            console.error("Error adding availability (MeetingPage.jsx): ", error)
+        }
+    }
+
+    const tryingToEditAvailability = () => {
+        alert("Click 'Edit availability' to edit availability")
+    }
     
     useEffect(() => {
         const fetchMeetingDetails = async () => {
@@ -106,7 +137,6 @@ export function MeetingPage() {
                     params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
-                console.log("MeetingPage.jsx: ", response.data.meeting)
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
             }
@@ -157,6 +187,7 @@ export function MeetingPage() {
                         </div>
                     )}
                 </div>
+                <button className="edit-availability-button" onClick={handleEditingAvailability}>{isEditingAvailability ? "Save availability" : "Edit availability"}</button>
             </div>
             {isEditMeetingOpen && (
                 <div className="overlay">
@@ -168,7 +199,12 @@ export function MeetingPage() {
                     <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleCloseDeleteMeetingClick}/>
                 </div>
             )}
-            <Calendar meetingDetails={meetingDetails}></Calendar>
+            {!isEditingAvailability && (
+                <Calendar meetingDetails={meetingDetails} editAvailability={() => tryingToEditAvailability()}></Calendar> //display all users' availabilities, do not allow editing
+            )}
+            {isEditingAvailability &&(
+                <Calendar meetingDetails={meetingDetails} editAvailability={(date, time) => handleAvailabilityChange(date, time)} ></Calendar> //display only user availability, allow editing
+            )}
         </div>
     )
 }

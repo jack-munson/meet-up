@@ -1,8 +1,7 @@
 import "./Calendar.css"
 import { DayColumn } from "./DayColumn"
-import { format, addDays, startOfWeek, startOfDay } from 'date-fns';
 
-export function Calendar({ meetingDetails }) {
+export function Calendar({ meetingDetails, editAvailability }) {
     const { days = [], frequency, start_time, end_time } = meetingDetails
     const times = []
     const timeInterval = end_time - start_time
@@ -40,7 +39,12 @@ export function Calendar({ meetingDetails }) {
                 </div>
                 <div className="days-grid">
                     {days.map((day) => (
-                        <DayColumn day={formatDate(day)} timeInterval={timeInterval}></DayColumn>
+                        <DayColumn 
+                            day={formatDate(day)} 
+                            timeInterval={timeInterval} 
+                            startTime={start_time}
+                            handleSlotClick={(date, time) => editAvailability(date, time)}>
+                        </DayColumn>
                     ))}
                 </div>
             </div>

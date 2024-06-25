@@ -13,6 +13,7 @@
     margin-top: 150px;
     margin-bottom: 50px;
     width: 100vw;
+    gap: 10px;
 }
 
 .sub-header-first-row {
@@ -226,4 +227,41 @@
     position: absolute;
     right: 10px;
     color: #1E965C;
+}
+
+.edit-availability-button, .edit-availability-button:focus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 250px;
+    background-color: #1E965C;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    margin-left: 200px;
+    margin-bottom: 25px;
+    border: none !important;
+    outline: none !important;
+}
+
+.edit-availability-button:hover, .edit-availability-button:hover:focus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 3px solid #1E965C !important;
+    outline: none !important;
+    color: #1E965C;
+}
+
+.edit-availability-button:active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    height: 40px;
+    background-color: #1E965C;
+    font-family: 'Inter', sans-serif;
+    color: white;
 }

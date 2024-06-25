@@ -21,8 +21,9 @@
 
 .time-slot-15 {
     height: 50%;
+    transition: background-color 0.1s;
 }
 
 .time-slot-15:hover {
-    background-color: #373737;
+    background-color: #E0E0E0;
 }
