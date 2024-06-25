@@ -194,6 +194,77 @@ const deleteMeeting = async (meetingId) => {
     }
 }
 
+const addAvailability = async (userId, meetingId, day, time) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            UPDATE meetings
+            SET availability = availability || jsonb_build_array($1::jsonb)
+            WHERE id = $2
+            RETURNING availability
+        `
+        const values = [JSON.stringify({ userId, day, time }), meetingId]
+        console.log("values (addAvailability): ", values)
+        const result = await client.query(query, values)
+        console.log("Availability (database.js): ", result.rows[0].availability)
+
+        return result.rows[0].availability
+    } finally {
+        client.release()
+    }
+}
+
+const removeAvailability = async (userId, meetingId, day, time) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            UPDATE meetings
+            SET availability = (
+                SELECT jsonb_agg(elem)
+                FROM jsonb_array_elements(availability) AS elem
+                WHERE NOT (
+                    elem->>'userId' = $1 AND elem->>'day' = $2 AND elem->>'time' = $3
+                )
+            )
+            WHERE id = $4
+            RETURNING availability
+        `
+        const values = [userId, day, time, meetingId]
+        const result = await client.query(query, values)
+
+        return result.rows[0]?.availability
+    } catch (error) {
+        console.error('Error removing availability: ', error)
+        throw error
+    } finally {
+        client.release()
+    }
+}
+
+const getAvailability = async (userId, meetingId, day, time) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            SELECT availability FROM meetings 
+            WHERE id = $1
+        `
+        const values = [meetingId]
+        const { rows } = await client.query(query, values)
+        client.release()
+
+        const meeting = rows[0]
+        if (!meeting || !meeting.availability) return false
+        const availability = meeting.availability
+
+        return availability.some(entry => entry.userId === userId && entry.day === day && entry.time === time)
+    } catch (error) {
+        throw error
+    }
+}
+
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting
+    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting, addAvailability, removeAvailability, getAvailability
 };

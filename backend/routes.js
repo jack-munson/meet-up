@@ -153,4 +153,25 @@ router.delete('/delete-meeting', async (req, res) => {
     }
 })
 
+router.post('/add-availability', async (req, res) => {
+    const {userId, meetingId, day, time} = req.body
+
+    try {
+        const existingAvailability = await db.getAvailability(userId, meetingId, day, time)
+        console.log("existingAvailability: ", existingAvailability)
+        if (existingAvailability) {
+            const result = await db.removeAvailability(userId, meetingId, day, time)
+            
+            res.status(200).json({ message: "Successfully removed availability", availability: result })
+        }
+        else {
+            const result = await db.addAvailability(userId, meetingId, day, time)
+
+            res.status(200).json({ message: 'Successfully added availability', availability: result})
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
 module.exports = router
