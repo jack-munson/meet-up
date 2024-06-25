@@ -19,6 +19,7 @@
 .sub-header-first-row {
     display: flex;
     flex-direction: row;
+    height: 50px;
     align-items: center;
     justify-content: space-between;
 }
@@ -28,6 +29,7 @@
     font-weight: 500;
     color: #373737;
     margin-left: 200px;
+    padding: 0px !important;
 }
 
 .meeting-sub-header-icons {
@@ -95,6 +97,7 @@
 }
 
 .invite {
+    height: 41px;
     position: relative;
     margin-right: -8px;
 }
@@ -107,19 +110,18 @@
 
 .invite-icon {
     height: 25px;
-    margin-top: 6px;
     width: auto;
     background-color: #D9D9D9;
     color: white;
     padding: 5px;
     border: 3px solid white;
     border-radius: 50%;
+
     cursor: pointer;
 }
 
 .invite-icon-accepted {
     height: 25px;
-    margin-top: 6px;
     width: auto;
     background-color: #1E965C;
     color: white;

@@ -153,7 +153,7 @@ router.delete('/delete-meeting', async (req, res) => {
     }
 })
 
-router.post('/add-availability', async (req, res) => {
+router.post('/edit-availability', async (req, res) => {
     const {userId, meetingId, day, time} = req.body
 
     try {

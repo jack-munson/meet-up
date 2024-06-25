@@ -200,7 +200,7 @@ const addAvailability = async (userId, meetingId, day, time) => {
     try {
         const query = `
             UPDATE meetings
-            SET availability = availability || jsonb_build_array($1::jsonb)
+            SET availability = COALESCE(availability, '[]'::jsonb) || jsonb_build_array($1::jsonb)
             WHERE id = $2
             RETURNING availability
         `

@@ -119,7 +119,7 @@ export function MeetingPage() {
                 time: time
             }
 
-            const response = await axios.post('http://localhost:3000/api/add-availability', availability)
+            const response = await axios.post('http://localhost:3000/api/edit-availability', availability)
             console.log("MeetingPage.jsx (handleAvailabilityChange): ", response.data.availability)
         } catch (error) {
             console.error("Error adding availability (MeetingPage.jsx): ", error)
