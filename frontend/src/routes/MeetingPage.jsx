@@ -21,6 +21,7 @@ export function MeetingPage() {
     const [isEditingAvailability, setIsEditingAvailability] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
+    const [availability, setAvailability] = useState([])
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
@@ -112,15 +113,16 @@ export function MeetingPage() {
         console.log("Time: ", time)
 
         try {
-            const availability = {
+            const availabilityData = {
                 userId: user.uid,
                 meetingId: meetingDetails.id, 
                 day: day, 
                 time: time
             }
 
-            const response = await axios.post('http://localhost:3000/api/edit-availability', availability)
+            const response = await axios.post('http://localhost:3000/api/edit-availability', availabilityData)
             console.log("MeetingPage.jsx (handleAvailabilityChange): ", response.data.availability)
+            setAvailability(response.data.availability)
         } catch (error) {
             console.error("Error adding availability (MeetingPage.jsx): ", error)
         }
@@ -137,6 +139,7 @@ export function MeetingPage() {
                     params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
+                setAvailability(response.data.meeting.availability || [])
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
             }
@@ -200,10 +203,21 @@ export function MeetingPage() {
                 </div>
             )}
             {!isEditingAvailability && (
-                <Calendar meetingDetails={meetingDetails} editAvailability={() => tryingToEditAvailability()}></Calendar> //display all users' availabilities, do not allow editing
+                <Calendar 
+                    meetingDetails={meetingDetails} 
+                    editAvailability={() => tryingToEditAvailability()}
+                    availability={{display: 'all', userId: user.uid, data: availability}}
+                    display={'all'}
+                    maxCount={acceptedList.length / 2}>
+                </Calendar>
             )}
             {isEditingAvailability &&(
-                <Calendar meetingDetails={meetingDetails} editAvailability={(date, time) => handleAvailabilityChange(date, time)} ></Calendar> //display only user availability, allow editing
+                <Calendar 
+                    meetingDetails={meetingDetails} 
+                    editAvailability={(date, time) => handleAvailabilityChange(date, time)}
+                    availability={{display: 'user', userId: user.uid, data: availability}}
+                    maxCount={acceptedList.length / 2}>
+                </Calendar> 
             )}
         </div>
     )
