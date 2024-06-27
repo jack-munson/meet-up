@@ -16,14 +16,14 @@
     flex-direction: column;
     align-items: center;
     height: 80px;
-    width: 200px;
+    width: 250px;
     border-top: 1px solid #828282;
 }
 
 .time-cell-30-top {
     display: flex;
     flex-direction: column;
-    height: 50%;
+    height: 40px;
     border-bottom: 1px dashed #E0E0E0;
     position: relative;
 }
@@ -31,12 +31,19 @@
 .time-cell-30-bottom {
     display: flex;
     flex-direction: column;
-    height: 50%;
+    height: 40px;
 }
 
 .time-cell-15 {
-    width: 200px;
-    height: 50%;
+    width: 250px;
+    height: 20px;
+    box-sizing: border-box;
+}
+
+.time-cell-15.selected {
+    width: 250px;
+    height: 20px;
+    background-color: red !important;
     box-sizing: border-box;
 }
 
