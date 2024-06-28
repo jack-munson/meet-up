@@ -1,41 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 .front-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100vw;
 }
 
 .page-content {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100vw;
-    height: 100vh;
-    padding-bottom: 225px;
+    flex-direction: column;
+    width: 68vw;
 }
 
 .welcome-message {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    max-height: 600px;
-    margin-top: 100px;
-    margin-left: 200px; /* To align with heading content */
-    font-family: "Lexend", sans-serif;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .welcome-text-main {
-    font-size: 75px;
+    font-size: 4.5rem; /* Responsive text size */
     font-weight: bold;
-    margin-top: -30px;
-    margin-bottom: -20px;
     color: #373737;
 }
 
 .welcome-text-sub {
-    font-size: 20pt;
-    margin-top: 10px;
-    color: #373737;
+    font-size: 2.2rem; /* Responsive text size */
+    font-weight: 500;
+    color: #1E965C;
+    margin-top: -20px;
+    margin-bottom: 50px;
 }
 
 .welcome-message-text-steps {
@@ -54,7 +53,7 @@
 
 .step-number {
     color: #0040B4;
-    font-size: 36px;
+    font-size: 2rem; /* Responsive text size */
 }
 
 .step-messages {
@@ -65,10 +64,63 @@
 }
 
 .step-message {
-    font-size: 25pt;
+    font-size: 1.5rem; /* Responsive text size */
     margin-left: 20px;
     margin-bottom: -15px;
 }
+
+/* Media queries for different screen sizes */
+@media (max-width: 1200px) {
+    .welcome-text-main {
+        font-size: 3.5rem;
+    }
+    .welcome-text-sub {
+        font-size: 1.8rem;
+    }
+    .step-number {
+        font-size: 1.8rem;
+    }
+    .step-message {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-text-main {
+        font-size: 3rem;
+    }
+    .welcome-text-sub {
+        font-size: 1.5rem;
+    }
+    .step-number {
+        font-size: 1.5rem;
+    }
+    .step-message {
+        font-size: 1.2rem;
+    }
+    .page-content {
+        padding-bottom: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-text-main {
+        font-size: 2.5rem;
+    }
+    .welcome-text-sub {
+        font-size: 1.6rem;
+    }
+    .step-number {
+        font-size: 1.2rem;
+    }
+    .step-message {
+        font-size: 1rem;
+    }
+    .page-content {
+        padding-bottom: 100px;
+    }
+}
+
 
 /* Important for making sure everything is centered */
 #root {

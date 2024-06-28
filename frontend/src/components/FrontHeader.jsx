@@ -1,5 +1,5 @@
 import "./FrontHeader.css"
-import MainLogo from "../public/MeetUp-main-logo-white.png"
+import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 

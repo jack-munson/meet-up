@@ -9,9 +9,8 @@ export function Invite() {
     useEffect(() => {
         async function validateToken() {
             try {
-                console.log(token)
                 const response = await axios.get(`http://localhost:3000/api/invite/${token}`);
-                console.log(response)
+                
                 if (response.data.valid) {
                     navigate(`/signin?token=${token}`);
                 }

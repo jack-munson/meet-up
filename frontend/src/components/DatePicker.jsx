@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import {Calendar} from "react-multi-date-picker"
+import { Calendar } from "react-multi-date-picker"
 import "./DatePicker.css"
 
 export function DatePicker({ handleDateChange, dates}) {

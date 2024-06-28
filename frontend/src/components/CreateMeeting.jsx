@@ -42,7 +42,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     }
 
     const handleDateChange = (newValue) => {
-        setDates(newValue.map(date => date.toDate().getTime())); // Convert dates to timestamps
+        setDates(newValue.map(date => date.toDate().getTime()))
     }
 
     const handleCreate = async (e) => {
