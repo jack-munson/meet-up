@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: column;
     width: 68vw;
+    padding-bottom: 60px;
 }
 
 .welcome-message {
@@ -45,28 +46,50 @@
     font-family: "Lexend", sans-serif;
 }
 
-.message-step {
+.main-content {
     display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.step-number {
-    color: #0040B4;
-    font-size: 2rem; /* Responsive text size */
-}
-
-.step-messages {
+.how-to {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    gap: 30px;
 }
 
-.step-message {
-    font-size: 1.5rem; /* Responsive text size */
-    margin-left: 20px;
-    margin-bottom: -15px;
+.how-to-heading {
+    font-size: 2.5rem; /* Responsive text size */
+    font-weight: 600;
+    color: #373737;
+}
+
+.how-to-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.step {
+    display: flex;
+    flex-direction: row;
+    background-color: #1E965C;
+    border-radius: 20px;
+    color: white;
+    align-items: center;
+    padding: 10px;
+}
+
+.step-number {
+    font-size: 45px;
+    font-weight: 500;
+    margin-right: 15px;
+}
+
+.step-text {
+    font-size: 30px;
+    font-weight: 500;
 }
 
 /* Media queries for different screen sizes */

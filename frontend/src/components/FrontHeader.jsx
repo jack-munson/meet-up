@@ -3,7 +3,7 @@ import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 
-export function FrontHeader(){
+export function FrontHeader() {
     const auth = getAuth()
     const navigate = useNavigate()
 
