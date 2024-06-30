@@ -67,6 +67,14 @@ export function MeetingPage() {
         setIsEditingAvailability(!isEditingAvailability)
     }
 
+    const flashEditButton = () => {
+        const button = document.querySelector('.edit-availability-button');
+        button.classList.add('flash');
+        setTimeout(() => {
+            button.classList.remove('flash');
+        }, 1000);
+    }
+
     const handleAddNewInvite = async (e) => {
         e.stopPropagation()
 
@@ -127,10 +135,6 @@ export function MeetingPage() {
             console.error("Error adding availability (MeetingPage.jsx): ", error)
         }
     }
-
-    const tryingToEditAvailability = () => {
-        alert("Click 'Edit availability' to edit availability")
-    }
     
     useEffect(() => {
         const fetchMeetingDetails = async () => {
@@ -154,9 +158,9 @@ export function MeetingPage() {
             <div className="meeting-sub-header">
                 <div className="sub-header-first-row">
                     <div className="meeting-sub-header-text">{meetingDetails.title}</div>
-                        <div className="meeting-sub-header-icons">
-                            <img className="meeting-edit-icon" onClick={handleEditMeetingClick} src={EditIcon} alt="Edit"/>
-                            <img className="meeting-delete-icon" onClick={handleDeleteMeetingClick} src={DeleteIcon} alt="Delete"/>
+                        <div className="meeting-sub-header-buttons">
+                            <button className="meeting-edit-button" onClick={handleEditMeetingClick} alt="Edit">Edit meeting</button>
+                            <button className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete">Delete meeting</button>
                         </div>
                     </div>
                 <div className="meeting-info-invites">
@@ -205,10 +209,11 @@ export function MeetingPage() {
             {!isEditingAvailability && (
                 <Calendar 
                     meetingDetails={meetingDetails} 
-                    editAvailability={() => tryingToEditAvailability()}
+                    editAvailability={flashEditButton}
                     availability={{display: 'all', userId: user.uid, data: availability}}
                     display={'all'}
-                    maxCount={acceptedList.length / 2}>
+                    maxCount={acceptedList.length / 2}
+                    flashEditButton={flashEditButton}>
                 </Calendar>
             )}
             {isEditingAvailability &&(

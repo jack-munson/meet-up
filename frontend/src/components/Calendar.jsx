@@ -1,7 +1,7 @@
 import "./Calendar.css"
 import { DayColumn } from "./DayColumn"
 
-export function Calendar({ meetingDetails, editAvailability, availability, maxCount }) {
+export function Calendar({ meetingDetails, editAvailability, availability, maxCount, flashEditButton }) {
     const { days = [], frequency, start_time, end_time } = meetingDetails
     const times = []
     const timeInterval = end_time - start_time
@@ -45,7 +45,8 @@ export function Calendar({ meetingDetails, editAvailability, availability, maxCo
                             startTime={start_time}
                             handleSlotClick={(date, time) => editAvailability(date, time)}
                             availability={availability}
-                            maxCount={maxCount}>
+                            maxCount={maxCount}
+                            flashEditButton={flashEditButton}>
                         </DayColumn>
                     ))}
                 </div>
