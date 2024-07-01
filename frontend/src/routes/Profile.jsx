@@ -1,7 +1,10 @@
+import AvailabilityCalendar from "../components/AvailabilityCalendar"
+
 export function Profile() {
     return (
-        <h1>
-            This is the profile page
-        </h1>
-    )
+        <AvailabilityCalendar 
+            days={["SUN", "MON", "THU", "FRI", "SAT"]}
+            times={[9, 10, 11, 12, 13, 14, 15, 16, 17]}
+        />
+    );
 }
