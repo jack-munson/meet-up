@@ -1,11 +1,23 @@
+.availability-viewer {
+    display: flex;
+}
+
+.time-axis {
+    display: grid;
+    grid-template-rows: repeat(auto-fill); /* Adjust height of hour labels */
+    padding-right: 15px;
+    padding-top: 25px;
+    padding-bottom: 13px;
+    text-align: right;
+}
+
+.hour-label {
+    font-size: 15px;
+}
+
 .calendar {
     font-family: Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    overflow: hidden;
     width: 1050px;
-    margin: 0 auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -13,7 +25,6 @@
   }
   
   .calendar-header {
-    background-color: #f0f0f0;
     padding: 10px;
     text-align: center;
   }
@@ -21,36 +32,42 @@
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    border-top: 1px solid #ccc;
   }
   
   .calendar-day {
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    margin-right: -2px;
   }
   
   .calendar-day-label {
-    background-color: #f0f0f0;
     padding: 5px;
     font-weight: bold;
     text-align: center;
+    color: #373737;
+  }
+
+  .day-slots {
+    border: 2px solid #D9D9D9;
   }
   
   .calendar-time-slot {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #D9D9D9;
+    height: 15px !important;
     padding: 10px;
+    background-color: #FFE0E0;
+    transition: background-color 0.1s ease-out;
     text-align: center;
     cursor: pointer;
   }
   
   .calendar-time-slot.selected, .calendar-time-slot.selected:hover, .calendar-time-slot.temp-selected, .calendar-time-slot.temp-selected:hover {
-    background-color: #a3d3a7; /* Light green color for selected slots */
+    background-color: #69C79A; /* Light green color for selected slots */
   }
   
   .calendar-time-slot.deselecting, .calendar-time-slot.deselecting:hover {
-    background-color: white; /* Light red color for slots being deselected */
+    background-color: #FFE0E0; /* Light red color for slots being deselected */
   }
   
   .calendar-time-slot:hover {
-    background-color: #f5f5f5; /* Light gray on hover */
+    outline: 2px dashed #828282; /* Light gray on hover */
+    outline-offset: -2px;
   }

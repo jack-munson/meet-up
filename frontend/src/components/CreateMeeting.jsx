@@ -1,4 +1,3 @@
-import EditIcon from "../public/MeetUp-edit-icon.png"
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from "react"
 import axios from "axios"
@@ -45,10 +44,22 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         setDates(newValue.map(date => date.toDate().getTime()))
     }
 
+    const formatDate = (timestamp) => {
+        const date = new Date(parseInt(timestamp));
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${month}/${day}`;
+      }
+
     const handleCreate = async (e) => {
         e.preventDefault()
 
-        const selectedDays = frequency === 'one-time' ? dates : days
+        const selectedDays = []
+        if (frequency === 'one-time') {
+            dates.forEach(date => selectedDays.push(formatDate(date)))
+        } else {
+            selectedDays.push(...days)
+        }
 
         try {
             const meetingData = {
@@ -116,13 +127,13 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                         <DatePicker handleDateChange={handleDateChange} dates={dates}/>
                     ) : (
                         <div className="days-of-the-week">
-                            <div className={`day ${days.includes("sunday") ? "selected" : ""}`} onClick={() => toggleDay("sunday")}>S</div>
-                            <div className={`day ${days.includes("monday") ? "selected" : ""}`} onClick={() => toggleDay("monday")}>M</div>
-                            <div className={`day ${days.includes("tuesday") ? "selected" : ""}`} onClick={() => toggleDay("tuesday")}>T</div>
-                            <div className={`day ${days.includes("wednesday") ? "selected" : ""}`} onClick={() => toggleDay("wednesday")}>W</div>
-                            <div className={`day ${days.includes("thursday") ? "selected" : ""}`} onClick={() => toggleDay("thursday")}>T</div>
-                            <div className={`day ${days.includes("friday") ? "selected" : ""}`} onClick={() => toggleDay("friday")}>F</div>
-                            <div className={`day ${days.includes("saturday") ? "selected" : ""}`} onClick={() => toggleDay("saturday")}>S</div>
+                            <div className={`day ${days.includes("SUN") ? "selected" : ""}`} onClick={() => toggleDay("SUN")}>S</div>
+                            <div className={`day ${days.includes("MON") ? "selected" : ""}`} onClick={() => toggleDay("MON")}>M</div>
+                            <div className={`day ${days.includes("TUE") ? "selected" : ""}`} onClick={() => toggleDay("TUE")}>T</div>
+                            <div className={`day ${days.includes("WED") ? "selected" : ""}`} onClick={() => toggleDay("WED")}>W</div>
+                            <div className={`day ${days.includes("THU") ? "selected" : ""}`} onClick={() => toggleDay("THU")}>T</div>
+                            <div className={`day ${days.includes("FRI") ? "selected" : ""}`} onClick={() => toggleDay("FRI")}>F</div>
+                            <div className={`day ${days.includes("SAT") ? "selected" : ""}`} onClick={() => toggleDay("SAT")}>S</div>
                         </div>
                     )}
                 </div>
@@ -157,63 +168,3 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         </div>
     )
 }
-
-{/* <div className={`create-meeting-box ${customClassName}`}>
-    <div className={`meeting-box-header ${showTitleError ? 'error' : ''}`}>
-        <input 
-            onChange={(e) => {setMeetingTitle(e.target.value); setShowTitleError(!e.target.value.trim())}}
-            className="meeting-title-input" 
-            type="text" 
-            maxLength="55"
-            placeholder="Meeting Title"
-        />
-        {showTitleError && (
-            <span className="error-tooltip">Meeting title is required</span>
-        )}
-        <img className="edit-icon" src={EditIcon} alt="Edit"/>
-    </div>
-    <form action="" className="meeting-form">
-        <div className="meeting-description-text">What is your meeting about?</div>
-        <textarea onChange={(e) => {setMeetingDescription(e.target.value)}} className="meeting-description-input" type="text" placeholder="In this meeting we'll be discussing..."/>
-        <div className="meeting-description-text">What times would you like to meet between?</div>
-        <div className="meeting-times">
-            <Select 
-                onChange={(e) => {setStartTime(e)}} 
-                className="meeting-time-input" 
-                classNamePrefix= "react-select" 
-                options={times} 
-                isSearchable={false} 
-                value={startTime}
-                menuPlacement="top">
-            </Select>
-            <div>to</div>
-            <Select 
-                onChange={(e) => {setEndTime(e)}} 
-                className="meeting-time-input" 
-                classNamePrefix= "react-select" 
-                options={times} 
-                isSearchable={false} 
-                value={endTime}
-                menuPlacement="top">
-            </Select>
-        </div>
-        <div className="meeting-description-text">Who would you like to invite?</div>
-        <div className="invites">
-            {invites.map((email, index) => (
-                <input
-                    key={index}
-                    className="invite-input"
-                    type="text"
-                    placeholder="email@domain.com"
-                    value={email}
-                    onChange={(e) => handleNewInvite(index, e.target.value)}
-                />
-            ))}
-        </div>
-        <div className="meeting-recurring">
-            <input onChange={handleCheckboxChange} recurring={recurring} className="recurring-checkbox" type="checkbox"/>
-            <div className="meeting-description-text" style={{ marginTop: '0px', marginLeft: '0px' }}>This meeting is recurring</div>
-        </div>
-        <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
-    </form>
-</div> */}

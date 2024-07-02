@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import EditIcon from "../public/MeetUp-edit-icon-blue.svg"
-import DeleteIcon from "../public/MeetUp-delete-icon-blue.svg"
 import { HomeHeader } from "../components/HomeHeader"
 import "../styles/MeetingPage.css"
 import { EditMeeting } from "../components/EditMeeting"
 import { DeleteMeeting } from "../components/DeleteMeeting"
-import { Calendar } from "../components/Calendar"
+import { AvailabilityCalendar } from "../components/AvailabilityCalendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
 import { getAuth } from "firebase/auth"
@@ -21,7 +19,6 @@ export function MeetingPage() {
     const [isEditingAvailability, setIsEditingAvailability] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
-    const [availability, setAvailability] = useState([])
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
@@ -143,6 +140,7 @@ export function MeetingPage() {
                     params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
+                console.log(response.data.meeting)
                 setAvailability(response.data.meeting.availability || [])
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
@@ -207,22 +205,26 @@ export function MeetingPage() {
                 </div>
             )}
             {!isEditingAvailability && (
-                <Calendar 
-                    meetingDetails={meetingDetails} 
-                    editAvailability={flashEditButton}
-                    availability={{display: 'all', userId: user.uid, data: availability}}
+                <AvailabilityCalendar 
+                    days={meetingDetails.days || []}
+                    frequency={meetingDetails.frequency}
                     display={'all'}
-                    maxCount={acceptedList.length / 2}
+                    availability={meetingDetails.availability || []}
+                    startTime={meetingDetails.start_time}
+                    endTime={meetingDetails.end_time}
                     flashEditButton={flashEditButton}>
-                </Calendar>
+                </AvailabilityCalendar>
             )}
             {isEditingAvailability &&(
-                <Calendar 
-                    meetingDetails={meetingDetails} 
-                    editAvailability={(date, time) => handleAvailabilityChange(date, time)}
-                    availability={{display: 'user', userId: user.uid, data: availability}}
-                    maxCount={acceptedList.length / 2}>
-                </Calendar> 
+                <AvailabilityCalendar 
+                    days={meetingDetails.days || []}
+                    frequency={meetingDetails.frequency}
+                    display={'user'}
+                    availability={meetingDetails.availability || []}
+                    startTime={meetingDetails.start_time}
+                    endTime={meetingDetails.end_time}
+                    >
+                </AvailabilityCalendar> 
             )}
         </div>
     )
