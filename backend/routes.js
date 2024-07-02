@@ -154,22 +154,27 @@ router.delete('/delete-meeting', async (req, res) => {
 })
 
 router.post('/edit-availability', async (req, res) => {
-    const {userId, meetingId, day, time} = req.body
-
+    const {meetingId, userId, newAvailability} = req.body
+    console.log("newAvailability (routes.js): ", newAvailability)
     try {
-        const existingAvailability = await db.getAvailability(userId, meetingId, day, time)
-        console.log("existingAvailability: ", existingAvailability)
-        if (existingAvailability) {
-            const result = await db.removeAvailability(userId, meetingId, day, time)
+        // const existingAvailability = await db.getAvailability(userId, meetingId, day, time)
+        // console.log("existingAvailability: ", existingAvailability)
+        // if (existingAvailability) {
+        //     const result = await db.removeAvailability(userId, meetingId, day, time)
             
-            res.status(200).json({ message: "Successfully removed availability", availability: result })
-        }
-        else {
-            const result = await db.addAvailability(userId, meetingId, day, time)
+        //     res.status(200).json({ message: "Successfully removed availability", availability: result })
+        // }
+        // else {
+        //     const result = await db.addAvailability(userId, meetingId, day, time)
 
-            res.status(200).json({ message: 'Successfully added availability', availability: result})
-        }
+        //     res.status(200).json({ message: 'Successfully added availability', availability: result})
+        // }
+
+        const result = await db.updateAvailability(meetingId, userId, newAvailability)
+        console.log("result (routes.js): ", result)
+        res.status(200).json({ message: "Successfully removed availability", updatedAvailability: result })
     } catch (error) {
+        console.error("Error (routes.js): ", error)
         res.status(500).json({ error: 'Internal server error'})
     }
 })
