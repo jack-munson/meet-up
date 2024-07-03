@@ -1,0 +1,26 @@
+.availability-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.availability-header {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.respondent {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.available {
+    color: green;
+}
+
+.unavailable {
+    text-decoration: line-through;
+    color: #828282;
+    font-style: italic;
+}

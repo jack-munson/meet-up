@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AvailabilityViewer } from './AvailabilityViewer';
 import './AvailabilityCalendar.css';
 
 export function AvailabilityCalendar({ userId, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, accepted, flashEditButton }) {
@@ -8,14 +9,18 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
     const [currentTempSlots, setCurrentTempSlots] = useState(new Set());
     const [isDeselecting, setIsDeselecting] = useState(false);
     const [groupAvailability, setGroupAvailability] = useState({});
+    const [available, setAvailable] = useState([])
 
     useEffect(() => {
         console.log("Availability (AvailabilityCalendar.jsx): ", availability)
         if (display === 'all') {
             let availableSlots = {}
-            for (const [key, value] of Object.entries(availability)) {
+            for (const [userId, value] of Object.entries(availability)) {
                 for (const slot of value) {
-                    availableSlots[slot] = (availableSlots[slot] || 0) + 1
+                    if (!availableSlots[slot]) {
+                        availableSlots[slot] = []
+                    }
+                    availableSlots[slot].push(userId)
                 }
             }
             console.log(availableSlots)
@@ -57,9 +62,12 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
     }
 
     const handleMouseEnter = (day, time) => {
+        const slot = `${day}-${time}`;
+        
+        setAvailable(groupAvailability[slot] || [])
+
         if (!isMouseDown) return;
 
-        const slot = `${day}-${time}`;
         if (!startSlot) return;
 
         // Get indexes of start and current slots
@@ -124,7 +132,7 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
 
             let backgroundColor = ''
             if (display === 'all') {
-                const count = groupAvailability[slot]
+                const count = (groupAvailability[slot] && groupAvailability[slot].length) || 0
                 if (count) {
                     backgroundColor = `rgba(30, 150, 92, ${Math.min(count / ((accepted.length / 2) + 1), 1)})`
                 } else {
@@ -156,7 +164,7 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
     };
 
     return (
-        <div className='availability-viewer'>
+        <div className='availability-info'>
             <div className="time-axis">
                 {times.map((time, index) => (
                     <div key={index} className="hour-label">
@@ -164,11 +172,16 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
                     </div>
                 ))}
             </div>
-        <div className="calendar">
-            <div className="calendar-grid">
-                {renderDays()}
+            <div className="calendar">
+                <div className="calendar-grid">
+                    {renderDays()}
+                </div>
             </div>
+            <AvailabilityViewer
+                userId={userId}
+                responded={accepted}
+                available={available}
+            />
         </div>
-    </div>
-  );
+    );
 }
