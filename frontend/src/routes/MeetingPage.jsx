@@ -19,6 +19,7 @@ export function MeetingPage() {
     const [isEditingAvailability, setIsEditingAvailability] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
+    const [selectedSlots, setSelectedSlots] = useState(new Set())
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
@@ -61,7 +62,14 @@ export function MeetingPage() {
     }
 
     const handleEditingAvailability = () => {
+        if (isEditingAvailability) {
+            handleSaveAvailability(selectedSlots)
+        }
         setIsEditingAvailability(!isEditingAvailability)
+    }
+
+    const updateSelectedSlots = (slots) => {
+        setSelectedSlots(slots);
     }
 
     const flashEditButton = () => {
@@ -113,21 +121,22 @@ export function MeetingPage() {
         setIsDeleteMeetingOpen(false)
     }
 
-    const handleAvailabilityChange = async (day, time) => {
-        console.log("Day: ", day)
-        console.log("Time: ", time)
+    const handleSaveAvailability = async (slots) => {
+        console.log("newAvailability (start of handleSaveAvailability): ", Array.from(slots))
 
         try {
             const availabilityData = {
-                userId: user.uid,
                 meetingId: meetingDetails.id, 
-                day: day, 
-                time: time
+                userId: user.uid,
+                newAvailability: Array.from(slots)
             }
 
             const response = await axios.post('http://localhost:3000/api/edit-availability', availabilityData)
-            console.log("MeetingPage.jsx (handleAvailabilityChange): ", response.data.availability)
-            setAvailability(response.data.availability)
+            console.log("MeetingPage.jsx (handleSaveAvailability): ", response.data.updatedAvailability)
+            setMeetingDetails(prevState => ({
+                ...prevState,
+                availability: response.data.updatedAvailability
+            }))
         } catch (error) {
             console.error("Error adding availability (MeetingPage.jsx): ", error)
         }
@@ -141,7 +150,6 @@ export function MeetingPage() {
                 })
                 setMeetingDetails(response.data.meeting)
                 console.log(response.data.meeting)
-                setAvailability(response.data.meeting.availability || [])
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
             }
@@ -206,23 +214,29 @@ export function MeetingPage() {
             )}
             {!isEditingAvailability && (
                 <AvailabilityCalendar 
+                    userId={user.uid}
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'all'}
                     availability={meetingDetails.availability || []}
+                    updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
+                    accepted={meetingDetails.accepted || []}
                     flashEditButton={flashEditButton}>
                 </AvailabilityCalendar>
             )}
             {isEditingAvailability &&(
                 <AvailabilityCalendar 
+                    userId={user.uid}
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'user'}
                     availability={meetingDetails.availability || []}
+                    updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
+                    accepted={meetingDetails.accepted || []}
                     >
                 </AvailabilityCalendar> 
             )}

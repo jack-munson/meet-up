@@ -60,7 +60,7 @@
   }
   
   .calendar-time-slot.selected, .calendar-time-slot.selected:hover, .calendar-time-slot.temp-selected, .calendar-time-slot.temp-selected:hover {
-    background-color: #69C79A; /* Light green color for selected slots */
+    background-color: #6ac398; /* Light green color for selected slots */
   }
   
   .calendar-time-slot.deselecting, .calendar-time-slot.deselecting:hover {
@@ -68,6 +68,6 @@
   }
   
   .calendar-time-slot:hover {
-    outline: 2px dashed #828282; /* Light gray on hover */
+    outline: 2px dashed #373737; /* Light gray on hover */
     outline-offset: -2px;
   }
