@@ -10,7 +10,7 @@ export function AvailabilityViewer({ userId, responded, available }) {
 
     return (
         <div className="availability-viewer">
-            <div className="availability-header">Available:</div>
+            <div className="availability-header">Available ({availableSet.size}/{respondedSet.size + 1}):</div>
             <div className="availability-list">
                 {[...respondedSet].map(userId => (
                     <div
