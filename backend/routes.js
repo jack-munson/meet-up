@@ -59,8 +59,8 @@ router.get('/get-meeting-details', async (req, res) => {
             console.log("idFromToken (routes.js): ", idFromToken.meeting_id)
             meeting = await db.getMeetingDetails(idFromToken.meeting_id)
         }
-        console.log("Meeting (routes.js): ", meeting)
-        res.status(200).json({ meeting })
+        console.log("Meeting (/get-meeting-details, routes.js): ", meeting)
+        res.status(200).json({ meeting: meeting })
     } catch (error) {
         console.error('Error fetching meeting details (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error '})
@@ -157,19 +157,6 @@ router.post('/edit-availability', async (req, res) => {
     const {meetingId, userId, newAvailability} = req.body
     console.log("newAvailability (routes.js): ", newAvailability)
     try {
-        // const existingAvailability = await db.getAvailability(userId, meetingId, day, time)
-        // console.log("existingAvailability: ", existingAvailability)
-        // if (existingAvailability) {
-        //     const result = await db.removeAvailability(userId, meetingId, day, time)
-            
-        //     res.status(200).json({ message: "Successfully removed availability", availability: result })
-        // }
-        // else {
-        //     const result = await db.addAvailability(userId, meetingId, day, time)
-
-        //     res.status(200).json({ message: 'Successfully added availability', availability: result})
-        // }
-
         const result = await db.updateAvailability(meetingId, userId, newAvailability)
         console.log("result (routes.js): ", result)
         res.status(200).json({ message: "Successfully removed availability", updatedAvailability: result })
