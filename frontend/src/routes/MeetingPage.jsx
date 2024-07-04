@@ -16,6 +16,7 @@ export function MeetingPage() {
     const [meetingDetails, setMeetingDetails] = useState('')
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false)
     const [isDeleteMeetingOpen, setIsDeleteMeetingOpen] = useState(false)
+    const [isScheduleMeetingOpen, setIsScheduleMeetingOpen] = useState(false)
     const [isEditingAvailability, setIsEditingAvailability] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
@@ -26,6 +27,10 @@ export function MeetingPage() {
     const user = auth.currentUser
     const navigate = useNavigate()
 
+    const isAdmin = (userId) => {
+        return meetingDetails.user_id === userId
+    }
+
     const handleAddInviteClick = (e) => {
         e.stopPropagation()
         setShowInviteModal(!showInviteModal)
@@ -35,33 +40,25 @@ export function MeetingPage() {
         setNewInvite(e.target.value)
     }
 
+    const isAccepted = (invite) => {
+        return acceptedList.includes(invite)
+    }
+
     const handleInputClick = (e) => {
         if (e.target.tagName === 'INPUT') {
             e.stopPropagation()
         }
     }
-
-    const handleEditMeetingClick = () => {
-        setIsEditMeetingOpen(true)
-    }
-
-    const handleCloseEditMeetingClick = () => {
-        setIsEditMeetingOpen(false)
-    }
     
-    const handleDeleteMeetingClick = () => {
-        setIsDeleteMeetingOpen(true)
-    }
-
     const handleCloseDeleteMeetingClick = () => {
-        setIsDeleteMeetingOpen(false)
+        setIsDeleteMeetingOpen(!isDeleteMeetingOpen)
     }
 
-    const isAccepted = (invite) => {
-        return acceptedList.includes(invite)
+    const handleScheduleMeetingClick = () => {
+        setIsScheduleMeetingOpen(!isScheduleMeetingOpen)
     }
 
-    const handleEditingAvailability = () => {
+    const handleEditAvailabilityClick = () => {
         if (isEditingAvailability) {
             handleSaveAvailability(selectedSlots)
         }
@@ -164,43 +161,50 @@ export function MeetingPage() {
             <div className="meeting-sub-header">
                 <div className="sub-header-first-row">
                     <div className="meeting-sub-header-text">{meetingDetails.title}</div>
+                        {isAdmin(user.uid) &&
                         <div className="meeting-sub-header-buttons">
-                            <button className="meeting-edit-button" onClick={handleEditMeetingClick} alt="Edit">Edit meeting</button>
-                            <button className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete">Delete meeting</button>
+                            <button className="meeting-edit-button" onClick={handleEditAvailabilityClick} alt="Edit">Edit meeting</button>
+                            <button className="meeting-delete-button" onClick={handleScheduleMeetingClick} alt="Delete">Delete meeting</button>
                         </div>
+                        }
                     </div>
-                <div className="meeting-info-invites">
-                    <div className="invite-icons">
-                        {inviteList.map((invite, index) => (
-                            <div key={index} className="invite">
-                                <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
-                                <span className="tooltip">{invite}</span>
-                            </div>
-                        ))}
-                    </div>
-                    {inviteList.length < 10 && (
-                        <div className="add-invite-container">
-                            <BsPlusCircle className="add-invite-icon" onClick={handleAddInviteClick}/>
-                            {showInviteModal && (
-                                <div className="invite-modal">
-                                    <div className="invite-modal-content">
-                                        <input 
-                                            type="email" 
-                                            value={newInvite} 
-                                            style={{marginBottom: "0px"}}
-                                            className="invite-modal-popout"
-                                            onChange={(e) => handleInviteChange(e)}
-                                            onClick={handleInputClick}
-                                            placeholder="email@domain.com" 
-                                        />
-                                    </div>
-                                    <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                {isAdmin(user.uid) &&
+                    <div className="meeting-info-invites">
+                        <div className="invite-icons">
+                            {inviteList.map((invite, index) => (
+                                <div key={index} className="invite">
+                                    <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
+                                    <span className="tooltip">{invite}</span>
                                 </div>
-                            )}
+                            ))}
                         </div>
-                    )}
+                        {inviteList.length < 10 && (
+                            <div className="add-invite-container">
+                                <BsPlusCircle className="add-invite-icon" onClick={handleAddInviteClick}/>
+                                {showInviteModal && (
+                                    <div className="invite-modal">
+                                        <div className="invite-modal-content">
+                                            <input 
+                                                type="email" 
+                                                value={newInvite} 
+                                                style={{marginBottom: "0px"}}
+                                                className="invite-modal-popout"
+                                                onChange={(e) => handleInviteChange(e)}
+                                                onClick={handleInputClick}
+                                                placeholder="email@domain.com" 
+                                            />
+                                        </div>
+                                        <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                }
+                <div className="admin-buttons">
+                    <button className="edit-availability-button" onClick={handleEditAvailabilityClick}>{isEditingAvailability ? "Save availability" : "Edit availability"}</button>
+                    <button className="edit-availability-button" onClick={handleScheduleMeetingClick}>{isScheduleMeetingOpen ? "Cancel" : "Schedule meeting"}</button>
                 </div>
-                <button className="edit-availability-button" onClick={handleEditingAvailability}>{isEditingAvailability ? "Save availability" : "Edit availability"}</button>
             </div>
             {isEditMeetingOpen && (
                 <div className="overlay">
@@ -223,7 +227,8 @@ export function MeetingPage() {
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
                     accepted={meetingDetails.accepted || []}
-                    flashEditButton={flashEditButton}>
+                    flashEditButton={flashEditButton}
+                    isScheduling={isScheduleMeetingOpen}>
                 </AvailabilityCalendar>
             )}
             {isEditingAvailability &&(

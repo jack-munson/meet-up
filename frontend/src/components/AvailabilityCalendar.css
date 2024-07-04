@@ -71,3 +71,9 @@
     outline: 2px dashed #373737; /* Light gray on hover */
     outline-offset: -2px;
   }
+
+  .meeting-block {            
+    background-color: 'rgba(0, 123, 255)';
+    border-radius: '12px';
+    pointer-events: 'none';
+  }
