@@ -35,6 +35,36 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         updateSelectedSlots(selectedSlots);
     }, [selectedSlots]);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (isScheduling && meetingBlock && meetingStart && meetingEnd) {
+                updateMeetingBlockPosition();
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [isScheduling, meetingBlock, meetingStart, meetingEnd]);
+
+    const updateMeetingBlockPosition = () => {
+        const startElement = document.querySelector(`[data-slot='${meetingStart}']`);
+        const endElement = document.querySelector(`[data-slot='${meetingEnd}']`);
+        const calendarGrid = document.querySelector('.calendar-grid');
+
+        if (startElement && endElement && calendarGrid) {
+            const calendarGridRect = calendarGrid.getBoundingClientRect();
+            const startRect = startElement.getBoundingClientRect();
+            const endRect = endElement.getBoundingClientRect();
+
+            setMeetingBlock({
+                top: startRect.top - calendarGridRect.top,
+                left: startRect.left - calendarGridRect.left,
+                width: endRect.right - startRect.left,
+                height: endRect.bottom - startRect.top,
+            });
+        }
+    };
+
     let times = [];
     for (let i = parseInt(startTime) * 2; i < parseInt(endTime) * 2; i++) {
         times.push(i / 2);
@@ -64,15 +94,7 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         setMeetingEnd(slot);
 
         if (isScheduling) {
-            // Initialize the meeting block
-            const slotElement = document.querySelector(`[data-slot='${slot}']`);
-            const { top, left } = slotElement.getBoundingClientRect();
-            setMeetingBlock({ 
-                top: top + window.scrollY, 
-                left: left + window.scrollX, 
-                width: slotElement.offsetWidth, 
-                height: slotElement.offsetHeight 
-            });
+            updateMeetingBlockPosition();
         }
     };
 
@@ -80,43 +102,36 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         const slot = `${day}-${time}`;
         
         setAvailable(groupAvailability[slot] || []);
-
+    
         if (!isMouseDown) return;
-
+    
         if (!startSlot) return;
-
+    
         const startDayIndex = days.indexOf(startSlot.split('-')[0]);
         const currentDayIndex = days.indexOf(day);
         const [startTime] = startSlot.split('-').slice(-1).map(Number);
         const currentTime = time;
-
+    
         const minDayIndex = Math.min(startDayIndex, currentDayIndex);
         const maxDayIndex = Math.max(startDayIndex, currentDayIndex);
         const minTime = Math.min(startTime, currentTime);
         const maxTime = Math.max(startTime, currentTime);
-
+    
         const newTempSlots = new Set();
-
+    
         for (let d = minDayIndex; d <= maxDayIndex; d++) {
             for (let t = minTime; t <= maxTime; t += 0.5) {
                 newTempSlots.add(`${days[d]}-${t}`);
             }
         }
-
+    
         setCurrentTempSlots(newTempSlots);
         setMeetingEnd(slot);
-
-        if (isScheduling) {
-            // Update the meeting block dimensions
-            const slotElement = document.querySelector(`[data-slot='${slot}']`);
-            const { bottom, right } = slotElement.getBoundingClientRect();
-            setMeetingBlock(prev => ({
-                ...prev,
-                width: right + window.scrollX - prev.left,
-                height: bottom + window.scrollY - prev.top,
-            }));
+    
+        if (isScheduling && isMouseDown) {
+            updateMeetingBlockPosition();
         }
-
+    
         if (document.getSelection) {
             document.getSelection().removeAllRanges();
         } else if (window.getSelection) {
@@ -125,7 +140,7 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
             document.selection.empty();
         }
     };
-
+    
     const handleMouseUp = () => {
         setIsMouseDown(false);
 
@@ -143,8 +158,6 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
             setSelectedSlots(newSelectedSlots);
         }
 
-        console.log(meetingStart)
-        console.log(meetingEnd)
         setStartSlot(null);
         setMeetingStart(null);
         setMeetingEnd(null);
@@ -211,23 +224,20 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
                     <div
                         className="meeting-block"
                         style={{
-                            position: "fixed",
                             top: meetingBlock.top,
                             left: meetingBlock.left,
                             width: meetingBlock.width,
                             height: meetingBlock.height,
-                            backgroundColor: 'rgba(0, 123, 255)',
-                            borderRadius: '12px',
-                            pointerEvents: 'none',
                         }}
                     />
                 )}
             </div>
-            <AvailabilityViewer
-                userId={userId}
-                responded={accepted}
-                available={available}
-            />
+            {display === 'all' && (
+                <AvailabilityViewer
+                    available={available}
+                    responded={accepted}
+                />
+            )}
         </div>
     );
 }

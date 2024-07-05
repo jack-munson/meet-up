@@ -1,79 +1,81 @@
 .availability-info {
-    display: flex;
+  display: flex;
 }
 
 .time-axis {
-    display: grid;
-    grid-template-rows: repeat(auto-fill); /* Adjust height of hour labels */
-    padding-right: 15px;
-    padding-top: 25px;
-    padding-bottom: 13px;
-    text-align: right;
+  display: grid;
+  grid-template-rows: repeat(auto-fill); /* Adjust height of hour labels */
+  padding-right: 15px;
+  padding-top: 25px;
+  padding-bottom: 13px;
+  text-align: right;
 }
 
 .hour-label {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .calendar {
-    font-family: Arial, sans-serif;
-    width: 1050px;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-  }
-  
-  .calendar-header {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-  
-  .calendar-day {
-    margin-right: -2px;
-  }
-  
-  .calendar-day-label {
-    padding: 5px;
-    font-weight: bold;
-    text-align: center;
-    color: #373737;
-  }
+  font-family: Arial, sans-serif;
+  width: 1050px;
+  position: relative;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 
-  .day-slots {
-    border: 2px solid #D9D9D9;
-  }
-  
-  .calendar-time-slot {
-    border-bottom: 1px solid #D9D9D9;
-    height: 15px !important;
-    padding: 10px;
-    background-color: #FFE0E0;
-    transition: background-color 0.1s ease-out;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .calendar-time-slot.selected, .calendar-time-slot.selected:hover, .calendar-time-slot.temp-selected, .calendar-time-slot.temp-selected:hover {
-    background-color: #6ac398; /* Light green color for selected slots */
-  }
-  
-  .calendar-time-slot.deselecting, .calendar-time-slot.deselecting:hover {
-    background-color: #FFE0E0; /* Light red color for slots being deselected */
-  }
-  
-  .calendar-time-slot:hover {
-    outline: 2px dashed #373737; /* Light gray on hover */
-    outline-offset: -2px;
-  }
+.calendar-header {
+  padding: 10px;
+  text-align: center;
+}
 
-  .meeting-block {            
-    background-color: 'rgba(0, 123, 255)';
-    border-radius: '12px';
-    pointer-events: 'none';
-  }
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.calendar-day {
+  margin-right: -2px;
+}
+
+.calendar-day-label {
+  padding: 5px;
+  font-weight: bold;
+  text-align: center;
+  color: #373737;
+}
+
+.day-slots {
+  border: 2px solid #D9D9D9;
+}
+
+.calendar-time-slot {
+  border-bottom: 1px solid #D9D9D9;
+  height: 15px !important;
+  padding: 10px;
+  background-color: #FFE0E0;
+  transition: background-color 0.1s ease-out;
+  text-align: center;
+  cursor: pointer;
+}
+
+.calendar-time-slot.selected, .calendar-time-slot.selected:hover, .calendar-time-slot.temp-selected, .calendar-time-slot.temp-selected:hover {
+  background-color: #6ac398; /* Light green color for selected slots */
+}
+
+.calendar-time-slot.deselecting, .calendar-time-slot.deselecting:hover {
+  background-color: #FFE0E0; /* Light red color for slots being deselected */
+}
+
+.calendar-time-slot:hover {
+  outline: 2px dashed #373737; /* Light gray on hover */
+  outline-offset: -2px;
+}
+
+.meeting-block {
+  position: absolute;
+  background-color: rgba(0, 123, 255);
+  z-index: 10;
+  border-radius: 12px;
+}
