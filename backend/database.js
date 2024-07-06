@@ -196,6 +196,7 @@ const deleteMeeting = async (meetingId) => {
 
 const updateAvailability = async (meetingId, userId, newAvailability) => {
     const client = await pool.connect();
+
     try {
         const query = `
             UPDATE meetings
@@ -216,77 +217,27 @@ const updateAvailability = async (meetingId, userId, newAvailability) => {
     }
 }
 
-// const addAvailability = async (userId, meetingId, day, time) => {
-//     const client = await pool.connect()
+const editMeetingTimes = async (meetingId, newStartTime, newEndTime) => {
+    const client = await pool.connect()
 
-//     try {
-//         const query = `
-//             UPDATE meetings
-//             SET availability = COALESCE(availability, '[]'::jsonb) || jsonb_build_array($1::jsonb)
-//             WHERE id = $2
-//             RETURNING availability
-//         `
-//         const values = [JSON.stringify({ userId, day, time }), meetingId]
-//         console.log("values (addAvailability): ", values)
-//         const result = await client.query(query, values)
-//         console.log("Availability (database.js): ", result.rows[0].availability)
+    try {
+        const query = `
+            UPDATE meetings
+                SET meeting_start = $2,
+                    meeting_end = $3
+            WHERE id = $1
+            RETURNING meeting_start, meeting_end
+        `
+        const values = [meetingId, newStartTime, newEndTime]
+        const result = await client.query(query, values)
+        const { meeting_start, meeting_end } = result.rows[0];
 
-//         return result.rows[0].availability
-//     } finally {
-//         client.release()
-//     }
-// }
-
-// const removeAvailability = async (userId, meetingId, day, time) => {
-//     const client = await pool.connect()
-
-//     try {
-//         const query = `
-//             UPDATE meetings
-//             SET availability = (
-//                 SELECT jsonb_agg(elem)
-//                 FROM jsonb_array_elements(availability) AS elem
-//                 WHERE NOT (
-//                     elem->>'userId' = $1 AND elem->>'day' = $2 AND elem->>'time' = $3
-//                 )
-//             )
-//             WHERE id = $4
-//             RETURNING availability
-//         `
-//         const values = [userId, day, time, meetingId]
-//         const result = await client.query(query, values)
-
-//         return result.rows[0]?.availability
-//     } catch (error) {
-//         console.error('Error removing availability: ', error)
-//         throw error
-//     } finally {
-//         client.release()
-//     }
-// }
-
-// const getAvailability = async (userId, meetingId, day, time) => {
-//     const client = await pool.connect()
-
-//     try {
-//         const query = `
-//             SELECT availability FROM meetings 
-//             WHERE id = $1
-//         `
-//         const values = [meetingId]
-//         const { rows } = await client.query(query, values)
-//         client.release()
-
-//         const meeting = rows[0]
-//         if (!meeting || !meeting.availability) return false
-//         const availability = meeting.availability
-
-//         return availability.some(entry => entry.userId === userId && entry.day === day && entry.time === time)
-//     } catch (error) {
-//         throw error
-//     }
-// }
+        return { meeting_start, meeting_end }
+    } finally {
+        client.release()
+    }
+}
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting, updateAvailability
+    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
 };

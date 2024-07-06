@@ -155,11 +155,24 @@ router.delete('/delete-meeting', async (req, res) => {
 
 router.post('/edit-availability', async (req, res) => {
     const {meetingId, userId, newAvailability} = req.body
-    console.log("newAvailability (routes.js): ", newAvailability)
+
     try {
         const result = await db.updateAvailability(meetingId, userId, newAvailability)
-        console.log("result (routes.js): ", result)
         res.status(200).json({ message: "Successfully removed availability", updatedAvailability: result })
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
+router.post('/edit-meeting-time', async (req, res) => {
+    const {meetingId, newStartTime, newEndTime} = req.body
+    console.log("New start time: ", newStartTime)
+    console.log("New end time: ", newEndTime)
+
+    try {
+        const result = await db.editMeetingTimes(meetingId, newStartTime, newEndTime)
+        console.log("result (routes.js): ", result)
+        res.status(200).json({ message: "Successfully edited meeting times", updatedStartTime: result.meeting_start, updatedEndTime: result.meeting_end })
     } catch (error) {
         console.error("Error (routes.js): ", error)
         res.status(500).json({ error: 'Internal server error'})
