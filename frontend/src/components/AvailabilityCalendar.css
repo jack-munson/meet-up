@@ -76,6 +76,7 @@
 .meeting-block {
   position: absolute;
   background-color: rgba(0, 123, 255);
-  z-index: 10;
   border-radius: 12px;
+  pointer-events: none;
+  z-index: 10;
 }

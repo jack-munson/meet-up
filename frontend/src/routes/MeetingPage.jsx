@@ -21,6 +21,8 @@ export function MeetingPage() {
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
     const [selectedSlots, setSelectedSlots] = useState(new Set())
+    const [meetingStart, setMeetingStart] = useState(null)
+    const [meetingEnd, setMeetingEnd] = useState(null)
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
@@ -55,6 +57,9 @@ export function MeetingPage() {
     }
 
     const handleScheduleMeetingClick = () => {
+        if (isScheduleMeetingOpen) {
+            handleUpdateMeetingTimes(meetingStart, meetingEnd)
+        }
         setIsScheduleMeetingOpen(!isScheduleMeetingOpen)
     }
 
@@ -67,6 +72,11 @@ export function MeetingPage() {
 
     const updateSelectedSlots = (slots) => {
         setSelectedSlots(slots);
+    }
+
+    const updateMeetingTimes = (start, end) => {
+        setMeetingStart(start);
+        setMeetingEnd(end);
     }
 
     const flashEditButton = () => {
@@ -119,8 +129,6 @@ export function MeetingPage() {
     }
 
     const handleSaveAvailability = async (slots) => {
-        console.log("newAvailability (start of handleSaveAvailability): ", Array.from(slots))
-
         try {
             const availabilityData = {
                 meetingId: meetingDetails.id, 
@@ -135,7 +143,29 @@ export function MeetingPage() {
                 availability: response.data.updatedAvailability
             }))
         } catch (error) {
-            console.error("Error adding availability (MeetingPage.jsx): ", error)
+            console.error("Error editing availability (MeetingPage.jsx): ", error)
+        }
+    }
+
+    const handleUpdateMeetingTimes = async (start, end) => {
+        console.log("Start in MeetingPage.jsx: ", start)
+        console.log("End in MeetingPage.jsx: ", end)
+
+        try {
+            const meetingTimeData = {
+                meetingId: meetingDetails.id,
+                newStartTime: start,
+                newEndTime: end
+            }
+
+            const response = await axios.post('http://localhost:3000/api/edit-meeting-time', meetingTimeData)
+            setMeetingDetails(prevState => ({
+                ...prevState,
+                meeting_start: response.data.updatedStartTime,
+                meeting_end: response.data.updatedEndTime
+            }))
+        } catch (error) {
+            console.error("Error editing meeting times (MeetingPage.jsx): ", error)
         }
     }
     
@@ -203,7 +233,7 @@ export function MeetingPage() {
                 }
                 <div className="admin-buttons">
                     <button className="edit-availability-button" onClick={handleEditAvailabilityClick}>{isEditingAvailability ? "Save availability" : "Edit availability"}</button>
-                    <button className="edit-availability-button" onClick={handleScheduleMeetingClick}>{isScheduleMeetingOpen ? "Cancel" : "Schedule meeting"}</button>
+                    <button className="edit-availability-button" onClick={handleScheduleMeetingClick}>{isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}</button>
                 </div>
             </div>
             {isEditMeetingOpen && (
@@ -226,6 +256,9 @@ export function MeetingPage() {
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
+                    meetingStart={meetingDetails.meeting_start || null}
+                    meetingEnd={meetingDetails.meeting_end || null}
+                    updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
                     accepted={meetingDetails.accepted || []}
                     flashEditButton={flashEditButton}
                     isScheduling={isScheduleMeetingOpen}>
@@ -239,8 +272,8 @@ export function MeetingPage() {
                     display={'user'}
                     availability={meetingDetails.availability || []}
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
-                    startTime={meetingDetails.start_time}
-                    endTime={meetingDetails.end_time}
+                    startTime={meetingDetails.meeting_start}
+                    endTime={meetingDetails.meeting_end}
                     accepted={meetingDetails.accepted || []}
                     >
                 </AvailabilityCalendar> 

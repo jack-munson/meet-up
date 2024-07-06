@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AvailabilityViewer } from './AvailabilityViewer';
 import './AvailabilityCalendar.css';
 
-export function AvailabilityCalendar({ userId, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, accepted, flashEditButton, isScheduling }) {
+export function AvailabilityCalendar({ userId, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
     const [selectedSlots, setSelectedSlots] = useState(new Set());
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [startSlot, setStartSlot] = useState(null);
@@ -10,9 +10,8 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
     const [isDeselecting, setIsDeselecting] = useState(false);
     const [groupAvailability, setGroupAvailability] = useState({});
     const [available, setAvailable] = useState([]);
-    const [meetingBlock, setMeetingBlock] = useState(null);
-    const [meetingStart, setMeetingStart] = useState(null);
-    const [meetingEnd, setMeetingEnd] = useState(null);
+    const [meetingStartSlot, setMeetingStartSlot] = useState(null);
+    const [meetingEndSlot, setMeetingEndSlot] = useState(null);
 
     useEffect(() => {
         if (display === 'all') {
@@ -36,34 +35,13 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
     }, [selectedSlots]);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (isScheduling && meetingBlock && meetingStart && meetingEnd) {
-                updateMeetingBlockPosition();
-            }
-        };
+        updateMeetingTimes(meetingStartSlot, meetingEndSlot)
+    }, [meetingStartSlot, meetingEndSlot])
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [isScheduling, meetingBlock, meetingStart, meetingEnd]);
-
-    const updateMeetingBlockPosition = () => {
-        const startElement = document.querySelector(`[data-slot='${meetingStart}']`);
-        const endElement = document.querySelector(`[data-slot='${meetingEnd}']`);
-        const calendarGrid = document.querySelector('.calendar-grid');
-
-        if (startElement && endElement && calendarGrid) {
-            const calendarGridRect = calendarGrid.getBoundingClientRect();
-            const startRect = startElement.getBoundingClientRect();
-            const endRect = endElement.getBoundingClientRect();
-
-            setMeetingBlock({
-                top: startRect.top - calendarGridRect.top,
-                left: startRect.left - calendarGridRect.left,
-                width: endRect.right - startRect.left,
-                height: endRect.bottom - startRect.top,
-            });
-        }
-    };
+    useEffect(() => {
+        setMeetingStartSlot(meetingStart);
+        setMeetingEndSlot(meetingEnd);
+    }, [meetingStart, meetingEnd]);
 
     let times = [];
     for (let i = parseInt(startTime) * 2; i < parseInt(endTime) * 2; i++) {
@@ -90,12 +68,8 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         setStartSlot(slot);
         setIsDeselecting(isSlotSelected);
         setCurrentTempSlots(new Set([slot]));
-        setMeetingStart(slot);
-        setMeetingEnd(slot);
-
-        if (isScheduling) {
-            updateMeetingBlockPosition();
-        }
+        setMeetingStartSlot(slot);
+        setMeetingEndSlot(slot);
     };
 
     const handleMouseEnter = (day, time) => {
@@ -126,18 +100,8 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         }
     
         setCurrentTempSlots(newTempSlots);
-        setMeetingEnd(slot);
-    
-        if (isScheduling && isMouseDown) {
-            updateMeetingBlockPosition();
-        }
-    
-        if (document.getSelection) {
-            document.getSelection().removeAllRanges();
-        } else if (window.getSelection) {
-            window.getSelection().removeAllRanges();
-        } else if (document.selection) {
-            document.selection.empty();
+        if (isScheduling) {
+            setMeetingEndSlot(slot);
         }
     };
     
@@ -159,10 +123,12 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         }
 
         setStartSlot(null);
-        setMeetingStart(null);
-        setMeetingEnd(null);
         setCurrentTempSlots(new Set());
         setIsDeselecting(false);
+        // if (isScheduling) {
+        //     console.log("Start: ", meetingStartSlot)
+        //     console.log("End: ", meetingEndSlot)
+        // }
     };
 
     const renderTimeSlots = (day) => {
@@ -207,6 +173,34 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         ));
     };
 
+    const renderMeetingBlock = () => {
+        console.log("meetingStart: ", meetingStart)
+        console.log("meetingEnd: ", meetingEnd)
+        console.log("meetingStartSlot: ", meetingStartSlot)
+        console.log("meetingEndSlot: ", meetingEndSlot)
+        if (!meetingStartSlot || !meetingEndSlot) return null;
+        console.log("Start and end slot available")
+        const startSlotElement = document.querySelector(`[data-slot="${meetingStartSlot}"]`);
+        const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
+
+        const top = startSlotElement.offsetTop;
+        const left = startSlotElement.offsetLeft;
+        const width = endSlotElement.offsetWidth;
+        const height = endSlotElement.offsetTop + endSlotElement.offsetHeight - top - 1;
+
+        return (
+            <div
+                className="meeting-block"
+                style={{
+                    top: `${top}px`,
+                    left: `${left}px`,
+                    height: `${height}px`,
+                    width: `${width}px`
+                }}
+            ></div>
+        );
+    };
+
     return (
         <div className='availability-info'>
             <div className="time-axis">
@@ -217,20 +211,10 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
                 ))}
             </div>
             <div className="calendar">
-                <div className="calendar-grid">
+                <div className="calendar-grid" onMouseLeave={handleMouseUp}>
                     {renderDays()}
+                    {renderMeetingBlock()}
                 </div>
-                {isScheduling && meetingBlock && (
-                    <div
-                        className="meeting-block"
-                        style={{
-                            top: meetingBlock.top,
-                            left: meetingBlock.left,
-                            width: meetingBlock.width,
-                            height: meetingBlock.height,
-                        }}
-                    />
-                )}
             </div>
             {display === 'all' && (
                 <AvailabilityViewer
