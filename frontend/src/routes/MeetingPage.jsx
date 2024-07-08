@@ -232,8 +232,20 @@ export function MeetingPage() {
                     </div>
                 }
                 <div className="admin-buttons">
-                    <button className="edit-availability-button" onClick={handleEditAvailabilityClick}>{isEditingAvailability ? "Save availability" : "Edit availability"}</button>
-                    <button className="edit-availability-button" onClick={handleScheduleMeetingClick}>{isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}</button>
+                    <button 
+                        className={`edit-availability-button ${isScheduleMeetingOpen ? 'disabled' : ''} `} 
+                        onClick={handleEditAvailabilityClick}
+                        disabled={isScheduleMeetingOpen}>
+                        {isEditingAvailability ? "Save availability" : "Edit availability"}
+                    </button>
+                    {isAdmin(user.uid) && 
+                        <button 
+                            className={`edit-availability-button ${isEditingAvailability ? 'disabled' : ''} `} 
+                            onClick={handleScheduleMeetingClick}
+                            disabled={isEditingAvailability}>
+                            {isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}
+                        </button>
+                    }
                 </div>
             </div>
             {isEditMeetingOpen && (
@@ -272,8 +284,11 @@ export function MeetingPage() {
                     display={'user'}
                     availability={meetingDetails.availability || []}
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
-                    startTime={meetingDetails.meeting_start}
-                    endTime={meetingDetails.meeting_end}
+                    startTime={meetingDetails.start_time}
+                    endTime={meetingDetails.end_time}
+                    meetingStart={null}
+                    meetingEnd={null}
+                    updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
                     accepted={meetingDetails.accepted || []}
                     >
                 </AvailabilityCalendar> 

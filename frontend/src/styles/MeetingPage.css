@@ -265,15 +265,13 @@
     justify-content: center;
     transition: background-color 0.3s;
     height: 40px;
-    width: fit-content;
+    width: 230px;
     background-color: #1E965C;
     font-family: 'Inter', sans-serif;
     color: white;
     margin-bottom: 25px;
     border: none;
     outline: none !important;
-    padding-left: 40px;
-    padding-right: 40px
 }
 
 .edit-availability-button:hover, .edit-availability-button:hover:focus {
@@ -297,6 +295,18 @@
 
 .edit-availability-button.flash {
     animation: flash 0.4s ease-in-out 2;
+}
+
+.edit-availability-button.disabled {
+    background-color: #D9D9D9;
+    cursor: not-allowed;
+}
+
+.edit-availability-button.disabled:hover {
+    background-color: #D9D9D9;
+    cursor: not-allowed;
+    border: none !important;
+    color: white;
 }
 
 @keyframes flash {
