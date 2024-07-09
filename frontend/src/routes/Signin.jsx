@@ -4,7 +4,7 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopu
 import { Icon } from 'react-icons-kit'
 import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
-import MainLogo from "../public/MeetUp-main-logo.png"
+import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import GoogleLogo from "../public/google-logo.webp"
 import axios from "axios"
 import "../styles/Authentication.css"
@@ -118,9 +118,9 @@ export function Signin() {
                 </div>
             )}
             <form action="">
-                <input onChange={(e) => {setEmail(e.target.value)}} type="email" placeholder="email@domain.com"/>
+                <input onChange={(e) => {setEmail(e.target.value)}} type="email" placeholder="email@domain.com" className="auth-input"/>
                 <div className="input-container">
-                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password"></input>
+                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password" className="auth-input"></input>
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                 </div>
                 <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>

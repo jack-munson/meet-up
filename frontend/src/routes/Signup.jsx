@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from 'react-icons-kit'
 import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
-import MainLogo from "../public/MeetUp-main-logo.png"
+import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import GoogleLogo from "../public/google-logo.webp"
 import axios from "axios"
 import "../styles/Authentication.css"
@@ -84,11 +84,11 @@ export function Signup() {
         <div className="auth-box">
             <img className="auth-logo" onClick={() => navigate("/")} src={MainLogo} alt="MeetUp logo"></img>
             <form action="">
-                <input onChange={(e) => {setFirstName(e.target.value)}} type="text" placeholder="First name"/>
-                <input onChange={(e) => {setLastName(e.target.value)}} type="text" placeholder="Last name"/>
-                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com"/>
+                <input onChange={(e) => {setFirstName(e.target.value)}} type="text" placeholder="First name" className="auth-input"/>
+                <input onChange={(e) => {setLastName(e.target.value)}} type="text" placeholder="Last name" className="auth-input"/>
+                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com" className="auth-input"/>
                 <div className="input-container">
-                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password"/>
+                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password" className="auth-input"/>
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                 </div>
                 <button className="signup-button" style={{ marginBottom: '0px' }} type="button" onClick={(e) => {handleSignUp(e)}}>Sign Up</button>
