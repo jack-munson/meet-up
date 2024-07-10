@@ -10,7 +10,8 @@ export function HomeHeader(){
     async function handleSignOut(e) {
         e.preventDefault()
         try {
-            await signOut(auth);
+            await signOut(auth)
+            navigate("/")
         }
         catch (e) {
             console.log(e)
