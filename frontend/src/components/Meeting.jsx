@@ -32,6 +32,12 @@ export function Meeting({ title, startTime, endTime, days, meetingStart, meeting
         return formatTimeFromHour(time)
     }
 
+    const formatEndTimeFromSlot = (slot) => {
+        const [date, time] = slot.split('-');
+        const correctTime = parseFloat(time) + .5
+        return formatTimeFromHour(correctTime)
+    }
+
     const formatMonthOrDay = (slot) => {
         const [date, time] = slot.split('-');
         const [month, day] = date.split('/');
@@ -81,7 +87,7 @@ export function Meeting({ title, startTime, endTime, days, meetingStart, meeting
                         </div>
                     </div>
                     <div className="scheduled-time">
-                        {formatTimeFromSlot(meetingStart)} - {formatTimeFromSlot(meetingEnd)}
+                        {formatTimeFromSlot(meetingStart)} - {formatEndTimeFromSlot(meetingEnd)}
                     </div>
                     </div> :
                     <div className="no-meeting-text">
