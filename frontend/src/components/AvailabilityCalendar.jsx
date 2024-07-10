@@ -70,6 +70,37 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
         setMeetingEndSlot(meetingEnd);
     }, [meetingStart, meetingEnd]);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (meetingStartSlot && meetingEndSlot) {
+                const startSlotElement = document.querySelector(`[data-slot="${meetingStartSlot}"]`);
+                const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
+
+                if (startSlotElement && endSlotElement) {
+                    const top = startSlotElement.offsetTop;
+                    const left = startSlotElement.offsetLeft;
+                    const width = endSlotElement.offsetWidth;
+                    const height = endSlotElement.offsetTop + endSlotElement.offsetHeight - top - 1;
+
+                    const meetingBlock = document.querySelector('.meeting-block');
+                    if (meetingBlock) {
+                        meetingBlock.style.top = `${top}px`;
+                        meetingBlock.style.left = `${left}px`;
+                        meetingBlock.style.height = `${height}px`;
+                        meetingBlock.style.width = `${width}px`;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call to set the size
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [meetingStartSlot, meetingEndSlot])
+
     let times = [];
     for (let i = parseInt(startTime) * 2; i < parseInt(endTime) * 2; i++) {
         times.push(i / 2);
