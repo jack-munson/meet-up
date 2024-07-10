@@ -51,35 +51,40 @@ export function Home() {
     return (
         <div className="home-page">
             <HomeHeader></HomeHeader>
-            <div className="sub-header">
-                <div className="sub-header-text">Your Meetings</div>
-                <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
-            </div>
-            {isCreateMeetingOpen && (
-                <div className="overlay">
-                    <div className="create-meeting-container">
-                        <CreateMeeting customClassName="custom-create-meeting" onCreateSuccess={addMeeting}/>
-                        <button onClick={handleCloseCreateMeeting} className="close-button">Cancel</button>
+            <div className="page-content">
+                <div className="sub-header">
+                    <div className="sub-header-text">Your Meetings</div>
+                    <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
+                </div>
+                {isCreateMeetingOpen && (
+                    <div className="overlay">
+                        <div className="create-meeting-container">
+                            <CreateMeeting customClassName="custom-create-meeting" onCreateSuccess={addMeeting}/>
+                            <button onClick={handleCloseCreateMeeting} className="close-button">Cancel</button>
+                        </div>
                     </div>
+                )}
+                {meetings.length === 0 && (
+                    <div className="no-meetings-blurb">
+                        Looks like you don't have any meetings yet!
+                    </div>
+                )}
+                <div className="meetings">
+                    {meetings.map(meeting => (
+                        <Meeting
+                            key={meeting.id}
+                            meetingId={meeting.id}
+                            title={meeting.title}
+                            startTime={meeting.start_time || 9}
+                            endTime={meeting.end_time || 17}
+                            days={meeting.days || []}
+                            meetingStart={meeting.meeting_start || null}
+                            meetingEnd={meeting.meeting_end || null}
+                            frequency={meeting.frequency || "one-time"}
+                            onClick={() => handleMeetingClick(meeting.id)}
+                        />
+                    ))}
                 </div>
-            )}
-            {meetings.length === 0 && (
-                <div className="no-meetings-blurb">
-                    Looks like you don't have any meetings yet!
-                </div>
-            )}
-            <div className="meetings">
-                {meetings.map(meeting => (
-                    <Meeting
-                        key={meeting.id}
-                        meetingId={meeting.id}
-                        title={meeting.title}
-                        invites={meeting.invites}
-                        scheduledDay={meeting.scheduledDay}
-                        scheduledTime={meeting.scheduledTime}
-                        onClick={() => handleMeetingClick(meeting.id)}
-                    />
-                ))}
             </div>
         </div>
     )

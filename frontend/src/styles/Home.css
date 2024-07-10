@@ -3,15 +3,15 @@
 .home-page {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     width: 100vw;
-    height: 100vh;
 }
 
 .meetings {
     display: flex;
     flex-direction: column-reverse;
+    width: 100%;
+    gap: 20px;
 }
 
 .sub-header {
@@ -19,53 +19,35 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-top: 150px;
-    margin-bottom: 50px;
-    width: 100vw;
+    margin-top: 35px;
+    margin-bottom: 35px;
 }
 
 .sub-header-text {
     font-size: 40px;
     font-weight: 500;
     color: #373737;
-    margin-left: 200px;
 }
 
-.sub-header-icon {
+.sub-header-icon, .sub-header-icon:active {
     width: 40px;
     height: auto;
     transition: background-color 0.3s;
-    background-color: #0040B4;
+    background-color: #1E965C;
     color: white;
-    border-radius: 9px;
-    margin-right: 200px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .sub-header-icon:hover {
-    width: 40px;
-    height: auto;
     background-color: white;
-    outline: 3px solid #0040B4;
+    outline: 3px solid #1E965C;
     outline-offset: -3px;
-    color: #0040B4;
-    border-radius: 9px;
-    margin-right: 200px;
-    cursor: pointer;
-}
-
-.sub-header-icon:focus {
-    width: 40px;
-    height: auto;
-    background-color: #0040B4;
-    color: white;
-    border-radius: 9px;
-    margin-right: 200px;
-    cursor: pointer;
+    color: #1E965C;
 }
 
 .no-meetings-blurb {
-    color: #0040B4;
+    color: #1E965C;
     font-size: 25px;
     font-weight: 500;
     margin-top: 250px;

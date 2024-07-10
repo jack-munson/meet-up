@@ -18,12 +18,23 @@ export function FrontHeader() {
         });
     };
 
+    const checkSignUp = () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Already signed in");
+                navigate('/home');
+            } else {
+                navigate('/signup');
+            }
+        });
+    };
+
     return (
         <div className="banner">
             <img src={MainLogo} className="header-logo" alt="MeetUp logo"/>
             <div className = "nav-buttons">
                 <div className="menu-button" >HOW TO USE</div>
-                <div className="menu-button" onClick={() => navigate("/signup")}>SIGN UP</div>
+                <div className="menu-button" onClick={() => {checkSignUp()}}>SIGN UP</div>
                 <div className="menu-button" onClick={() => {checkSignIn()}}>SIGN IN</div>
             </div>
         </div>
