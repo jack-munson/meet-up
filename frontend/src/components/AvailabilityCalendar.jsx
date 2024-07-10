@@ -3,7 +3,7 @@ import { AvailabilityViewer } from './AvailabilityViewer';
 import SuggestedIcon from '../public/MeetUp-sparkle-icon.svg'
 import './AvailabilityCalendar.css';
 
-export function AvailabilityCalendar({ userId, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
+export function AvailabilityCalendar({ userId, days, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
     const [selectedSlots, setSelectedSlots] = useState(new Set());
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [startSlot, setStartSlot] = useState(null);
@@ -45,12 +45,15 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
                 }
             }
             setGroupAvailability(availableSlots);
-            const bestTimes = findBestTimes(availableSlots)
-            setBestMeetingTimes(bestTimes)
         } else {
             setSelectedSlots(new Set(availability[userId]));
         }
     }, [display, availability]);
+
+    useEffect(() => {
+        const bestTimes = findBestTimes(groupAvailability);
+        setBestMeetingTimes(bestTimes);
+    }, [groupAvailability]);
 
     useEffect(() => {
         updateSelectedSlots(selectedSlots);
@@ -151,10 +154,6 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
         setStartSlot(null);
         setCurrentTempSlots(new Set());
         setIsDeselecting(false);
-        // if (isScheduling) {
-        //     console.log("Start: ", meetingStartSlot)
-        //     console.log("End: ", meetingEndSlot)
-        // }
     };
 
     const renderTimeSlots = (day) => {
@@ -164,7 +163,6 @@ export function AvailabilityCalendar({ userId, days, frequency, display, availab
             const isTempSelected = currentTempSlots.has(slot);
             const isDeselected = isDeselecting && isTempSelected;
             const shouldBeSelected = !isDeselecting && isTempSelected;
-            console.log("Best: ", bestMeetingTimes)
             const isBestTime = isScheduling && bestMeetingTimes.has(slot)
             
             let backgroundColor = '';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -53,7 +53,7 @@ export function MeetingPage() {
     }
     
     const handleCloseDeleteMeetingClick = () => {
-        setIsDeleteMeetingOpen(!isDeleteMeetingOpen)
+        setIsDeleteMeetingOpen(false)
     }
 
     const handleScheduleMeetingClick = () => {
@@ -68,6 +68,10 @@ export function MeetingPage() {
             handleSaveAvailability(selectedSlots)
         }
         setIsEditingAvailability(!isEditingAvailability)
+    }
+
+    const handleDeleteMeetingClick = () => {
+        setIsDeleteMeetingOpen(true)
     }
 
     const updateSelectedSlots = (slots) => {
@@ -185,6 +189,8 @@ export function MeetingPage() {
         fetchMeetingDetails()
     }, [meetingId])
 
+    const memoAvailability = useMemo(() => meetingDetails.availability || [], [meetingDetails.availability])
+
     return (
         <div className="meeting-page">
             <HomeHeader></HomeHeader>
@@ -194,7 +200,7 @@ export function MeetingPage() {
                         {isAdmin(user.uid) &&
                         <div className="meeting-sub-header-buttons">
                             <button className="meeting-edit-button" onClick={handleEditAvailabilityClick} alt="Edit">Edit meeting</button>
-                            <button className="meeting-delete-button" onClick={handleScheduleMeetingClick} alt="Delete">Delete meeting</button>
+                            <button className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete">Delete meeting</button>
                         </div>
                         }
                     </div>
@@ -264,7 +270,7 @@ export function MeetingPage() {
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'all'}
-                    availability={meetingDetails.availability || []}
+                    availability={memoAvailability}
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
@@ -282,7 +288,7 @@ export function MeetingPage() {
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'user'}
-                    availability={meetingDetails.availability || []}
+                    availability={memoAvailability}
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
