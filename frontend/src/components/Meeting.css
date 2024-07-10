@@ -3,7 +3,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
     width: 100%;
     height: 150px;
     box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 10px 2px;
@@ -28,7 +28,7 @@
 
 .meeting-info-title {
     color: #1E965C;
-    transition: color 0.5s;
+    transition: color 0.3s;
     font-size: 35px;
     font-weight: 600;
 }
@@ -39,7 +39,7 @@
     height: 100px;
     margin-right: 20px;
     background-color: #1E965C;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
 }
 
 .meeting-container:hover .divider {
@@ -51,7 +51,7 @@
     flex-direction: row;
     align-items: center;
     color: #1E965C;
-    transition: color 0.5s;
+    transition: color 0.3s;
     font-size: 16px;
     font-weight: 500;
     gap: 8px;
@@ -59,7 +59,7 @@
 
 .clock-icon, .calendar-icon {
     fill: #1E965C;
-    transition: fill 0.5s;
+    transition: fill 0.3s;
 }
 
 .meeting-container:hover .clock-icon,
@@ -86,18 +86,18 @@
     font-size: 25px;
     font-weight: 500;
     gap: 10px;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .scheduled-time {
     font-size: 15px;
     font-weight: 500;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .recurring-icon {
     fill: #1E965C;
-    transition: fill 0.5s;
+    transition: fill 0.3s;
 }
 
 .no-meeting-text {
@@ -105,7 +105,7 @@
     color: #1E965C;
     font-weight: 500;
     line-height: 1.2;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .meeting-container:hover .meeting-info-title,

@@ -195,6 +195,7 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
             const isDeselected = isDeselecting && isTempSelected;
             const shouldBeSelected = !isDeselecting && isTempSelected;
             const isBestTime = isScheduling && bestMeetingTimes.has(slot)
+            const isHourSlot = time % 1 == 0;
             
             let backgroundColor = '';
             if (display === 'all') {
@@ -210,7 +211,7 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
                 <div
                     key={slot}
                     data-slot={slot}
-                    className={`calendar-time-slot ${isSelected ? 'selected' : ''} ${isDeselected ? 'deselecting' : ''} ${shouldBeSelected ? 'temp-selected' : ''}`}
+                    className={`calendar-time-slot ${isSelected ? 'selected' : ''} ${isDeselected ? 'deselecting' : ''} ${shouldBeSelected ? 'temp-selected' : ''} ${isHourSlot ? 'dashed' : ''}`}
                     onMouseDown={() => handleMouseDown(day, time)}
                     onMouseEnter={() => handleMouseEnter(day, time)}
                     onMouseUp={handleMouseUp}
@@ -251,7 +252,7 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
                     height: `${height}px`,
                     width: `${width}px`
                 }}
-            ></div>
+            >Meeting</div>
         );
     };
 

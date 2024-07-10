@@ -57,7 +57,20 @@
   align-items: center;
   justify-content: flex-end;
   border-bottom: 1px solid #D9D9D9;
-  height: 15px !important;
+  height: 12px !important;
+  padding: 10px;
+  background-color: #FFE0E0;
+  transition: background-color 0.1s ease-out;
+  text-align: center;
+  cursor: pointer;
+}
+
+.calendar-time-slot.dashed {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: 1px dashed #D9D9D9;
+  height: 12px !important;
   padding: 10px;
   background-color: #FFE0E0;
   transition: background-color 0.1s ease-out;
@@ -78,16 +91,21 @@
 }
 
 .calendar-time-slot:hover {
-  outline: 2px dashed #373737; /* Light gray on hover */
-  outline-offset: -2px;
+  outline: 1px dashed #373737; /* Light gray on hover */
+  outline-offset: -1px;
 }
 
 .meeting-block {
   position: absolute;
   background-color: rgba(0, 123, 255);
+  color: white;
+  padding: 5px;
+  font-size: 16px;
+  text-align: center;
   border-radius: 12px;
   pointer-events: none;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .meeting-block.transparent {

@@ -23,7 +23,12 @@
 .menu-button {
     color: #373737;
     font-family: "Inter", sans-serif;
+    transition: color 0.2s;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
+}
+
+.menu-button:hover {
+    color: #1E965C;
 }
