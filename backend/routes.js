@@ -68,7 +68,7 @@ router.get('/get-meeting-details', async (req, res) => {
 })
 
 async function sendInviteEmail(email, token) {
-    const inviteLink = `http://localhost:5176/invite/${token}`;
+    const inviteLink = `http://localhost:5173/invite/${token}`;
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
