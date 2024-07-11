@@ -149,7 +149,7 @@
   justify-content: center;
   align-items: center;
   height: 40px;
-  width: 240px;
+  width: 250px;
   background-color: #EEEEEE;
   transition: background-color 0.3s;
   color: #373737;
@@ -177,7 +177,7 @@
   justify-content: center;
   align-items: center;
   height: 40px;
-  width: 240px;
+  width: 250px;
   background-color: rgba(0, 123, 255);
   transition: background-color 0.3s;
   color: white;

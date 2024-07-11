@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AvailabilityViewer } from './AvailabilityViewer'
 import SuggestedIcon from '../public/MeetUp-sparkle-icon.svg'
-import { SiGooglemeet } from "react-icons/si"
+import { SiGooglecalendar } from "react-icons/si"
 import { SiZoom } from "react-icons/si"
 import './AvailabilityCalendar.css'
 
@@ -18,6 +18,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     const [meetingStartSlot, setMeetingStartSlot] = useState(null);
     const [meetingEndSlot, setMeetingEndSlot] = useState(null);
     const [zoomAccessToken, setZoomAccessToken] = useState(null)
+    const [isCreateZoomMeetingOpen, setIsCreateZoomMeetingOpen] = useState(false)
     const location = useLocation();
 
     const findBestTimes = (availability) => {
@@ -144,7 +145,6 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 date.setMinutes(minutes ? 30 : 0);
             }
             date.setSeconds(0);
-            console.log(date)
             return date;
         };
     
@@ -184,23 +184,6 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     };
 
     useEffect(() => {
-        // const urlParams = new URLSearchParams(window.location.search);
-        // console.log("URL Parameters:", urlParams.toString());
-        
-        // // Check if zoomAccessToken is received via URL query params
-        // const token = urlParams.get('zoomAccessToken');
-        // console.log("Access Token from URL:", token);
-        
-        // if (token) {
-        //     setZoomAccessToken(token);
-            
-        //     // Close the popup window (if any) after sending token to opener
-        //     if (window.opener) {
-        //         window.opener.postMessage({ zoomAccessToken: token }, window.location.origin);
-        //         window.close();
-        //     }
-        // }
-    
         const receiveMessage = (event) => {
             console.log("Received message")
             if (event.origin !== "http://localhost:3000") {
@@ -208,6 +191,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             }
             if (event.data.zoomAccessToken) {
                 setZoomAccessToken(event.data.zoomAccessToken);
+                setIsCreateZoomMeetingOpen(true);
             }
         };
     
@@ -216,8 +200,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         return () => {
             window.removeEventListener('message', receiveMessage);
         };
-    }, []);    
-    
+    }, []);
 
     const generateZoomURL = () => {
         const baseURL = 'https://zoom.us/oauth/authorize'
@@ -233,8 +216,18 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     }
 
     const handleZoomClick = () => {
+        if (zoomAccessToken) {
+            setIsCreateZoomMeetingOpen(true)
+            return
+        }
         const url = generateZoomURL();
-        const popup = window.open(url, '_blank', 'width=600,height=800');
+
+        const width = 550
+        const height = 650
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.outerHeight - height) / 2;
+        const popup = window.open(url, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+
         if (window.focus) {
             popup.focus();
         }
@@ -399,29 +392,36 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 </div>
             </div>
             <div className='right-panel-content'>
-                {display === 'all' && (
-                    <AvailabilityViewer
-                        available={available}
-                        responded={accepted}
-                    />
-                )}
-                <div className='scheduling-buttons'>
-                    <button 
-                        className='google-meet-button' 
-                        disabled={!meetingStart || !meetingEnd}
-                        onClick={handleGoogleMeetClick}>
-                        <SiGooglemeet className='google-meet-icon'/>
-                        <div className='open-in-text'>Open in Google Meet</div>
-                    </button>
-                    <button 
-                        className='zoom-button' 
-                        disabled={!meetingStart || !meetingEnd}
-                        onClick={handleZoomClick}>
-                        <SiZoom size={30} className='zoom-icon'/>
-                        <div className='open-in-text'>Schedule with Zoom</div>
-                    </button>
-                </div>
+                <AvailabilityViewer
+                    available={available}
+                    responded={accepted}
+                />
+                {display === 'all' && 
+                    <div className='scheduling-buttons'>
+                        <button 
+                            className='google-meet-button' 
+                            disabled={!meetingStart || !meetingEnd}
+                            onClick={handleGoogleMeetClick}>
+                            <SiGooglecalendar className='google-meet-icon'/>
+                            <div className='open-in-text'>Open in Google Calendar</div>
+                        </button>
+                        <button 
+                            className='zoom-button' 
+                            disabled={!meetingStart || !meetingEnd}
+                            onClick={handleZoomClick}>
+                            <SiZoom size={30} className='zoom-icon'/>
+                            <div className='open-in-text'>Schedule with Zoom</div>
+                        </button>
+                    </div>
+                }
             </div>
+            {isCreateZoomMeetingOpen && (
+                <div className="overlay">
+                    <div>Creating zoom meeting</div>
+                    <div>{title}</div>
+                    <button onClick={() => setIsCreateZoomMeetingOpen(false)}>Close</button>
+                </div>
+            )}
         </div>
     );
 }
