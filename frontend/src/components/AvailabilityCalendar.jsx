@@ -184,29 +184,40 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     };
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
-        const token = urlParams.get('zoomAccessToken');
-        if (token) {
-            setZoomAccessToken(token);
-        }
-    }, [location]);
-
-    const createZoomMeeting = async () => {
-        if (!zoomAccessToken) return;
-        console.log(zoomAccessToken)
-        // try {
-        //     const response = await axios.post('/api/create-zoom-meeting', {
-        //         accessToken: zoomAccessToken,
-        //         meetingStart, // Your meeting start time
-        //         meetingEnd // Your meeting end time
-        //     });
-
-        //     // Handle the created Zoom meeting details
-        //     console.log('Zoom meeting created:', response.data);
-        // } catch (error) {
-        //     console.error('Error creating Zoom meeting:', error);
+        // const urlParams = new URLSearchParams(window.location.search);
+        // console.log("URL Parameters:", urlParams.toString());
+        
+        // // Check if zoomAccessToken is received via URL query params
+        // const token = urlParams.get('zoomAccessToken');
+        // console.log("Access Token from URL:", token);
+        
+        // if (token) {
+        //     setZoomAccessToken(token);
+            
+        //     // Close the popup window (if any) after sending token to opener
+        //     if (window.opener) {
+        //         window.opener.postMessage({ zoomAccessToken: token }, window.location.origin);
+        //         window.close();
+        //     }
         // }
-    };
+    
+        const receiveMessage = (event) => {
+            console.log("Received message")
+            if (event.origin !== "http://localhost:3000") {
+                return;
+            }
+            if (event.data.zoomAccessToken) {
+                setZoomAccessToken(event.data.zoomAccessToken);
+            }
+        };
+    
+        window.addEventListener('message', receiveMessage);
+    
+        return () => {
+            window.removeEventListener('message', receiveMessage);
+        };
+    }, []);    
+    
 
     const generateZoomURL = () => {
         const baseURL = 'https://zoom.us/oauth/authorize'
@@ -223,7 +234,10 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
 
     const handleZoomClick = () => {
         const url = generateZoomURL();
-        window.open(url);
+        const popup = window.open(url, '_blank', 'width=600,height=800');
+        if (window.focus) {
+            popup.focus();
+        }
     };
 
     const handleMouseDown = (day, time) => {

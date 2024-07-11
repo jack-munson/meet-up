@@ -6,7 +6,7 @@ router.get('/callback', async (req, res) => {
     console.log("Made it to /callback")
     const authorizationCode = req.query.code;
     const originalUrl = req.query.state;
-
+    
     try {
         const response = await axios.post('https://zoom.us/oauth/token', null, {
             params: {
@@ -20,11 +20,22 @@ router.get('/callback', async (req, res) => {
         });
 
         const accessToken = response.data.access_token;
-        res.redirect(`${originalUrl}?zoomAccessToken=${accessToken}`);
+        console.log("Access Token:", accessToken);
+
+        const script = `
+            <script>
+                window.opener.postMessage({ zoomAccessToken: '${accessToken}' }, '${originalUrl}');
+                window.close();
+            </script>
+        `;
+        
+        // Send the script as the response to the callback request
+        res.send(script);
     } catch (error) {
         console.error('Error exchanging authorization code for access token:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 module.exports = router;
