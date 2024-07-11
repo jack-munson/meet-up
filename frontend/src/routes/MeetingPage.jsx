@@ -9,6 +9,8 @@ import { DeleteMeeting } from "../components/DeleteMeeting"
 import { AvailabilityCalendar } from "../components/AvailabilityCalendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
+import { FiEdit } from "react-icons/fi";
+import { MdDeleteForever } from "react-icons/md";
 import { getAuth } from "firebase/auth"
 
 export function MeetingPage() {
@@ -199,8 +201,8 @@ export function MeetingPage() {
                     <div className="meeting-sub-header-text">{meetingDetails.title}</div>
                         {isAdmin(user.uid) &&
                         <div className="meeting-sub-header-buttons">
-                            <button className="meeting-edit-button" onClick={handleEditAvailabilityClick} alt="Edit">Edit meeting</button>
-                            <button className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete">Delete meeting</button>
+                            <FiEdit size={40} className="meeting-edit-button" onClick={handleEditAvailabilityClick} alt="Edit"/>
+                            <MdDeleteForever size={48} className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete"/>
                         </div>
                         }
                     </div>
@@ -267,6 +269,9 @@ export function MeetingPage() {
             {!isEditingAvailability && (
                 <AvailabilityCalendar 
                     userId={user.uid}
+                    title={meetingDetails.title || "New meeting"}
+                    description={meetingDetails.description || "Event from MeetUp"}
+                    invites={meetingDetails.invites || []}
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'all'}
@@ -285,6 +290,9 @@ export function MeetingPage() {
             {isEditingAvailability &&(
                 <AvailabilityCalendar 
                     userId={user.uid}
+                    title={meetingDetails.title || "New meeting"}
+                    description={meetingDetails.description || "Event from MeetUp"}
+                    invites={meetingDetails.invites || []}
                     days={meetingDetails.days || []}
                     frequency={meetingDetails.frequency}
                     display={'user'}

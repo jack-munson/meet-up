@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { AvailabilityViewer } from './AvailabilityViewer';
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { AvailabilityViewer } from './AvailabilityViewer'
 import SuggestedIcon from '../public/MeetUp-sparkle-icon.svg'
-import './AvailabilityCalendar.css';
+import { SiGooglemeet } from "react-icons/si"
+import { SiZoom } from "react-icons/si"
+import './AvailabilityCalendar.css'
 
-export function AvailabilityCalendar({ userId, days, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
+export function AvailabilityCalendar({ userId, title, description, invites, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
     const [selectedSlots, setSelectedSlots] = useState(new Set());
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [startSlot, setStartSlot] = useState(null);
@@ -14,6 +17,8 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
     const [available, setAvailable] = useState([]);
     const [meetingStartSlot, setMeetingStartSlot] = useState(null);
     const [meetingEndSlot, setMeetingEndSlot] = useState(null);
+    const [zoomAccessToken, setZoomAccessToken] = useState(null)
+    const location = useLocation();
 
     const findBestTimes = (availability) => {
         let maxCount = 0; 
@@ -112,6 +117,113 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
         const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
         const ampm = hours >= 12 ? 'PM' : 'AM';
         return `${formattedHours}${minutes === 0 ? '' : ':30'} ${ampm}`;
+    };
+
+    const generateGoogleMeetURL = () => {
+        const baseURL = 'https://calendar.google.com/calendar/u/0/r/eventedit';
+        
+        const parseDateTime = (dateTimeStr, pos) => {
+            const [dayPart, timePart] = dateTimeStr.split('-');
+            const [monthOrWeekday, day] = dayPart.split('/');
+            const [hours, minutes] = timePart.split('.').map(Number);
+            const date = new Date();
+    
+            if (day) {
+                date.setMonth(Number(monthOrWeekday) - 1); // months are 0-indexed in JS Date
+                date.setDate(Number(day));
+            } else {
+                const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+                const dayIndex = daysOfWeek.indexOf(monthOrWeekday);
+                date.setDate(date.getDate() + ((dayIndex - date.getDay() + 7) % 7));
+            }
+    
+            date.setHours(hours);
+            if (pos === 'end') {
+                date.setMinutes((minutes ? 30 : 0) + 30)
+            } else {
+                date.setMinutes(minutes ? 30 : 0);
+            }
+            date.setSeconds(0);
+            console.log(date)
+            return date;
+        };
+    
+        const formatDateForGoogleCalendar = (date) => {
+            return date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+        };
+    
+        const startDate = parseDateTime(meetingStart, "start");
+        const endDate = parseDateTime(meetingEnd, "end");
+    
+        const params = new URLSearchParams({
+            vcon: 'meet',
+            hl: 'en',
+            text: title,
+            details: description,
+            add: invites
+        });
+
+        const startDateStr = formatDateForGoogleCalendar(startDate);
+        const endDateStr = formatDateForGoogleCalendar(endDate);
+    
+        params.append('dates', `${startDateStr}/${endDateStr}`);
+    
+        if (frequency === 'recurring') {
+            const daysOfWeek = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+            const dayIndex = startDate.getUTCDay();
+            const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${daysOfWeek[dayIndex]}`;
+            params.append('recur', rrule);
+        }
+    
+        return `${baseURL}?${params.toString()}`;
+    }
+
+    const handleGoogleMeetClick = () => {
+        const url = generateGoogleMeetURL();
+        window.open(url);
+    };
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const token = urlParams.get('zoomAccessToken');
+        if (token) {
+            setZoomAccessToken(token);
+        }
+    }, [location]);
+
+    const createZoomMeeting = async () => {
+        if (!zoomAccessToken) return;
+        console.log(zoomAccessToken)
+        // try {
+        //     const response = await axios.post('/api/create-zoom-meeting', {
+        //         accessToken: zoomAccessToken,
+        //         meetingStart, // Your meeting start time
+        //         meetingEnd // Your meeting end time
+        //     });
+
+        //     // Handle the created Zoom meeting details
+        //     console.log('Zoom meeting created:', response.data);
+        // } catch (error) {
+        //     console.error('Error creating Zoom meeting:', error);
+        // }
+    };
+
+    const generateZoomURL = () => {
+        const baseURL = 'https://zoom.us/oauth/authorize'
+
+        const params = new URLSearchParams({
+            client_id: import.meta.env.VITE_ZOOM_CLIENT_ID,
+            response_type: 'code',
+            redirect_uri: import.meta.env.VITE_ZOOM_REDIRECT_URL,
+            state: window.location.href
+        });
+
+        return `${baseURL}?${params.toString()}`
+    }
+
+    const handleZoomClick = () => {
+        const url = generateZoomURL();
+        window.open(url);
     };
 
     const handleMouseDown = (day, time) => {
@@ -252,7 +364,8 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
                     height: `${height}px`,
                     width: `${width}px`
                 }}
-            >Meeting</div>
+            >Meeting
+            </div>
         );
     };
 
@@ -271,12 +384,30 @@ export function AvailabilityCalendar({ userId, days, display, availability, upda
                     {renderMeetingBlock()}
                 </div>
             </div>
-            {display === 'all' && (
-                <AvailabilityViewer
-                    available={available}
-                    responded={accepted}
-                />
-            )}
+            <div className='right-panel-content'>
+                {display === 'all' && (
+                    <AvailabilityViewer
+                        available={available}
+                        responded={accepted}
+                    />
+                )}
+                <div className='scheduling-buttons'>
+                    <button 
+                        className='google-meet-button' 
+                        disabled={!meetingStart || !meetingEnd}
+                        onClick={handleGoogleMeetClick}>
+                        <SiGooglemeet className='google-meet-icon'/>
+                        <div className='open-in-text'>Open in Google Meet</div>
+                    </button>
+                    <button 
+                        className='zoom-button' 
+                        disabled={!meetingStart || !meetingEnd}
+                        onClick={handleZoomClick}>
+                        <SiZoom size={30} className='zoom-icon'/>
+                        <div className='open-in-text'>Schedule with Zoom</div>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

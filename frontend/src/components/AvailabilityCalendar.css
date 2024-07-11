@@ -50,6 +50,7 @@
 
 .day-slots {
   border: 2px solid #D9D9D9;
+  border-bottom: 1px solid #D9D9D9;;
 }
 
 .calendar-time-slot {
@@ -116,4 +117,79 @@
 
 .suggested-time-icon {
   height: 20px;
+}
+
+.right-panel-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-left: 15px;
+}
+
+.scheduling-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.open-in-text {
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.google-meet-icon {
+  fill: #373737;
+  transition: fill 0.3s;
+}
+
+.google-meet-button {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 240px;
+  background-color: #EEEEEE;
+  transition: background-color 0.3s;
+  color: #373737;
+  outline: none !important;
+}
+
+.google-meet-button:hover {
+  background-color: white;
+  border: 3px solid #EEEEEE;
+  color: #1E965C;
+}
+
+.google-meet-button:hover .google-meet-icon {
+  fill: #1E965C;
+}
+
+.zoom-icon {
+  fill: white;
+  transition: fill 0.3s;
+}
+
+.zoom-button {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 240px;
+  background-color: rgba(0, 123, 255);
+  transition: background-color 0.3s;
+  color: white;
+  outline: none !important;
+}
+
+.zoom-button:hover {
+  background-color: white;
+  border: 3px solid rgba(0, 123, 255);
+  color: rgba(0, 123, 255);
+}
+
+.zoom-button:hover .zoom-icon {
+  fill: rgba(0, 123, 255);
 }
