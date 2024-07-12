@@ -217,14 +217,16 @@ export function MeetingPage() {
                     </div>
                 {isAdmin(user.uid) &&
                     <div className="meeting-info-invites">
-                        <div className="invite-icons">
-                            {inviteList.map((invite, index) => (
-                                <div key={index} className="invite">
-                                    <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
-                                    <span className="tooltip">{invite}</span>
-                                </div>
-                            ))}
-                        </div>
+                        {inviteList.length > 0 && (
+                            <div className="invite-icons">
+                                {inviteList.map((invite, index) => (
+                                    <div key={index} className="invite">
+                                        <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
+                                        <span className="tooltip">{invite}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {inviteList.length < 10 && (
                             <div className="add-invite-container">                                
                                 <div className="invite-modal">
