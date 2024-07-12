@@ -1,4 +1,5 @@
 const express = require('express')
+const axios = require('axios')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const db = require('./database')
@@ -165,7 +166,7 @@ router.post('/edit-availability', async (req, res) => {
 })
 
 router.post('/edit-meeting-time', async (req, res) => {
-    const {meetingId, newStartTime, newEndTime} = req.body
+    const { meetingId, newStartTime, newEndTime } = req.body
     console.log("New start time: ", newStartTime)
     console.log("New end time: ", newEndTime)
 
@@ -176,6 +177,26 @@ router.post('/edit-meeting-time', async (req, res) => {
     } catch (error) {
         console.error("Error (routes.js): ", error)
         res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
+router.post('/create-zoom-meeting', async (req, res) => {
+    console.log("Made it to /create-zoom-meeting")
+    const { accessToken, meetingDetails } = req.body
+    console.log("accessToken (routes.js): ", accessToken)
+    console.log("meetingDetails (routes.js): ", meetingDetails)
+    try {
+        const response = await axios.post('https://api.zoom.us/v2/users/me/meetings', meetingDetails, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log("response.data (routes.js): ", response.data)
+        res.status(200).json({ message: "Successfully created Zoom meeting", joinURL: response.data.join_url});
+    } catch (error) {
+        console.log(error.response ? error.response.data : error.message)
+        res.status(500).json({ error: 'Internal server error'});
     }
 })
 

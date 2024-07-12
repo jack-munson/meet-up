@@ -193,3 +193,91 @@
 .zoom-button:hover .zoom-icon {
   fill: rgba(0, 123, 255);
 }
+
+.create-zoom-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: fit-content;
+  background-color: white;
+  border-radius: 30px;
+  gap: 30px;
+  padding: 25px;
+}
+
+.zoom-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.zoom-box-title {
+  font-size: 28px;
+  font-weight: 550;
+}
+
+.zoom-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.close-zoom-button {
+  fill: #373737;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.close-zoom-button:hover {
+  background-color: #D9D9D9;
+}
+
+.zoom-meeting-title {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.zoom-meeting-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.zoom-meeting-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.zoom-meeting-day-text {
+  color: #373737;
+  font-size: 22px;
+  font-weight: 450;
+}
+
+.zoom-recurring-icon {
+  fill: #373737;
+}
+
+.create-zoom-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 40px;
+  background-color: #1E965C;
+  transition: background-color 0.3s;
+  color: white;
+}
+
+.create-zoom-button:hover {
+  background-color: white;
+  border: 3px solid #1E965C;
+  color: #1E965C;
+}

@@ -74,6 +74,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .add-invite-icon {
@@ -121,7 +122,6 @@
     padding: 5px;
     border: 3px solid white;
     border-radius: 50%;
-
     cursor: pointer;
 }
 
@@ -169,6 +169,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center !important;
+    margin-left: 23px;
 }
 
 .invite-modal {
@@ -220,6 +221,7 @@
 .admin-buttons {
     display: flex;
     gap: 15px;
+    margin-bottom: 25px;
 }
 
 .edit-availability-button, .edit-availability-button:focus {
@@ -232,7 +234,6 @@
     background-color: #1E965C;
     font-family: 'Inter', sans-serif;
     color: white;
-    margin-bottom: 25px;
     border: none;
     outline: none !important;
 }
@@ -260,16 +261,37 @@
     animation: flash 0.4s ease-in-out 2;
 }
 
-.edit-availability-button.disabled {
+.edit-availability-button.disabled, .edit-availability-button.disabled:hover {
     background-color: #D9D9D9;
     cursor: not-allowed;
+    color: white;
+    border: none !important;
 }
 
-.edit-availability-button.disabled:hover {
-    background-color: #D9D9D9;
-    cursor: not-allowed;
-    border: none !important;
+.schedule-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.close-scheduling-button {
+    display: flex;
+    height: 40px;
+    width: 150px;
+    align-items: center;
+    justify-content: center;
+    background-color: #DA2A2A;
+    cursor: pointer;
     color: white;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none !important;
+}
+
+.close-scheduling-button:hover {
+    border: 3px solid #DA2A2A;
+    background-color: white;
+    color: #DA2A2A;
 }
 
 @keyframes flash {

@@ -10,6 +10,7 @@ import { AvailabilityCalendar } from "../components/AvailabilityCalendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
 import { FiEdit } from "react-icons/fi";
+import { IoClose } from "react-icons/io5"
 import { MdDeleteForever } from "react-icons/md";
 import { getAuth } from "firebase/auth"
 
@@ -91,6 +92,12 @@ export function MeetingPage() {
         setTimeout(() => {
             button.classList.remove('flash');
         }, 1000);
+    }
+
+    const handleCloseSchedule = () => {
+        setIsScheduleMeetingOpen(false)
+        setMeetingStart(meetingDetails.meeting_start || null)
+        setMeetingEnd(meetingDetails.meeting_end || null)
     }
 
     const handleAddNewInvite = async (e) => {
@@ -182,6 +189,8 @@ export function MeetingPage() {
                     params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)
+                setMeetingStart(response.data.meeting.meeting_start || null)
+                setMeetingEnd(response.data.meeting.meeting_end || null)
                 console.log(response.data.meeting)
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
@@ -217,24 +226,21 @@ export function MeetingPage() {
                             ))}
                         </div>
                         {inviteList.length < 10 && (
-                            <div className="add-invite-container">
-                                <BsPlusCircle className="add-invite-icon" onClick={handleAddInviteClick}/>
-                                {showInviteModal && (
-                                    <div className="invite-modal">
-                                        <div className="invite-modal-content">
-                                            <input 
-                                                type="email" 
-                                                value={newInvite} 
-                                                style={{marginBottom: "0px"}}
-                                                className="invite-modal-popout"
-                                                onChange={(e) => handleInviteChange(e)}
-                                                onClick={handleInputClick}
-                                                placeholder="email@domain.com" 
-                                            />
-                                        </div>
-                                        <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                            <div className="add-invite-container">                                
+                                <div className="invite-modal">
+                                    <div className="invite-modal-content">
+                                        <input 
+                                            type="email" 
+                                            value={newInvite} 
+                                            style={{marginBottom: "0px"}}
+                                            className="invite-modal-popout"
+                                            onChange={(e) => handleInviteChange(e)}
+                                            onClick={handleInputClick}
+                                            placeholder="email@domain.com" 
+                                        />
                                     </div>
-                                )}
+                                    <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -247,12 +253,17 @@ export function MeetingPage() {
                         {isEditingAvailability ? "Save availability" : "Edit availability"}
                     </button>
                     {isAdmin(user.uid) && 
-                        <button 
-                            className={`edit-availability-button ${isEditingAvailability ? 'disabled' : ''} `} 
-                            onClick={handleScheduleMeetingClick}
-                            disabled={isEditingAvailability}>
-                            {isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}
-                        </button>
+                        <div className="schedule-buttons">
+                            <button 
+                                className={`edit-availability-button ${isEditingAvailability ? 'disabled' : ''} `} 
+                                onClick={handleScheduleMeetingClick}
+                                disabled={isEditingAvailability}>
+                                {isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}
+                            </button>
+                            {isScheduleMeetingOpen && 
+                                <button className="close-scheduling-button" onClick={() => handleCloseSchedule()}>Cancel</button>
+                            }
+                        </div>
                     }
                 </div>
             </div>
@@ -279,8 +290,8 @@ export function MeetingPage() {
                     updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
                     startTime={meetingDetails.start_time}
                     endTime={meetingDetails.end_time}
-                    meetingStart={meetingDetails.meeting_start || null}
-                    meetingEnd={meetingDetails.meeting_end || null}
+                    meetingStart={meetingStart}
+                    meetingEnd={meetingEnd}
                     updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
                     accepted={meetingDetails.accepted || []}
                     flashEditButton={flashEditButton}

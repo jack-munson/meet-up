@@ -4,7 +4,10 @@ import { AvailabilityViewer } from './AvailabilityViewer'
 import SuggestedIcon from '../public/MeetUp-sparkle-icon.svg'
 import { SiGooglecalendar } from "react-icons/si"
 import { SiZoom } from "react-icons/si"
+import { FaRedoAlt } from "react-icons/fa"
+import { IoClose } from "react-icons/io5"
 import './AvailabilityCalendar.css'
+import axios from 'axios'
 
 export function AvailabilityCalendar({ userId, title, description, invites, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
     const [selectedSlots, setSelectedSlots] = useState(new Set());
@@ -120,37 +123,84 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         return `${formattedHours}${minutes === 0 ? '' : ':30'} ${ampm}`;
     };
 
+    const formatTimeFromHour = (time) => {
+        const hours = Math.floor(time);
+        const minutes = (time % 1) * 60;
+        const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        return `${formattedHours}${minutes === 0 ? '' : ':30'} ${ampm}`;
+    }
+
+    const getHour = (slot) => {
+        const [date, time] = slot.split('-')
+        return time
+    }
+
+    const getEndHour = (slot) => {
+        const [date, time] = slot.split('-')
+        return parseFloat(time) + .5
+    }
+
+    const formatTimeFromSlot = (slot) => {
+        const [date, time] = slot.split('-');
+        return formatTimeFromHour(time)
+    }
+
+    const formatEndTimeFromSlot = (slot) => {
+        const [date, time] = slot.split('-');
+        const correctTime = parseFloat(time) + .5
+        return formatTimeFromHour(correctTime)
+    }
+
+    const formatMonthOrDay = (slot) => {
+        const [date, time] = slot.split('-');
+        const [month, day] = date.split('/');
+
+        const dateObj = new Date(`2000-${month}-01`); // Year and day don't matter here
+
+        const monthName = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase();
+
+        return monthName === "INVALID DATE" ? date : monthName.toUpperCase()
+    }
+
+    const formatDate = (slot) => {
+        const [date, time] = slot.split('-');
+        const [month, day] = date.split('/');
+
+        return day
+    }
+
+    const parseDateTime = (dateTimeStr, pos) => {
+        const [dayPart, timePart] = dateTimeStr.split('-');
+        const [monthOrWeekday, day] = dayPart.split('/');
+        const [hours, minutes] = timePart.split('.').map(Number);
+        const date = new Date();
+
+        if (day) {
+            date.setMonth(Number(monthOrWeekday) - 1); // months are 0-indexed in JS Date
+            date.setDate(Number(day));
+        } else {
+            const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+            const dayIndex = daysOfWeek.indexOf(monthOrWeekday);
+            date.setDate(date.getDate() + ((dayIndex - date.getDay() + 7) % 7));
+        }
+
+        date.setHours(hours);
+        if (pos === 'end') {
+            date.setMinutes((minutes ? 30 : 0) + 30)
+        } else {
+            date.setMinutes(minutes ? 30 : 0);
+        }
+        date.setSeconds(0);
+        return date;
+    };
+
+    const formatDateForAPI = (date) => {
+        return date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+    };
+
     const generateGoogleMeetURL = () => {
         const baseURL = 'https://calendar.google.com/calendar/u/0/r/eventedit';
-        
-        const parseDateTime = (dateTimeStr, pos) => {
-            const [dayPart, timePart] = dateTimeStr.split('-');
-            const [monthOrWeekday, day] = dayPart.split('/');
-            const [hours, minutes] = timePart.split('.').map(Number);
-            const date = new Date();
-    
-            if (day) {
-                date.setMonth(Number(monthOrWeekday) - 1); // months are 0-indexed in JS Date
-                date.setDate(Number(day));
-            } else {
-                const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-                const dayIndex = daysOfWeek.indexOf(monthOrWeekday);
-                date.setDate(date.getDate() + ((dayIndex - date.getDay() + 7) % 7));
-            }
-    
-            date.setHours(hours);
-            if (pos === 'end') {
-                date.setMinutes((minutes ? 30 : 0) + 30)
-            } else {
-                date.setMinutes(minutes ? 30 : 0);
-            }
-            date.setSeconds(0);
-            return date;
-        };
-    
-        const formatDateForGoogleCalendar = (date) => {
-            return date.toISOString().replace(/-|:|\.\d\d\d/g, "");
-        };
     
         const startDate = parseDateTime(meetingStart, "start");
         const endDate = parseDateTime(meetingEnd, "end");
@@ -163,8 +213,8 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             add: invites
         });
 
-        const startDateStr = formatDateForGoogleCalendar(startDate);
-        const endDateStr = formatDateForGoogleCalendar(endDate);
+        const startDateStr = formatDateForAPI(startDate);
+        const endDateStr = formatDateForAPI(endDate);
     
         params.append('dates', `${startDateStr}/${endDateStr}`);
     
@@ -232,6 +282,63 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             popup.focus();
         }
     };
+
+    const handleCreateZoom = async () => {
+        console.log("meetingStart time in handleCreateZoom: ", getHour(meetingStart))
+        console.log("meetingEnd time in handleCreateZoom: ", getEndHour(meetingEnd))
+
+        let recurrence = null
+        if (frequency === 'recurring') {
+            const addMonths = (date, months) => {
+                const newDate = new Date(date);
+                newDate.setMonth(newDate.getMonth() + months);
+                return newDate;
+            }
+
+            const dayOfWeek = parseDateTime(meetingStart).getDay(); // Day of the week (0-6)
+            recurrence = {
+                type: 2, // Weekly recurrence
+                repeat_interval: 1, // Repeat every 1 week
+                weekly_days: `${dayOfWeek + 1}`, // Recur on the day of the week of the start date
+                end_times: 15, // End date 2 months after start date
+                first_occurance: parseDateTime(meetingStart).toISOString()
+            };
+        }
+
+        const zoomMeetingDetails = {
+            topic: title,
+            type: frequency === 'recurring' ? 8 : 2,
+            start_time: parseDateTime(meetingStart).toISOString(),
+            duration: (getEndHour(meetingEnd) - getHour(meetingStart)) * 60,
+            agenda: description,
+            timezone: 'EST',
+            recurrence: recurrence,
+            settings: {
+                participant_video: true,
+                host_video: true,
+                join_before_host: false,
+                mute_upon_entry: true,
+                approval_type: 1,
+                registration_type: 1,
+                audio: "both",
+                auto_recording: "none",
+                enforce_login: false,
+                // alternative_hosts: invites.join(',')
+            },
+        };
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/create-zoom-meeting', {
+                accessToken: zoomAccessToken, 
+                meetingDetails: zoomMeetingDetails
+            });
+            console.log('Meeting created:', response.data);
+        } catch (error) {
+            console.error('Error creating Zoom meeting:', error.response ? error.response.data : error.message);
+        }
+
+        setIsCreateZoomMeetingOpen(false)
+    }
 
     const handleMouseDown = (day, time) => {
         if (display === 'all' && !isScheduling) {
@@ -417,9 +524,29 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             </div>
             {isCreateZoomMeetingOpen && (
                 <div className="overlay">
-                    <div>Creating zoom meeting</div>
-                    <div>{title}</div>
-                    <button onClick={() => setIsCreateZoomMeetingOpen(false)}>Close</button>
+                    <div className='create-zoom-box'>
+                        <div className='zoom-box-header'>
+                            <div className='zoom-box-title'>Create Zoom meeting</div>
+                            <IoClose size={20} className='close-zoom-button' onClick={() => setIsCreateZoomMeetingOpen(false)}/>
+                        </div>
+                        <div className='zoom-info'>
+                            <div className='zoom-meeting-title'>{title}</div>
+                            <div className='zoom-meeting-description'>{description}</div>
+                            <div className='zoom-meeting-info'>
+                                <div className='zoom-meeting-day'>
+                                    <div className='zoom-meeting-day-text'>
+                                        {formatMonthOrDay(meetingStart)}
+                                    </div>
+                                    {frequency === "one-time" ?
+                                        <div className='zoom-meeting-day-text'>{formatDate(meetingStart)}</div> : 
+                                        <FaRedoAlt size={18} className="zoom-recurring-icon"/>
+                                    }
+                                </div>
+                                <div className='zoom-meeting-times'>{formatTimeFromSlot(meetingStart)} - {formatEndTimeFromSlot(meetingEnd)}</div>
+                            </div>
+                        </div>
+                        <button className='create-zoom-button' onClick={handleCreateZoom}>Create</button>
+                    </div>
                 </div>
             )}
         </div>
