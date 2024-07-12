@@ -295,12 +295,12 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 return newDate;
             }
 
-            const dayOfWeek = parseDateTime(meetingStart).getDay(); // Day of the week (0-6)
+            const dayOfWeek = parseDateTime(meetingStart).getDay()
             recurrence = {
-                type: 2, // Weekly recurrence
-                repeat_interval: 1, // Repeat every 1 week
-                weekly_days: `${dayOfWeek + 1}`, // Recur on the day of the week of the start date
-                end_times: 15, // End date 2 months after start date
+                type: 2,
+                repeat_interval: 1,
+                weekly_days: `${dayOfWeek + 1}`,
+                end_times: 15,
                 first_occurance: parseDateTime(meetingStart).toISOString()
             };
         }
