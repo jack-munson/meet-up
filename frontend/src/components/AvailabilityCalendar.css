@@ -281,3 +281,8 @@
   border: 3px solid #1E965C;
   color: #1E965C;
 }
+
+#timezone-input {
+  height: 40px;
+  width: 250px;
+}

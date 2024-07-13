@@ -178,7 +178,7 @@
 }
 
 .react-select__value-container{
-    padding: 0px 0px !important;
+    padding: 0px 10px !important;
 }
 
 .meeting-time-input .react-select__menu { 

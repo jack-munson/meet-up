@@ -148,8 +148,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                             options={times} 
                             isSearchable={false} 
                             value={startTime}
-                            menuPlacement="top">
-                        </Select>
+                            menuPlacement="top"/>
                         <div>to</div>
                         <Select 
                             onChange={(e) => {setEndTime(e)}} 
@@ -158,8 +157,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                             options={times} 
                             isSearchable={false} 
                             value={endTime}
-                            menuPlacement="top">
-                        </Select>
+                            menuPlacement="top"/>
                     </div>
                 </div>
 

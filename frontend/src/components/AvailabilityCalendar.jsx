@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import moment from 'moment-timezone'
 import { AvailabilityViewer } from './AvailabilityViewer'
 import SuggestedIcon from '../public/MeetUp-sparkle-icon.svg'
+import TimezoneSelect from 'react-timezone-select'
+import { DateTime } from 'luxon'
 import { SiGooglecalendar } from "react-icons/si"
 import { SiZoom } from "react-icons/si"
 import { FaRedoAlt } from "react-icons/fa"
@@ -22,7 +24,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     const [meetingEndSlot, setMeetingEndSlot] = useState(null);
     const [zoomAccessToken, setZoomAccessToken] = useState(null)
     const [isCreateZoomMeetingOpen, setIsCreateZoomMeetingOpen] = useState(false)
-    const location = useLocation();
+    const [selectedTimezone, setSelectedTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
     const findBestTimes = (availability) => {
         let maxCount = 0; 
@@ -170,12 +172,13 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         return day
     }
 
-    const parseDateTime = (dateTimeStr, pos) => {
+    const parseDateTime = (dateTimeStr, pos, api) => {
         const [dayPart, timePart] = dateTimeStr.split('-');
         const [monthOrWeekday, day] = dayPart.split('/');
         const [hours, minutes] = timePart.split('.').map(Number);
-        const date = new Date();
-
+    
+        let date = new Date(); // Current datetime in local timezone
+    
         if (day) {
             date.setMonth(Number(monthOrWeekday) - 1); // months are 0-indexed in JS Date
             date.setDate(Number(day));
@@ -184,7 +187,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             const dayIndex = daysOfWeek.indexOf(monthOrWeekday);
             date.setDate(date.getDate() + ((dayIndex - date.getDay() + 7) % 7));
         }
-
+    
         date.setHours(hours);
         if (pos === 'end') {
             date.setMinutes((minutes ? 30 : 0) + 30)
@@ -192,6 +195,15 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             date.setMinutes(minutes ? 30 : 0);
         }
         date.setSeconds(0);
+    
+        if (api === "Zoom") {
+            const localOffset = date.getTimezoneOffset() * -1; // Local timezone offset in minutes
+            const targetOffset = selectedTimezone.offset * 60 ; // Target timezone offset
+            const offsetDiff = (localOffset - parseInt(targetOffset)) * 60000; // Difference in milliseconds
+    
+            date.setTime(date.getTime() + offsetDiff); // Adjust the time to match selected timezone
+        }
+    
         return date;
     };
 
@@ -202,8 +214,8 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     const generateGoogleMeetURL = () => {
         const baseURL = 'https://calendar.google.com/calendar/u/0/r/eventedit';
     
-        const startDate = parseDateTime(meetingStart, "start");
-        const endDate = parseDateTime(meetingEnd, "end");
+        const startDate = parseDateTime(meetingStart, "start", "Google");
+        const endDate = parseDateTime(meetingEnd, "end", "Google");
     
         const params = new URLSearchParams({
             vcon: 'meet',
@@ -284,34 +296,39 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     };
 
     const handleCreateZoom = async () => {
-        console.log("meetingStart time in handleCreateZoom: ", getHour(meetingStart))
-        console.log("meetingEnd time in handleCreateZoom: ", getEndHour(meetingEnd))
-
         let recurrence = null
         if (frequency === 'recurring') {
-            const addMonths = (date, months) => {
-                const newDate = new Date(date);
-                newDate.setMonth(newDate.getMonth() + months);
-                return newDate;
-            }
 
-            const dayOfWeek = parseDateTime(meetingStart).getDay()
+            const dayOfWeek = parseDateTime(meetingStart, "start", "Zoom").getDay()
             recurrence = {
                 type: 2,
                 repeat_interval: 1,
                 weekly_days: `${dayOfWeek + 1}`,
                 end_times: 15,
-                first_occurance: parseDateTime(meetingStart).toISOString()
+                first_occurance: parseDateTime(meetingStart, "start", "Zoom").toISOString()
             };
+        }
+        
+        const zonedStartTime = DateTime.fromJSDate(parseDateTime(meetingStart, "start", "Zoom"), { zone: selectedTimezone.value });
+        const formattedStartTime = zonedStartTime.toISO({ includeOffset: true });
+
+        const getZoomValue = (value) => {
+            if (value === "America/Boise") {
+                return "America/Denver"
+            } else if (value === "Etc/GMT") {
+                return "UTC"
+            } else {
+                return value
+            }
         }
 
         const zoomMeetingDetails = {
             topic: title,
             type: frequency === 'recurring' ? 8 : 2,
-            start_time: parseDateTime(meetingStart).toISOString(),
+            start_time: formattedStartTime,
             duration: (getEndHour(meetingEnd) - getHour(meetingStart)) * 60,
             agenda: description,
-            timezone: 'EST',
+            timezone: getZoomValue(selectedTimezone.value),
             recurrence: recurrence,
             settings: {
                 participant_video: true,
@@ -505,6 +522,16 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 />
                 {display === 'all' && 
                     <div className='scheduling-buttons'>
+                        <TimezoneSelect
+                            onChange={setSelectedTimezone}
+                            // options={modifiedTimezones}
+                            value={selectedTimezone}
+                            id="timezone-input"
+                            className="meeting-time-input" 
+                            classNamePrefix= "react-select" 
+                            menuPlacement='top'
+                            isSearchable={false}
+                        />
                         <button 
                             className='google-meet-button' 
                             disabled={!meetingStart || !meetingEnd}
