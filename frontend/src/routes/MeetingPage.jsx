@@ -12,6 +12,7 @@ import { MdSend } from "react-icons/md"
 import { FiEdit } from "react-icons/fi";
 import { IoClose } from "react-icons/io5"
 import { MdDeleteForever } from "react-icons/md";
+import { Alert, Snackbar, styled } from "@mui/material"
 import { getAuth } from "firebase/auth"
 
 export function MeetingPage() {
@@ -21,11 +22,12 @@ export function MeetingPage() {
     const [isDeleteMeetingOpen, setIsDeleteMeetingOpen] = useState(false)
     const [isScheduleMeetingOpen, setIsScheduleMeetingOpen] = useState(false)
     const [isEditingAvailability, setIsEditingAvailability] = useState(false)
-    const [showInviteModal, setShowInviteModal] = useState(false)
     const [newInvite, setNewInvite] = useState('')
     const [selectedSlots, setSelectedSlots] = useState(new Set())
     const [meetingStart, setMeetingStart] = useState(null)
     const [meetingEnd, setMeetingEnd] = useState(null)
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
@@ -34,11 +36,6 @@ export function MeetingPage() {
 
     const isAdmin = (userId) => {
         return meetingDetails.user_id === userId
-    }
-
-    const handleAddInviteClick = (e) => {
-        e.stopPropagation()
-        setShowInviteModal(!showInviteModal)
     }
 
     const handleInviteChange = (e) => {
@@ -117,7 +114,9 @@ export function MeetingPage() {
                         invites: updatedInviteList
                     }))
                     setNewInvite('')
-                    setShowInviteModal(false)
+                    setAlertOpen(false)
+                    setAlertMessage("Invite sent!")
+                    setAlertOpen(true)
                 } else {
                     console.error('Failed to add invite')
                 }
@@ -155,6 +154,9 @@ export function MeetingPage() {
                 ...prevState,
                 availability: response.data.updatedAvailability
             }))
+            setAlertOpen(false)
+            setAlertMessage("Availability saved!")
+            setAlertOpen(true)
         } catch (error) {
             console.error("Error editing availability (MeetingPage.jsx): ", error)
         }
@@ -199,6 +201,22 @@ export function MeetingPage() {
 
         fetchMeetingDetails()
     }, [meetingId])
+
+    const CustomAlert = styled(Alert)(({ theme }) => ({
+        backgroundColor: 'rgba(0, 123, 255)',
+        color: 'white',
+        borderRadius: '8px',
+        '.MuiAlert-action': {
+          color: 'white',
+        },
+    }));
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setAlertOpen(false);
+    };
 
     const memoAvailability = useMemo(() => meetingDetails.availability || [], [meetingDetails.availability])
 
@@ -320,6 +338,16 @@ export function MeetingPage() {
                     >
                 </AvailabilityCalendar> 
             )}
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <CustomAlert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+                    {alertMessage}
+                </CustomAlert>
+            </Snackbar>
         </div>
     )
 }

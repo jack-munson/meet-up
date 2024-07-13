@@ -4,6 +4,7 @@ import { HomeHeader } from "../components/HomeHeader"
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
 import { IoAddOutline } from "react-icons/io5"
+import { Alert, Snackbar, styled } from "@mui/material"
 import "../styles/Home.css"
 import axios from "axios"
 import { getAuth } from "firebase/auth"
@@ -11,6 +12,8 @@ import { getAuth } from "firebase/auth"
 export function Home() {
     const [isCreateMeetingOpen, setIsCreateMeetingOpen] = useState(false)
     const [meetings, setMeetings] = useState([])
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -26,11 +29,20 @@ export function Home() {
     const addMeeting = (newMeeting) => {
         setMeetings(prevMeetings => [...prevMeetings, newMeeting])
         setIsCreateMeetingOpen(false)
+        setAlertMessage("Meeting created!")
+        setAlertOpen(true)
     }
 
     const handleMeetingClick = (meetingId) => {
         navigate(`/meeting/${meetingId}`)
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setAlertOpen(false);
+    };
 
     useEffect(() => {
         const fetchMeetings = async () => {
@@ -47,6 +59,15 @@ export function Home() {
 
         fetchMeetings()
     }, [user, isCreateMeetingOpen])
+
+    const CustomAlert = styled(Alert)(({ theme }) => ({
+        backgroundColor: 'rgba(0, 123, 255)',
+        color: 'white',
+        borderRadius: '8px',
+        '.MuiAlert-action': {
+          color: 'white',
+        },
+    }));
     
     return (
         <div className="home-page">
@@ -86,6 +107,16 @@ export function Home() {
                     ))}
                 </div>
             </div>
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <CustomAlert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+                    {alertMessage}
+                </CustomAlert>
+            </Snackbar>
         </div>
     )
 }

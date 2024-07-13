@@ -7,7 +7,9 @@ import { DateTime } from 'luxon'
 import { SiGooglecalendar } from "react-icons/si"
 import { SiZoom } from "react-icons/si"
 import { FaRedoAlt } from "react-icons/fa"
+import { FaRegCopy } from "react-icons/fa6"
 import { IoClose } from "react-icons/io5"
+import { Alert, Snackbar, styled } from "@mui/material"
 import './AvailabilityCalendar.css'
 import axios from 'axios'
 
@@ -24,6 +26,10 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     const [meetingEndSlot, setMeetingEndSlot] = useState(null);
     const [zoomAccessToken, setZoomAccessToken] = useState(null)
     const [isCreateZoomMeetingOpen, setIsCreateZoomMeetingOpen] = useState(false)
+    const [zoomJoinURL, setZoomJoinURL] = useState('')
+    const [isJoinURLDisplayed, setIsJoinURLDisplayed] = useState(false)
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
     const [selectedTimezone, setSelectedTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
     const findBestTimes = (availability) => {
@@ -349,13 +355,32 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 accessToken: zoomAccessToken, 
                 meetingDetails: zoomMeetingDetails
             });
+            setZoomJoinURL(response.data.joinURL)
             console.log('Meeting created:', response.data);
         } catch (error) {
             console.error('Error creating Zoom meeting:', error.response ? error.response.data : error.message);
         }
 
+        setAlertMessage("Zoom meeting created!")
+        setAlertOpen(true)
         setIsCreateZoomMeetingOpen(false)
+        setIsJoinURLDisplayed(true)
     }
+
+    const handleCopy = () => {
+        setAlertMessage("URL copied to clipboard")
+        setAlertOpen(false)
+        navigator.clipboard.writeText(zoomJoinURL).then(() => {
+          setAlertOpen(true);
+        });
+    };
+    
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setAlertOpen(false);
+    };
 
     const handleMouseDown = (day, time) => {
         if (display === 'all' && !isScheduling) {
@@ -500,6 +525,15 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         );
     };
 
+    const CustomAlert = styled(Alert)(({ theme }) => ({
+        backgroundColor: 'rgba(0, 123, 255)',
+        color: 'white',
+        borderRadius: '8px',
+        '.MuiAlert-action': {
+          color: 'white',
+        },
+    }));
+
     return (
         <div className='availability-info'>
             <div className="time-axis">
@@ -576,6 +610,34 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                     </div>
                 </div>
             )}
+            {isJoinURLDisplayed && 
+                <div className='overlay'>
+                    <div className='create-zoom-box'>
+                        <div className='zoom-box-header'>
+                            <div className='zoom-box-title'>Meeting URL</div>
+                            <IoClose size={20} className='close-zoom-button' onClick={() => setIsJoinURLDisplayed(false)}/>
+                        </div>
+                        <div className='url-container'>
+                            <div className='url-container-text'>
+                                <div>{zoomJoinURL}</div>
+                            </div>
+                            <div className='url-container-icon'>
+                                <FaRegCopy className='copy-button' onClick={handleCopy}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <CustomAlert onClose={handleClose} severity="success" sx={{ width: '100%' }} variant="filled">
+                    {alertMessage}
+                </CustomAlert>
+            </Snackbar>
         </div>
     );
 }
