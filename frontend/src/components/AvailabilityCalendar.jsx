@@ -30,7 +30,13 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     const [isJoinURLDisplayed, setIsJoinURLDisplayed] = useState(false)
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
-    const [selectedTimezone, setSelectedTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    const [selectedTimezone, setSelectedTimezone] = useState({
+        abbrev: "EDT",
+        altName: "Eastern Daylight Time",
+        label: "(GMT-4:00) Eastern Time",
+        offset: -4,
+        value: "America/Detroit"
+    })
 
     const findBestTimes = (availability) => {
         let maxCount = 0; 
@@ -302,6 +308,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
     };
 
     const handleCreateZoom = async () => {
+        console.log(selectedTimezone)
         let recurrence = null
         if (frequency === 'recurring') {
 
@@ -314,7 +321,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 first_occurance: parseDateTime(meetingStart, "start", "Zoom").toISOString()
             };
         }
-        
+        console.log(selectedTimezone)
         const zonedStartTime = DateTime.fromJSDate(parseDateTime(meetingStart, "start", "Zoom"), { zone: selectedTimezone.value });
         const formattedStartTime = zonedStartTime.toISO({ includeOffset: true });
 
