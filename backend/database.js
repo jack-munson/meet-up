@@ -63,9 +63,9 @@ const getMeetingsByUserId = async (userId) => {
     try {
         const query = `
             SELECT * FROM meetings
-            WHERE user_id = $1 OR $1 = ANY(accepted)
+            WHERE user_id = $1 OR accepted @> $2::jsonb
         `
-        const values = [userId]
+        const values = [userId, JSON.stringify({ [userId]: {} })]
         const result = await client.query(query, values)
         return result.rows
     } finally {
@@ -87,6 +87,24 @@ const getMeetingDetails = async (meetingId) => {
         return result.rows[0]
     }
     finally {
+        client.release()
+    }
+}
+
+const getUserName = async(userId) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            SELECT first_name, last_name
+            FROM users
+            WHERE user_id = $1
+        `
+        const values = [userId]
+        const result = await client.query(query, values)
+        console.log("db.js: ", result)
+        return result.rows[0]
+    } finally {
         client.release()
     }
 }
@@ -143,17 +161,23 @@ const validateInvite = async (token) => {
     }
 }
 
-const acceptInvite = async (userId, email, meetingId) => {
+const acceptInvite = async (userId, email, name, meetingId) => {
     const client = await pool.connect()
 
     try {
         const query = `
             UPDATE meetings
-            SET accepted = array_cat(accepted, ARRAY[$1, $2])
+            SET accepted = jsonb_set(
+                COALESCE(accepted, '{}'::jsonb),
+                $1::text[],
+                to_jsonb($2::jsonb)
+            )
             WHERE id = $3
             RETURNING accepted
         `;
-        const values = [userId, email, meetingId];
+        const path = `{${userId}}`
+        const info = { email: email, name: name }
+        const values = [path, info, meetingId];
         const result = await client.query(query, values)
         return result.rows[0]
     } finally {
@@ -239,5 +263,5 @@ const editMeetingTimes = async (meetingId, newStartTime, newEndTime) => {
 }
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
+    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
 };

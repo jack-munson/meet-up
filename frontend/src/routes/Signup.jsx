@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from 'react-icons-kit'
@@ -16,9 +16,18 @@ export function Signup() {
     const [password, setPassword] = useState('')
     const [type, setType] = useState('password')
     const [icon, setIcon] = useState(eyeOff)
+    const [inviteToken, setInviteToken] = useState('')
     const userId = '';
     const auth = getAuth();
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const token = queryParams.get('token');
+        if (token) {
+            setInviteToken(token)
+        }
+    }, [location.search])
 
     async function handleSignUp(e) {
         e.preventDefault()
@@ -36,8 +45,12 @@ export function Signup() {
             };
     
             const response = await axios.post('http://localhost:3000/api/create-user', userData);
-            console.log(response)
-            navigate('/home'); 
+            
+            if (inviteToken) {
+                handleInviteAcceptance(response.data, inviteToken)
+            } else {
+                navigate('/home')
+            } 
         } catch (error) {
             alert('Error signing up. Please try again later.');
         }
@@ -61,10 +74,31 @@ export function Signup() {
             }
 
             const response = await axios.post('http://localhost:3000/api/create-user', userData)
-
-            navigate('/home')
+            
+            if (inviteToken) {
+                handleInviteAcceptance(response.data, inviteToken)
+            } else {
+                navigate('/home')
+            }
         } catch {
             console.error('Error during Google sign-in:', error)
+        }
+    }
+
+    const handleInviteAcceptance = async (user, token) => {
+        try {
+            console.log("User: ", user)
+            const name = user.firstName + ' ' + user.lastName
+            
+            await axios.post('http://localhost:3000/api/accept-invite', {
+                userId: user.userId,
+                email: user.email,
+                name: name,
+                token: token
+            });
+            navigate('/home');
+        } catch (error) {
+            console.error('Error accepting invite: ', error);
         }
     }
 

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const db = require('./database')
 require('dotenv').config()
 const nodemailer = require('nodemailer')
+const { last } = require('lodash')
 
 router.use(bodyParser.json())
 
@@ -68,6 +69,24 @@ router.get('/get-meeting-details', async (req, res) => {
     }
 })
 
+router.get('/get-user-name', async (req, res) => {
+    const { userId } = req.query
+    console.log("userId in routes.js: ", userId)
+    try {
+        const name = await db.getUserName(userId)
+        let firstName = ''
+        let lastName = ''
+
+        if (name) {
+            firstName = name.first_name
+            lastName = name.last_name
+        }
+        res.status(200).json({ firstName: firstName, lastName: lastName})
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
 async function sendInviteEmail(email, token) {
     const inviteLink = `http://localhost:5173/invite/${token}`;
     const transporter = nodemailer.createTransport({
@@ -125,7 +144,7 @@ router.get('/invite/:token', async (req, res) => {
 })
 
 router.post('/accept-invite', async (req, res) => {
-    const { userId, token, email } = req.body
+    const { userId, token, email, name } = req.body
     console.log("userId (routes.js): ", userId)
     console.log("token (routes.js): ", token)
     console.log("email (routes.js): ", email)
@@ -133,7 +152,7 @@ router.post('/accept-invite', async (req, res) => {
     try {
         const meeting = await db.getMeetingId(token)
         console.log("Meeting (routes.js): ", meeting)
-        await db.acceptInvite(userId, email, meeting.meeting_id)
+        await db.acceptInvite(userId, email, name, meeting.meeting_id)
 
         res.status(200).json({ message: 'Invite accepted successfully' })
     } catch (error) {

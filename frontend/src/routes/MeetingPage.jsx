@@ -29,7 +29,7 @@ export function MeetingPage() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
-    const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
+    // const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -43,7 +43,12 @@ export function MeetingPage() {
     }
 
     const isAccepted = (invite) => {
-        return acceptedList.includes(invite)
+        for (const userId in meetingDetails.accepted) {
+            if (meetingDetails.accepted[userId].email === invite) {
+              return true;
+            }
+          }
+          return false;
     }
 
     const handleInputClick = (e) => {

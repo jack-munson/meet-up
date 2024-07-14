@@ -41,7 +41,7 @@ export function Signin() {
         .then((user) => {
             console.log(user)
             if (inviteToken) {
-                handleInviteAcceptance(user.user, inviteToken)
+                handleInviteAcceptance(user.user, inviteToken, "Firebase")
             }
             else {
                 navigate('/home')
@@ -64,13 +64,18 @@ export function Signin() {
         signInWithPopup(auth, provider)
         .then(function (result) {
             const user = result.user
+            console.log("User with Google sign in: ", user)
             const additionUserInfo = getAdditionalUserInfo(result)
             if (additionUserInfo.isNewUser) {
-                navigate('/signup')
+                if (inviteToken) {
+                    navigate(`/signup/token=${inviteToken}`)
+                } else {
+                    navigate('/signup')
+                }
             }
             else {
                 if (inviteToken) {
-                    handleInviteAcceptance(user, inviteToken);
+                    handleInviteAcceptance(user, inviteToken, "Google");
                 } else {
                     navigate('/home');
                 }
@@ -81,18 +86,43 @@ export function Signin() {
         })
     }
 
-    async function handleInviteAcceptance(user, token) {
-        try {
-            console.log("User: ", user)
-            console.log(user.uid)
-            await axios.post('http://localhost:3000/api/accept-invite', {
-                userId: user.uid,
-                email: user.email,
-                token: token
-            });
-            navigate('/home');
-        } catch (error) {
-            console.error('Error accepting invite: ', error);
+    const handleInviteAcceptance = async (user, token, method) => {
+        if (method === "Google") {
+            const { uid, displayName, email} = user
+
+            try {
+                await axios.post('http://localhost:3000/api/accept-invite', {
+                    userId: uid,
+                    email: email,
+                    name: displayName,
+                    token: token
+                });
+                navigate('/home');
+            } catch (error) {
+                console.error('Error accepting invite: ', error);
+            }
+        } else {
+            const { uid, email } = user
+            console.log(user)
+            console.log("uid: ", uid)
+            const response = await axios.get('http://localhost:3000/api/get-user-name', { 
+                params: { userId: uid } 
+            })
+            const firstName = response.firstName
+            const lastName = response.lastName
+            const name = firstName + ' ' + lastName
+
+            try {
+                await axios.post('http://localhost:3000/api/accept-invite', {
+                    userId: uid,
+                    email: email,
+                    name: name,
+                    token: token
+                });
+                navigate('/home');
+            } catch (error) {
+                console.error('Error accepting invite: ', error);
+            }
         }
     }
 
@@ -130,7 +160,7 @@ export function Signin() {
                     Google
                     </button>
                 <span className="instruction-medium">Don't have an account?</span>
-                <button className="signup-button" onClick={() => navigate("/signup")}>Sign up</button>
+                <button className="signup-button" onClick={() => navigate(inviteToken ? `/signup?token=${inviteToken}` : "/signup")}>Sign up</button>
             </form>
         </div>
     )
