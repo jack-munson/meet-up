@@ -579,14 +579,16 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                             className='google-meet-button' 
                             disabled={!meetingStart || !meetingEnd}
                             onClick={handleGoogleMeetClick}>
-                            <SiGooglecalendar className='google-meet-icon'/>
+                            <SiGooglecalendar className='google-meet-icon'
+                        />
                             <div className='open-in-text'>Open in Google Calendar</div>
                         </button>
                         <button 
                             className='zoom-button' 
                             disabled={!meetingStart || !meetingEnd}
                             onClick={handleZoomClick}>
-                            <SiZoom size={30} className='zoom-icon'/>
+                            <SiZoom size={30} className='zoom-icon'
+                        />
                             <div className='open-in-text'>Schedule with Zoom</div>
                         </button>
                     </div>

@@ -4,13 +4,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 10px 0px;
     width: 500px;
     height: fit-content;
+    max-height: 700px;
+    overflow: auto;
     border-radius: 30px;
     background-color: white;
-    gap: 25px;
+    padding: 20px 0px !important;
+}
+
+.create-meeting-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .meeting-form {
@@ -19,6 +27,14 @@
     justify-content: center;
     align-items: flex-start;
     gap: 25px;
+    margin-bottom: 25px;
+}
+
+.meeting-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
 }
 
 .meeting-title-input {     
@@ -33,29 +49,23 @@
     font-family: "Inter", sans-serif;
     font-size: 20px;        
     font-weight: 500;
-    padding: 10px;
-    margin-bottom: 0px !important;
     color: #373737 !important;
-    margin-top: 25px;
 }
 
 .meeting-title-input:focus {     
-    border-radius: 10px;
     box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
     outline: 2px solid #1E965C !important;
     outline-offset: -2px;   
     transition: outline-color 0.5s ease-in!important;     
-    height: 30px; 
-    width: 430px;   
-    font-family: "Inter", sans-serif;
-    font-size: 20px;        
-    font-weight: 500;
-    padding: 10px;
-    color: #373737;
 }
 
 .meeting-title-input::placeholder {
     color: #828282;
+}
+
+.small-error-message {
+    font-size: 14px;
+    color: #DA2A2A;
 }
 
 .meeting-description {
@@ -326,7 +336,6 @@
     background-color: #1E965C;
     font-family: 'Inter', sans-serif;
     color: white;
-    margin-bottom: 25px;
     border: none !important;
     outline: none !important;
 }
@@ -351,4 +360,14 @@
     background-color: #1E965C;
     font-family: 'Inter', sans-serif;
     color: white;
+}
+
+.create-meeting-button.disabled, 
+.create-meeting-button.disabled:hover, 
+.create-meeting-button.disabled:focus {
+    background-color: #E0E0E0 !important;
+    color: white !important;
+    border: none !important;
+    outline: none !important;
+    cursor: not-allowed !important;
 }

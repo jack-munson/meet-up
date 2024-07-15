@@ -80,7 +80,7 @@ export function Home() {
                 {isCreateMeetingOpen && (
                     <div className="overlay">
                         <div className="create-meeting-container">
-                            <CreateMeeting customClassName="custom-create-meeting" onCreateSuccess={addMeeting}/>
+                            <CreateMeeting onCreateSuccess={addMeeting}/>
                             <button onClick={handleCloseCreateMeeting} className="close-button">Cancel</button>
                         </div>
                     </div>

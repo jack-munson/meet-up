@@ -182,6 +182,9 @@ export function MeetingPage() {
                 meeting_start: response.data.updatedStartTime,
                 meeting_end: response.data.updatedEndTime
             }))
+            setAlertOpen(false)
+            setAlertMessage('Meeting scheduled')
+            setAlertOpen(true)
         } catch (error) {
             console.error("Error editing meeting times (MeetingPage.jsx): ", error)
         }

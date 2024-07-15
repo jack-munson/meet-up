@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import axios from "axios"
 import Select from 'react-select'
 import "./CreateMeeting.css"
@@ -15,7 +15,7 @@ for (let hour = 0; hour < 24; hour++) {
     times.push({ value: hour, label: timeString });
 }
 
-export function CreateMeeting({customClassName, onCreateSuccess}){
+export function CreateMeeting({onCreateSuccess}){
     const [meetingTitle, setMeetingTitle] = useState('')
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
@@ -23,6 +23,9 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     const [frequency, setFrequency] = useState('one-time')
     const [days, setDays] = useState([])
     const [dates, setDates] = useState([])
+    const [errors, setErrors] = useState(false)
+    const [titleError, setTitleError] = useState(false)
+    const [daysError, setDaysError] = useState(false)
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -32,7 +35,9 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     }
 
     const toggleDay = (day) => {
-        console.log(days)
+        if (daysError) {
+            setDaysError(false)
+        }
         if (days.includes(day)) {
             setDays(days.filter((d) => d !== day))
         } else {
@@ -40,7 +45,24 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         }
     }
 
+    useEffect(() => {
+        if (!titleError && !daysError) {
+            setErrors(false)
+        }
+    }, [titleError, daysError])
+
+    const handleFocus = (input) => {
+        if (input === "title") {
+          setTitleError(false);
+        } else if (input === "days") {
+          setDaysError(false);
+        }
+    };
+
     const handleDateChange = (newValue) => {
+        if (daysError) {
+            setDaysError(false)
+        }
         setDates(newValue.map(date => date.toDate().getTime()))
     }
 
@@ -59,6 +81,18 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
             dates.forEach(date => selectedDays.push(formatDate(date)))
         } else {
             selectedDays.push(...days)
+        }
+
+        if (meetingTitle === '' || selectedDays.length === 0) {
+            if (meetingTitle === '') {
+                setErrors(true)
+                setTitleError(true)
+            } 
+            if (selectedDays.length === 0) {
+                setErrors(true)
+                setDaysError(true)
+            }
+            return
         }
 
         try {
@@ -100,79 +134,102 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
     
 
     return (
-        <div className={`create-meeting-box ${customClassName}`}>
-            <input 
-                onChange={(e) => {setMeetingTitle(e.target.value)}}
-                className="meeting-title-input" 
-                type="text" 
-                maxLength="55"
-                placeholder="Enter meeting title"
-            />
-            <div className="meeting-form">
-                <div className="meeting-description">
-                    <div className="meeting-description-text">What is your meeting about?</div>
-                    <textarea 
-                        onChange={(e) => {setMeetingDescription(e.target.value)}} 
-                        className="meeting-description-input" 
+        <div className="create-meeting-box">
+            <div className='create-meeting-content'>
+                <div className='meeting-title'>
+                    <input 
+                        onChange={(e) => {setMeetingTitle(e.target.value)}}
+                        onFocus={() => handleFocus('title')}
+                        className="meeting-title-input" 
                         type="text" 
-                        placeholder="In this meeting we'll be discussing..."
+                        maxLength="55"
+                        placeholder="Enter meeting title"
                     />
+                    {titleError && 
+                        <div className='small-error-message'>Please enter a title for your meeting</div>
+                    }
                 </div>
-                
-                <div className="meeting-frequency">
-                    <div className="meeting-description-text">Is this a one-time or recurring meeting?</div>
-                    <ToggleButtonGroup className="frequency-options" onChange={handleFrequencyChange} value={frequency} exclusive>
-                        <ToggleButton className="frequency-option one-time" disableRipple value="one-time">One-time</ToggleButton>
-                        <ToggleButton className="frequency-option recurring" disableRipple value="recurring">Recurring</ToggleButton>
-                    </ToggleButtonGroup>
-                </div>
-
-                <div className="day-selection">
-                    {frequency === 'one-time' ? (
-                        <div className="meeting-description-text">What dates might work?</div>
-                    ) : (
-                        <div className="meeting-description-text">What days might work?</div>
-                    )}
-                    {frequency === 'one-time' ? (
-                        <DatePicker handleDateChange={handleDateChange} dates={dates}/>
-                    ) : (
-                        <div className="days-of-the-week">
-                            <div className={`day ${days.includes("SUN") ? "selected" : ""}`} onClick={() => toggleDay("SUN")}>S</div>
-                            <div className={`day ${days.includes("MON") ? "selected" : ""}`} onClick={() => toggleDay("MON")}>M</div>
-                            <div className={`day ${days.includes("TUE") ? "selected" : ""}`} onClick={() => toggleDay("TUE")}>T</div>
-                            <div className={`day ${days.includes("WED") ? "selected" : ""}`} onClick={() => toggleDay("WED")}>W</div>
-                            <div className={`day ${days.includes("THU") ? "selected" : ""}`} onClick={() => toggleDay("THU")}>T</div>
-                            <div className={`day ${days.includes("FRI") ? "selected" : ""}`} onClick={() => toggleDay("FRI")}>F</div>
-                            <div className={`day ${days.includes("SAT") ? "selected" : ""}`} onClick={() => toggleDay("SAT")}>S</div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="meeting-time">
-                    <div className="meeting-description-text">What times would you like to meet between?</div>
-                    <div className="meeting-times">
-                        <Select 
-                            onChange={(e) => {setStartTime(e)}} 
-                            className="meeting-time-input" 
-                            classNamePrefix= "react-select" 
-                            options={times} 
-                            isSearchable={false} 
-                            value={startTime}
-                            menuPlacement="top"/>
-                        <div>to</div>
-                        <Select 
-                            onChange={(e) => {setEndTime(e)}} 
-                            className="meeting-time-input" 
-                            classNamePrefix= "react-select" 
-                            options={times} 
-                            isSearchable={false} 
-                            value={endTime}
-                            menuPlacement="top"/>
+                <div className="meeting-form">
+                    <div className="meeting-description">
+                        <div className="meeting-description-text">What is your meeting about?</div>
+                        <textarea 
+                            onChange={(e) => {setMeetingDescription(e.target.value)}} 
+                            className="meeting-description-input" 
+                            type="text" 
+                            placeholder="In this meeting we'll be discussing..."
+                        />
                     </div>
-                </div>
+                    
+                    <div className="meeting-frequency">
+                        <div className="meeting-description-text">Is this a one-time or recurring meeting?</div>
+                        <ToggleButtonGroup className="frequency-options" onChange={handleFrequencyChange} value={frequency} exclusive>
+                            <ToggleButton className="frequency-option one-time" disableRipple value="one-time">One-time</ToggleButton>
+                            <ToggleButton className="frequency-option recurring" disableRipple value="recurring">Recurring</ToggleButton>
+                        </ToggleButtonGroup>
+                    </div>
 
+                    <div className="day-selection">
+                        {frequency === 'one-time' ? (
+                            <div className="meeting-description-text">What dates might work?</div>
+                        ) : (
+                            <div className="meeting-description-text">What days might work?</div>
+                        )}
+                        {frequency === 'one-time' ? (
+                            <DatePicker handleDateChange={handleDateChange} dates={dates}/>
+                        ) : (
+                            <div className="days-of-the-week">
+                                <div className={`day ${days.includes("SUN") ? "selected" : ""}`} onClick={() => toggleDay("SUN")}>S</div>
+                                <div className={`day ${days.includes("MON") ? "selected" : ""}`} onClick={() => toggleDay("MON")}>M</div>
+                                <div className={`day ${days.includes("TUE") ? "selected" : ""}`} onClick={() => toggleDay("TUE")}>T</div>
+                                <div className={`day ${days.includes("WED") ? "selected" : ""}`} onClick={() => toggleDay("WED")}>W</div>
+                                <div className={`day ${days.includes("THU") ? "selected" : ""}`} onClick={() => toggleDay("THU")}>T</div>
+                                <div className={`day ${days.includes("FRI") ? "selected" : ""}`} onClick={() => toggleDay("FRI")}>F</div>
+                                <div className={`day ${days.includes("SAT") ? "selected" : ""}`} onClick={() => toggleDay("SAT")}>S</div>
+                            </div>
+                        )}
+                        {daysError && 
+                            <div className='small-error-message'>Please select {frequency === 'one-time' ? "dates" : "days"}</div>
+                        }
+                    </div>
+
+                    <div className="meeting-time">
+                        <div className="meeting-description-text">What times would you like to meet between?</div>
+                        <div className="meeting-times">
+                            <Select 
+                                onChange={(e) => {setStartTime(e)}} 
+                                className="meeting-time-input" 
+                                classNamePrefix= "react-select" 
+                                options={times} 
+                                isSearchable={false} 
+                                value={startTime}
+                                menuPlacement="top"/>
+                            <div>to</div>
+                            <Select 
+                                onChange={(e) => {setEndTime(e)}} 
+                                className="meeting-time-input" 
+                                classNamePrefix= "react-select" 
+                                options={times} 
+                                isSearchable={false} 
+                                value={endTime}
+                                menuPlacement="top"/>
+                        </div>
+                    </div>
+
+                </div>
+                <div className='create-meeting'>
+                    <button 
+                        type="button" 
+                        onClick={(e) => {handleCreate(e)}} 
+                        className={`create-meeting-button ${errors ? 'disabled' : ''}`}
+                        disabled={errors}
+                    >
+                        Create meeting
+                    </button>
+                    {errors && 
+                        <div className='small-error-message'>Fix errors before continuing</div>
+                    }
+                </div>
             </div>
-            <button type="button" onClick={(e) => {handleCreate(e)}} className="create-meeting-button">Create meeting</button>
         </div>
     )
 }
