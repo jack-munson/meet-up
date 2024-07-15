@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from 'react-icons-kit'
 import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
+import { Alert, Snackbar, styled } from "@mui/material"
 import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import GoogleLogo from "../public/google-logo.webp"
 import axios from "axios"
@@ -17,8 +18,13 @@ export function Signup() {
     const [type, setType] = useState('password')
     const [icon, setIcon] = useState(eyeOff)
     const [inviteToken, setInviteToken] = useState('')
-    const userId = '';
-    const auth = getAuth();
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [emailError, setEmailError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
+    const [firstNameError, setFirstNameError] = useState(false)
+    const [lastNameError, setLastNameError] = useState(false)
+    const auth = getAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -34,6 +40,12 @@ export function Signup() {
         let userId = ''
 
         try {
+            if (firstName === "") {
+                throw { code: "invalid-first-name" };
+              }
+              if (lastName === "") {
+                throw { code: "invalid-last-name" };
+              }
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             userId = userCredential.user.uid
 
@@ -52,7 +64,33 @@ export function Signup() {
                 navigate('/home')
             } 
         } catch (error) {
-            alert('Error signing up. Please try again later.');
+            console.log(error.code)
+            if (error.code === "invalid-first-name") {
+                setAlertOpen(false)
+                setFirstNameError(true)
+                setAlertMessage('First name field cannot be empty')
+                setAlertOpen(true)
+            } else if (error.code === "invalid-last-name") {
+                setAlertOpen(false)
+                setLastNameError(true)
+                setAlertMessage('Last name field cannot be empty')
+                setAlertOpen(true)
+            } else if (error.code === "auth/invalid-email") {
+                setAlertOpen(false)
+                setEmailError(true)
+                setAlertMessage('Inavid email')
+                setAlertOpen(true)
+            }
+            else if (error.code === "auth/weak-password" || error.code === "auth/missing-password") {
+                setAlertOpen(false)
+                setPasswordError(true)
+                setAlertMessage('Password should be at least 6 characters')
+                setAlertOpen(true)
+            } else {
+                setAlertOpen(false)
+                setAlertMessage('Error signing up')
+                setAlertOpen(true)
+            }
         }
     }
 
@@ -102,6 +140,34 @@ export function Signup() {
         }
     }
 
+    const CustomAlert = styled(Alert)(({ theme }) => ({
+        backgroundColor: '#DADADAD',
+        color: 'white',
+        borderRadius: '8px',
+        '.MuiAlert-action': {
+          color: 'white',
+        },
+    }));
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setAlertOpen(false);
+    };
+
+    const handleFocus = (input) => {
+        if (input === "email") {
+          setEmailError(false);
+        } else if (input === "password") {
+          setPasswordError(false);
+        } else if (input === "first") {
+            setFirstNameError(false)
+        } else if (input === "last") {
+            setLastNameError(false)
+        }
+    };
+
     const handleToggle = () => {
         if (type==='password'){
            setIcon(eye);
@@ -118,11 +184,35 @@ export function Signup() {
         <div className="auth-box">
             <img className="auth-logo" onClick={() => navigate("/")} src={MainLogo} alt="MeetUp logo"></img>
             <form action="">
-                <input onChange={(e) => {setFirstName(e.target.value)}} type="text" placeholder="First name" className="auth-input"/>
-                <input onChange={(e) => {setLastName(e.target.value)}} type="text" placeholder="Last name" className="auth-input"/>
-                <input onChange={(e) => {setEmail(e.target.value)}} type="text" placeholder="email@domain.com" className="auth-input"/>
+                <input 
+                    onChange={(e) => {setFirstName(e.target.value)}} 
+                    onFocus={() => handleFocus('first')}
+                    type="text" 
+                    placeholder="First name" 
+                    className={`auth-input ${firstNameError ? "input-error" : ""}`}
+                />
+                <input 
+                    onChange={(e) => {setLastName(e.target.value)}} 
+                    onFocus={() => handleFocus('last')}
+                    type="text" 
+                    placeholder="Last name" 
+                    className={`auth-input ${lastNameError ? "input-error" : ""}`}
+                />
+                <input 
+                    onChange={(e) => {setEmail(e.target.value)}} 
+                    onFocus={() => handleFocus('email')}
+                    type="text" 
+                    placeholder="email@domain.com"
+                    className={`auth-input ${emailError ? "input-error" : ""}`}
+                />
                 <div className="input-container">
-                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password" className="auth-input"/>
+                    <input 
+                        onChange={(e) => {setPassword(e.target.value)}} 
+                        onFocus={() => handleFocus('password')}
+                        type={type} 
+                        placeholder="Password" 
+                        className={`auth-input ${passwordError ? "input-error" : ""}`}
+                    />
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                 </div>
                 <button className="signup-button" style={{ marginBottom: '0px' }} type="button" onClick={(e) => {handleSignUp(e)}}>Sign Up</button>
@@ -132,6 +222,16 @@ export function Signup() {
                     Google
                 </button>
             </form>
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <CustomAlert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+                    {alertMessage}
+                </CustomAlert>
+            </Snackbar>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopu
 import { Icon } from 'react-icons-kit'
 import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
+import { Alert, Snackbar, styled } from "@mui/material"
 import MainLogo from "../public/MeetUp-main-logo-green.svg"
 import GoogleLogo from "../public/google-logo.webp"
 import axios from "axios"
@@ -12,13 +13,17 @@ import "../styles/Authentication.css"
 export function Signin() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [type, setType] = useState('password');
-    const [icon, setIcon] = useState(eyeOff);
+    const [type, setType] = useState('password')
+    const [icon, setIcon] = useState(eyeOff)
+    const [inviteToken, setInviteToken] = useState('')
+    const [meetingTitle, setMeetingTitle] = useState('')
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [emailError, setEmailError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
     const auth = getAuth()
     const navigate = useNavigate()
     const location = useLocation()
-    const [inviteToken, setInviteToken] = useState('')
-    const [meetingTitle, setMeetingTitle] = useState('')
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -50,10 +55,26 @@ export function Signin() {
         .catch((error) => {
             console.log(error)
             if (error.code === "auth/invalid-email") {
-                alert("Invalid email, please try again")
+                setAlertOpen(false)
+                setEmailError(true)
+                setAlertMessage('Inavid email')
+                setAlertOpen(true)
             }
             else if (error.code == "auth/invalid-credential") {
-                alert("Those credentials do not match any known user. Please try again.")
+                setAlertOpen(false)
+                setEmailError(true)
+                setPasswordError(true)
+                setAlertMessage('Those credentials do not match any known users')
+                setAlertOpen(true)
+            } else if (error.code === "auth/missing-password") {
+                setAlertOpen(false)
+                setAlertMessage('Please enter your password')
+                setPasswordError(true)
+                setAlertOpen(true)
+            } else {
+                setAlertOpen(false)
+                setAlertMessage("Error signing in")
+                setAlertOpen(true)
             }
         })
     }
@@ -126,6 +147,30 @@ export function Signin() {
         }
     }
 
+    const CustomAlert = styled(Alert)(({ theme }) => ({
+        backgroundColor: '#DA2A2A',
+        color: 'white',
+        borderRadius: '8px',
+        '.MuiAlert-action': {
+          color: 'white',
+        },
+    }));
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setAlertOpen(false);
+    };
+
+    const handleFocus = (input) => {
+        if (input === "email") {
+          setEmailError(false);
+        } else if (input === "password") {
+          setPasswordError(false);
+        }
+    };
+
     const handleToggle = () => {
         if (type==='password'){
            setIcon(eye);
@@ -148,9 +193,21 @@ export function Signin() {
                 </div>
             )}
             <form action="">
-                <input onChange={(e) => {setEmail(e.target.value)}} type="email" placeholder="email@domain.com" className="auth-input"/>
+                <input 
+                    onChange={(e) => {setEmail(e.target.value)}}
+                    onFocus={() => handleFocus("email")} 
+                    type="email" 
+                    placeholder="email@domain.com" 
+                    className={`auth-input ${emailError ? "input-error" : ""}`}
+                />
                 <div className="input-container">
-                    <input onChange={(e) => {setPassword(e.target.value)}} type={type} placeholder="Password" className="auth-input"></input>
+                    <input 
+                        onChange={(e) => {setPassword(e.target.value)}} 
+                        onFocus={() => handleFocus("password")}
+                        type={type} 
+                        placeholder="Password" 
+                        className={`auth-input ${passwordError ? "input-error" : ""}`}
+                    />
                     <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                 </div>
                 <button className="signin-button" type="button" onClick={(e) => {handleSignIn(e)}}>Sign In</button>
@@ -162,6 +219,16 @@ export function Signin() {
                 <span className="instruction-medium">Don't have an account?</span>
                 <button className="signup-button" onClick={() => navigate(inviteToken ? `/signup?token=${inviteToken}` : "/signup")}>Sign up</button>
             </form>
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <CustomAlert onClose={handleClose} severity="error" sx={{ width: '100%' }} variant="filled">
+                    {alertMessage}
+                </CustomAlert>
+            </Snackbar>
         </div>
     )
 }

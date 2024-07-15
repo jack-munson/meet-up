@@ -34,6 +34,10 @@
     color: #373737;
 }
 
+.auth-input.input-error {
+    outline: 2px solid #DA2A2A;
+}
+
 .auth-input:focus {
     box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
     outline: 2px solid #1E965C !important;

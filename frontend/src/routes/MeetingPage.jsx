@@ -10,7 +10,6 @@ import { AvailabilityCalendar } from "../components/AvailabilityCalendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
 import { FiEdit } from "react-icons/fi";
-import { IoClose } from "react-icons/io5"
 import { MdDeleteForever } from "react-icons/md";
 import { Alert, Snackbar, styled } from "@mui/material"
 import { getAuth } from "firebase/auth"
