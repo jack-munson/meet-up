@@ -49,7 +49,7 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         const month = date.getMonth() + 1;
         const day = date.getDate();
         return `${month}/${day}`;
-      }
+    }
 
     const handleCreate = async (e) => {
         e.preventDefault()
@@ -62,6 +62,12 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
         }
 
         try {
+            const nameInfo = await axios.get('http://localhost:3000/api/get-user-name', { 
+                params: { userId: user.uid }
+            })
+            const firstName = nameInfo.data.firstName
+            const lastName = nameInfo.data.lastName
+            const name = firstName + ' ' + lastName
             const meetingData = {
                 userId: user.uid,
                 title: meetingTitle,
@@ -69,14 +75,18 @@ export function CreateMeeting({customClassName, onCreateSuccess}){
                 startTime: startTime.value,
                 endTime: endTime.value,
                 frequency: frequency,
-                days: selectedDays
+                days: selectedDays,
+                accepted: {
+                    [user.uid]: {
+                        name: name,
+                        email: user.email
+                    }
+                }
             }
     
             const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData)
     
             console.log('Meeting created successfully (CreateMeeting.jsx)')
-            console.log(response.data.newMeeting)
-            console.log(response.data.userMeetings)
             
             if (onCreateSuccess) {
                 onCreateSuccess(response.data.newMeeting)

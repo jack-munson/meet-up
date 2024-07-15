@@ -106,7 +106,7 @@ export function Signin() {
             console.log(user)
             console.log("uid: ", uid)
             const response = await axios.get('http://localhost:3000/api/get-user-name', { 
-                params: { userId: uid } 
+                params: { userId: uid }
             })
             const firstName = response.firstName
             const lastName = response.lastName

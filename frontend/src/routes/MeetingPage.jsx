@@ -29,7 +29,6 @@ export function MeetingPage() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
-    // const acceptedList = Array.isArray(meetingDetails.accepted) ? meetingDetails.accepted : []
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -198,7 +197,6 @@ export function MeetingPage() {
                 setMeetingDetails(response.data.meeting)
                 setMeetingStart(response.data.meeting.meeting_start || null)
                 setMeetingEnd(response.data.meeting.meeting_end || null)
-                console.log(response.data.meeting)
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
             }

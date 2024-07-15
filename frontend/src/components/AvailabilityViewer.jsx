@@ -2,27 +2,24 @@ import React from 'react';
 import './AvailabilityViewer.css';
 
 export function AvailabilityViewer({ userId, responded, available }) {
-    // Filter and convert responded array into a set
-    const respondedSet = new Set(responded.filter(email => !email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)));
+    console.log(available)
+    console.log(userId)
+    const respondedSet = new Set(Object.keys(responded));
 
-    // Convert available array into a set
     const availableSet = new Set(available);
 
     return (
         <div className="availability-viewer">
-            <div className="availability-header">Available ({availableSet.size}/{respondedSet.size + 1}):</div>
+            <div className="availability-header">Available ({availableSet.size}/{respondedSet.size}):</div>
             <div className="availability-list">
-                {[...respondedSet].map(userId => (
+                {[...respondedSet].map(id => (
                     <div
-                        key={userId}
-                        className={`respondent ${availableSet.has(userId) ? 'available' : 'unavailable'}`}
+                        key={id}
+                        className={`respondent ${availableSet.has(id) ? 'available' : 'unavailable'}`}
                     >
-                        {userId}
+                        {id === userId ? "You" : responded[id].name}
                     </div>
                 ))}
-                <div className={`respondent ${availableSet.has(userId) ? 'available' : 'unavailable'}`}>
-                    You
-                </div>
             </div>
         </div>
     );

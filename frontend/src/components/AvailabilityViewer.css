@@ -2,12 +2,18 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 265px;
 }
 
 .availability-header {
-    font-weight: bold;
+    font-weight: 550;
     font-size: 20px;
     margin-bottom: 5px;
+}
+
+.availability-list {
+    font-size: 18px;
+    text-align: left;
 }
 
 .respondent {

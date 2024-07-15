@@ -11,9 +11,9 @@ router.use(bodyParser.json())
 
 router.post('/create-meeting', async (req, res) => {
     try {
-        const { userId, title, description, startTime, endTime, frequency, days } = req.body
+        const { userId, title, description, startTime, endTime, frequency, days, accepted } = req.body
         
-        const result = await db.createMeeting(userId, title, description, startTime, endTime, frequency, days)
+        const result = await db.createMeeting(userId, title, description, startTime, endTime, frequency, days, accepted)
         
         res.status(201).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
     } catch (error) {
@@ -76,11 +76,13 @@ router.get('/get-user-name', async (req, res) => {
         const name = await db.getUserName(userId)
         let firstName = ''
         let lastName = ''
-
+        console.log("name: ", name)
         if (name) {
             firstName = name.first_name
             lastName = name.last_name
         }
+        console.log("firstName: ", firstName)
+        console.log("lastName: ", lastName)
         res.status(200).json({ firstName: firstName, lastName: lastName})
     } catch (error) {
         res.status(500).json({ error: 'Internal server error'})

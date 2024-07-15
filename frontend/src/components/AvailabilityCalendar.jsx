@@ -477,7 +477,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
             if (display === 'all') {
                 const count = (groupAvailability[slot] && groupAvailability[slot].length) || 0;
                 if (count) {
-                    backgroundColor = `rgba(30, 150, 92, ${Math.min(count / ((Object.keys(accepted).length) + 1), 1)})`;
+                    backgroundColor = `rgba(30, 150, 92, ${Math.min(count / Object.keys(accepted).length, 1)})`;
                 } else {
                     backgroundColor = 'white';
                 }
@@ -558,10 +558,11 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                 </div>
             </div>
             <div className='right-panel-content'>
-                {/* <AvailabilityViewer
+                <AvailabilityViewer
+                    userId={userId}
                     available={available}
                     responded={accepted}
-                /> */}
+                />
                 {display === 'all' && 
                     <div className='scheduling-buttons'>
                         <TimezoneSelect
