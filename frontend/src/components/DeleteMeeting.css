@@ -1,16 +1,18 @@
 .delete-meeting-container {
-    width: 600px;
-    height: 175px;
-    border-radius: 20px;
+    width: 500px;
+    height: fit-content;
+    border-radius: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: white;
+    padding: 25px;
+    gap: 30px;
 }
 
 .delete-meeting-text {
-    font-size: 25px;
+    font-size: 22px;
     font-weight: 500;
     color: #373737;
 }
@@ -20,13 +22,8 @@
     color: #828282;
 }
 
-.delete-meeting-buttons {
-    margin-top: 15px;
-    gap: 15px;
-    display: flex;
-}
-
-.delete-button {
+.delete-button, .delete-button:active {
+    width: 150px;
     background-color: #DA2A2A;
     transition: background-color 0.3s;
     color: white;
@@ -37,36 +34,6 @@
     outline: 3px solid #DA2A2A;
     outline-offset: -3px;
     background-color: white;
-    color: #373737;
-    border: none;
-}
-
-.delete-button:active {
-    background-color: #DA2A2A;
-    transition: background-color 0.3s;
-    color: white;
-    border: none;
-}
-
-.cancel-button {
-    transition: background-color 0.3s;
-    background-color: #EEEEEE;
-    color: #373737;
-    border: none;
-}
-
-.cancel-button:hover {
-    outline: 3px solid #EEEEEE;
-    transition: background-color 0.3s;
-    background-color: white;
-    outline-offset: -3px;
-    color: #373737;
-    border: none;
-}
-
-.cancel-button:active {
-    transition: background-color 0.3s;
-    background-color: #EEEEEE;
     color: #373737;
     border: none;
 }

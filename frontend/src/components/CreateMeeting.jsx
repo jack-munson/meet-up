@@ -6,6 +6,7 @@ import "./CreateMeeting.css"
 import { getAuth } from "firebase/auth"
 import { DatePicker } from './DatePicker'
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { IoClose } from "react-icons/io5"
 
 const times = [];
 for (let hour = 0; hour < 24; hour++) {
@@ -15,7 +16,7 @@ for (let hour = 0; hour < 24; hour++) {
     times.push({ value: hour, label: timeString });
 }
 
-export function CreateMeeting({onCreateSuccess}){
+export function CreateMeeting({ onCreateSuccess, onCancel }){
     const [meetingTitle, setMeetingTitle] = useState('')
     const [meetingDescription, setMeetingDescription] = useState('')
     const [startTime, setStartTime] = useState({ value: 9, label: '9 am' })
@@ -135,6 +136,12 @@ export function CreateMeeting({onCreateSuccess}){
 
     return (
         <div className="create-meeting-box">
+            {onCancel && 
+                <div className='zoom-box-header'>
+                    <div className='zoom-box-title'>Create MeetUp</div>
+                    <IoClose size={20} className='close-zoom-button' onClick={onCancel}/>
+                </div>
+            }
             <div className='create-meeting-content'>
                 <div className='meeting-title'>
                     <input 
@@ -216,19 +223,19 @@ export function CreateMeeting({onCreateSuccess}){
                     </div>
 
                 </div>
-                <div className='create-meeting'>
-                    <button 
-                        type="button" 
-                        onClick={(e) => {handleCreate(e)}} 
-                        className={`create-meeting-button ${errors ? 'disabled' : ''}`}
-                        disabled={errors}
-                    >
-                        Create meeting
-                    </button>
-                    {errors && 
-                        <div className='small-error-message'>Fix errors before continuing</div>
-                    }
-                </div>
+            </div>
+            <div className='create-meeting'>
+                <button 
+                    type="button" 
+                    onClick={(e) => {handleCreate(e)}} 
+                    className={`create-meeting-button ${errors ? 'disabled' : ''}`}
+                    disabled={errors}
+                >
+                    Create meeting
+                </button>
+                {errors && 
+                    <div className='small-error-message'>Fix errors before continuing</div>
+                }
             </div>
         </div>
     )

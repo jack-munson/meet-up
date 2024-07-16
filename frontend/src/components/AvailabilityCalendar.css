@@ -225,6 +225,9 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: rgba(109, 109, 109, 0.2) 0px 0px 10px 0px;
 }
 
 .close-zoom-button {
@@ -241,8 +244,12 @@
 }
 
 .zoom-meeting-title {
-  font-size: 25px;
+  font-size: 26px;
   font-weight: 500;
+}
+
+.zoom-meeting-description {
+  font-size: 16px;
 }
 
 .zoom-meeting-info {
@@ -259,7 +266,7 @@
 
 .zoom-meeting-day-text {
   color: #373737;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 450;
 }
 

@@ -22,7 +22,7 @@ export function HomeHeader(){
         <div className="banner">
             <img src={MainLogo} className="header-logo" alt="MeetUp logo" onClick={() => navigate("/")}/>
             <div className = "nav-buttons">
-                <div className="menu-button" onClick={() => navigate("/home")}>MEETINGS</div>
+                <div className="menu-button" onClick={() => navigate("/home")}>MEETUPS</div>
                 <div className="menu-button" onClick={() => navigate("/profile")}>PROFILE</div>
                 <div className="menu-button" onClick={(e) => {handleSignOut(e)}}>SIGN OUT</div>
             </div>

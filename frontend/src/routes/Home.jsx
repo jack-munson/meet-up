@@ -74,14 +74,13 @@ export function Home() {
             <HomeHeader></HomeHeader>
             <div className="page-content">
                 <div className="sub-header">
-                    <div className="sub-header-text">Your Meetings</div>
+                    <div className="sub-header-text">Your MeetUps</div>
                     <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
                 </div>
                 {isCreateMeetingOpen && (
                     <div className="overlay">
                         <div className="create-meeting-container">
-                            <CreateMeeting onCreateSuccess={addMeeting}/>
-                            <button onClick={handleCloseCreateMeeting} className="close-button">Cancel</button>
+                            <CreateMeeting onCreateSuccess={addMeeting} onCancel={handleCloseCreateMeeting}/>
                         </div>
                     </div>
                 )}
