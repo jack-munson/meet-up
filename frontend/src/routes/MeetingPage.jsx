@@ -152,7 +152,6 @@ export function MeetingPage() {
             }
 
             const response = await axios.post('http://localhost:3000/api/edit-availability', availabilityData)
-            console.log("MeetingPage.jsx (handleSaveAvailability): ", response.data.updatedAvailability)
             setMeetingDetails(prevState => ({
                 ...prevState,
                 availability: response.data.updatedAvailability
@@ -166,9 +165,6 @@ export function MeetingPage() {
     }
 
     const handleUpdateMeetingTimes = async (start, end) => {
-        console.log("Start in MeetingPage.jsx: ", start)
-        console.log("End in MeetingPage.jsx: ", end)
-
         try {
             const meetingTimeData = {
                 meetingId: meetingDetails.id,
