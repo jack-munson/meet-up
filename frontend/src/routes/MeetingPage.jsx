@@ -204,7 +204,7 @@ export function MeetingPage() {
             }))
             setIsEditMeetingOpen(false)
             setAlertOpen(false)
-            setAlertMessage('Meeting updated')
+            setAlertMessage('Meeting details updated')
             setAlertOpen(true)
         } catch (error) {
             console.error("Error editing meeting (MeetingPage.jsx): ", error)
