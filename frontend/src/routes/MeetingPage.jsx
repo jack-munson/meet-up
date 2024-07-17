@@ -54,10 +54,6 @@ export function MeetingPage() {
             e.stopPropagation()
         }
     }
-    
-    const handleCloseDeleteMeetingClick = () => {
-        setIsDeleteMeetingOpen(false)
-    }
 
     const handleScheduleMeetingClick = () => {
         if (isScheduleMeetingOpen) {
@@ -73,8 +69,12 @@ export function MeetingPage() {
         setIsEditingAvailability(!isEditingAvailability)
     }
 
+    const handleEditMeetingClick = () => {
+        setIsEditMeetingOpen(!isEditMeetingOpen)
+    }
+
     const handleDeleteMeetingClick = () => {
-        setIsDeleteMeetingOpen(true)
+        setIsDeleteMeetingOpen(!isDeleteMeetingOpen)
     }
 
     const updateSelectedSlots = (slots) => {
@@ -189,6 +189,27 @@ export function MeetingPage() {
             console.error("Error editing meeting times (MeetingPage.jsx): ", error)
         }
     }
+
+    const handleMeetingUpdate = async (newMeetingDetails) => {
+        try {
+            console.log("newMeetingDetails before API call: ", newMeetingDetails)
+            const response = await axios.post('http://localhost:3000/api/edit-meeting', newMeetingDetails)
+            setMeetingDetails(prevState => ({
+                ...prevState,
+                title: response.data.newTitle,
+                description: response.data.newDescription,
+                days: response.data.newDays,
+                start_time: response.data.newStartTime,
+                end_time: response.data.newEndTime
+            }))
+            setIsEditMeetingOpen(false)
+            setAlertOpen(false)
+            setAlertMessage('Meeting updated')
+            setAlertOpen(true)
+        } catch (error) {
+            console.error("Error editing meeting (MeetingPage.jsx): ", error)
+        }
+    }
     
     useEffect(() => {
         const fetchMeetingDetails = async () => {
@@ -233,7 +254,7 @@ export function MeetingPage() {
                     <div className="meeting-sub-header-text">{meetingDetails.title}</div>
                         {isAdmin(user.uid) &&
                         <div className="meeting-sub-header-buttons">
-                            <FiEdit size={40} className="meeting-edit-button" onClick={handleEditAvailabilityClick} alt="Edit"/>
+                            <FiEdit size={40} className="meeting-edit-button" onClick={handleEditMeetingClick} alt="Edit"/>
                             <MdDeleteForever size={48} className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete"/>
                         </div>
                         }
@@ -294,12 +315,15 @@ export function MeetingPage() {
             </div>
             {isEditMeetingOpen && (
                 <div className="overlay">
-                    <EditMeeting/>
+                    <EditMeeting 
+                        onCancel={handleEditMeetingClick} 
+                        onSubmit={(newDetails) => handleMeetingUpdate(newDetails)} 
+                        meetingDetails={meetingDetails || null}/>
                 </div>
             )}
             {isDeleteMeetingOpen && (
                 <div className="overlay">
-                    <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleCloseDeleteMeetingClick}/>
+                    <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleDeleteMeetingClick}/>
                 </div>
             )}
             {!isEditingAvailability && (

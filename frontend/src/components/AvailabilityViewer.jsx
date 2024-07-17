@@ -2,8 +2,6 @@ import React from 'react';
 import './AvailabilityViewer.css';
 
 export function AvailabilityViewer({ userId, responded, available }) {
-    console.log(available)
-    console.log(userId)
     const respondedSet = new Set(Object.keys(responded));
 
     const availableSet = new Set(available);
@@ -17,7 +15,7 @@ export function AvailabilityViewer({ userId, responded, available }) {
                         key={id}
                         className={`respondent ${availableSet.has(id) ? 'available' : 'unavailable'}`}
                     >
-                        {id === userId ? "You" : responded[id].name}
+                        {id === userId ? "You" : (responded[id].name ? responded[id].name : responded[id].email)}
                     </div>
                 ))}
             </div>

@@ -40,6 +40,30 @@ const createMeeting = async (userId, title, description, startTime, endTime, fre
     }
 }
 
+const editMeeting = async (id, newTitle, newDescription, newDays, newStartTime, newEndTime) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            UPDATE meetings
+                SET title = $2,
+                    description = $3,
+                    days = $4,
+                    start_time = $5,
+                    end_time = $6
+            WHERE id = $1
+            RETURNING title, description, days, start_time, end_time
+        `
+        const values = [id, newTitle, newDescription, newDays, newStartTime, newEndTime]
+        const result = await client.query(query, values)
+        const { title, description, days, start_time, end_time } = result.rows[0];
+
+        return { title, description, days, start_time, end_time }
+    } finally {
+        client.release()
+    }
+}
+
 const createUser = async (userId, firstName, lastName, email) => {
     const client = await pool.connect()
 
@@ -264,5 +288,5 @@ const editMeetingTimes = async (meetingId, newStartTime, newEndTime) => {
 }
 
 module.exports = {
-    createMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
+    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
 };

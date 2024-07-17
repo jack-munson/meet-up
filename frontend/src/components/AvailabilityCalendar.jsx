@@ -123,7 +123,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [meetingStartSlot, meetingEndSlot])
+    }, [meetingStartSlot, meetingEndSlot, days])
 
     let times = [];
     for (let i = parseInt(startTime) * 2; i < parseInt(endTime) * 2; i++) {
@@ -499,8 +499,35 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
         });
     };
 
+    function sortDays(days) {
+        if (frequency === 'one-time') {
+            const currentDate = new Date()
+            const currentYear = currentDate.getFullYear()
+            const currentMonth = currentDate.getMonth() + 1
+        
+            const parsedDates = days.map(date => {
+                const [month, day] = date.split('/').map(Number)
+                let year = currentYear
+        
+                if (month < currentMonth || (month === currentMonth && day < currentDate.getDate())) {
+                    year++
+                }
+        
+                return new Date(year, month - 1, day)
+            });
+        
+            parsedDates.sort((a, b) => a - b)
+        
+            return parsedDates.map(date => `${date.getMonth() + 1}/${date.getDate()}`)
+        } else {
+            const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+
+            return days.sort((a, b) => daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b))
+        }
+    }
+
     const renderDays = () => {
-        return days.map((day) => (
+        return sortDays(days).map((day) => (
             <div key={day} className="calendar-day">
                 <div className="calendar-day-label">{day}</div>
                 <div className="day-slots">{renderTimeSlots(day)}</div>
@@ -510,9 +537,12 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
 
     const renderMeetingBlock = () => {
         if (!meetingStartSlot || !meetingEndSlot) return null;
-        
         const startSlotElement = document.querySelector(`[data-slot="${meetingStartSlot}"]`);
         const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
+
+        if (!startSlotElement || !endSlotElement) { // Scheduled meeting is no longer within user's selected days/times
+            return
+        }
 
         const top = startSlotElement.offsetTop;
         const left = startSlotElement.offsetLeft;

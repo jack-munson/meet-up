@@ -15,9 +15,23 @@ router.post('/create-meeting', async (req, res) => {
         
         const result = await db.createMeeting(userId, title, description, startTime, endTime, frequency, days, accepted)
         
-        res.status(201).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
+        res.status(200).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
     } catch (error) {
-        console.error('Error creating meeting (Routes.js):', error)
+        console.error('Error creating meeting (routes.js):', error)
+
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+router.post('/edit-meeting', async (req, res) => {
+    try {
+        console.log("Request body: ", req.body)
+        const { id, newTitle, newDescription, newDays, newStartTime, newEndTime } = req.body
+        const result = await db.editMeeting(id, newTitle, newDescription, newDays, newStartTime, newEndTime)
+
+        res.status(200).json({ message: 'Meeting edited successfully', newTitle: result.title, newDescription: result.description, newDays: result.days, newStartTime: result.start_time, newEndTime: result.end_time })
+    } catch (error) {
+        console.error('Error editing meeting (routes.js): ', error)
 
         res.status(500).json({ error: 'Internal server error' })
     }

@@ -1,7 +1,7 @@
 import { IoClose } from "react-icons/io5"
 import "./DeleteMeeting.css"
 
-export function DeleteMeeting({ onCancel, onDelete}) {
+export function DeleteMeeting({ onCancel, onDelete }) {
     return (
         <div className="delete-meeting-container">
             <div className='zoom-box-header'>
