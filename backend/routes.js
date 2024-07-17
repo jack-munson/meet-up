@@ -4,6 +4,7 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const db = require('./database')
 require('dotenv').config()
+const { google } = require('googleapis')
 const nodemailer = require('nodemailer')
 const { last } = require('lodash')
 
@@ -105,13 +106,13 @@ router.get('/get-user-name', async (req, res) => {
 
 async function sendInviteEmail(email, token) {
     const inviteLink = `http://localhost:5173/invite/${token}`;
+
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        type: 'OAuth2',
-        user: process.env.AUTH_USER,
-        accessToken: process.env.AUTH_ACCESS_TOKEN
-      }
+        service: 'Gmail',
+        auth: {
+            user: process.env.AUTH_USER,
+            pass: process.env.AUTH_APP_PASSWORD
+        },
     });
   
     const mailOptions = {
