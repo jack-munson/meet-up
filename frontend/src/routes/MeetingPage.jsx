@@ -158,7 +158,7 @@ export function MeetingPage() {
                 availability: response.data.updatedAvailability
             }))
             setAlertOpen(false)
-            setAlertMessage("Availability saved!")
+            setAlertMessage("Availability saved")
             setAlertOpen(true)
         } catch (error) {
             console.error("Error editing availability (MeetingPage.jsx): ", error)
