@@ -1,0 +1,103 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 100vh;
+}
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 68vw;
+    padding-bottom: 60px;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    gap: 40px;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.profile-section-header {
+    font-size: 25px;
+    font-weight: 450;
+    color: #1E965C;
+}
+
+.profile-name-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.profile-name-input {
+    width: 225px;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    outline: 2px solid white;     
+    outline-offset: -2px;
+    transition: outline-color 0.3s ease-out; 
+    color: #373737;
+}
+
+.profile-name-input:focus {
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
+    outline: 2px solid #1E965C !important;
+    outline-offset: -2px;   
+    transition: outline-color 0.5s ease-in!important; 
+}
+
+.profile-name-input::placeholder {
+    color: #828282;
+}
+
+.delete-account-button {
+    width: 125px;
+    background-color: #DA2A2A;
+    transition: background-color 0.3s;
+    color: white;
+    border: none;
+}
+
+.delete-account-button:hover {
+    outline: 3px solid #DA2A2A;
+    outline-offset: -3px;
+    background-color: white;
+    color: #373737;
+    border: none;
+}
+
+.save-changes-button {
+    width: 175px;
+    background-color: #1E965C;
+    transition: background-color 0.3s;
+    color: white;
+    border: none;
+}
+
+.save-changes-button:hover {
+    outline: 3px solid #1E965C;
+    outline-offset: -3px;
+    background-color: white;
+    color: #1E965C;
+    border: none;
+}
