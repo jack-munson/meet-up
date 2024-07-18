@@ -13,7 +13,7 @@ import { Alert, Snackbar, styled } from "@mui/material"
 import './AvailabilityCalendar.css'
 import axios from 'axios'
 
-export function AvailabilityCalendar({ userId, title, description, invites, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
+export function AvailabilityCalendar({ userId, admin, title, description, invites, days, frequency, display, availability, updateSelectedSlots, startTime, endTime, meetingStart, meetingEnd, updateMeetingTimes, accepted, flashEditButton, isScheduling }) {
     const [selectedSlots, setSelectedSlots] = useState(new Set());
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [startSlot, setStartSlot] = useState(null);
@@ -593,7 +593,7 @@ export function AvailabilityCalendar({ userId, title, description, invites, days
                     available={available}
                     responded={accepted}
                 />
-                {display === 'all' && 
+                {display === 'all' && admin &&
                     <div className='scheduling-buttons'>
                         <TimezoneSelect
                             onChange={setSelectedTimezone}

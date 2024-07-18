@@ -9,8 +9,8 @@ import { DeleteMeeting } from "../components/DeleteMeeting"
 import { AvailabilityCalendar } from "../components/AvailabilityCalendar"
 import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
-import { FiEdit } from "react-icons/fi";
-import { MdDeleteForever } from "react-icons/md";
+import { FiEdit } from "react-icons/fi"
+import { MdDeleteForever } from "react-icons/md"
 import { Alert, Snackbar, styled } from "@mui/material"
 import { getAuth } from "firebase/auth"
 
@@ -325,6 +325,7 @@ export function MeetingPage() {
             {!isEditingAvailability && (
                 <AvailabilityCalendar 
                     userId={user.uid}
+                    admin={isAdmin(user.uid)}
                     title={meetingDetails.title || "New meeting"}
                     description={meetingDetails.description || "Event from MeetUp"}
                     invites={meetingDetails.invites || []}
@@ -346,6 +347,7 @@ export function MeetingPage() {
             {isEditingAvailability &&(
                 <AvailabilityCalendar 
                     userId={user.uid}
+                    admin={isAdmin(user.uid)}
                     title={meetingDetails.title || "New meeting"}
                     description={meetingDetails.description || "Event from MeetUp"}
                     invites={meetingDetails.invites || []}
