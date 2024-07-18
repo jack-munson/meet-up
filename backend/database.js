@@ -85,13 +85,29 @@ const getMeetingsByUserId = async (userId) => {
     const client = await pool.connect()
 
     try {
-        const query = `
-            SELECT * FROM meetings
-            WHERE user_id = $1 OR accepted @> $2::jsonb
+        const userQuery = `
+            SELECT user_meetings FROM users
+            WHERE user_id = $1
         `
-        const values = [userId, JSON.stringify({ [userId]: {} })]
-        const result = await client.query(query, values)
-        return result.rows
+        const userResult = await client.query(userQuery, [userId])
+
+        if (userResult.rows.length === 0) {
+            return []
+        }
+
+        const userMeetings = userResult.rows[0].user_meetings
+
+        if (!userMeetings || userMeetings.length === 0) {
+            return []
+        }
+
+        const meetingQuery = `
+            SELECT * FROM meetings
+            WHERE id = ANY($1)
+        `
+        const meetingResult = await client.query(meetingQuery, [userMeetings]);
+        console.log("Meetings in db.js: ", meetingResult.rows)
+        return meetingResult.rows;
     } finally {
         client.release()
     }
@@ -190,7 +206,7 @@ const acceptInvite = async (userId, email, name, meetingId) => {
     const client = await pool.connect()
 
     try {
-        const query = `
+        const meetingQuery = `
             UPDATE meetings
             SET accepted = jsonb_set(
                 COALESCE(accepted, '{}'::jsonb),
@@ -203,8 +219,18 @@ const acceptInvite = async (userId, email, name, meetingId) => {
         const path = `{${userId}}`
         const info = { email: email, name: name }
         const values = [path, info, meetingId];
-        const result = await client.query(query, values)
-        return result.rows[0]
+        const meetingResult = await client.query(meetingQuery, values)
+
+        const userQuery = `
+            UPDATE users
+            SET user_meetings = array_append(COALESCE(user_meetings, '{}'), $1)
+            WHERE user_id = $2
+            RETURNING user_meetings
+        `
+        const userValues = [meetingId, userId]
+        const userResult = await client.query(userQuery, userValues)
+        console.log("user_meeting in db.js: ", userResult.rows[0].user_meetings)
+        return userResult.rows[0].user_meetings
     } finally {
         client.release()
     }
