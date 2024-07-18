@@ -70,34 +70,36 @@
     color: #828282;
 }
 
-.delete-account-button {
+.delete-account-button, .delete-account-button:focus {
     width: 125px;
     background-color: #DA2A2A;
     transition: background-color 0.3s;
     color: white;
-    border: none;
+    border: none !important;
+    outline: none;
 }
 
-.delete-account-button:hover {
+.delete-account-button:hover, .delete-account-button:focus:hover {
     outline: 3px solid #DA2A2A;
     outline-offset: -3px;
     background-color: white;
     color: #373737;
-    border: none;
+    border: none !important;
 }
 
-.save-changes-button {
+.save-changes-button, .save-changes-button:focus {
     width: 175px;
     background-color: #1E965C;
     transition: background-color 0.3s;
     color: white;
-    border: none;
+    border: none !important;
+    outline: none;
 }
 
-.save-changes-button:hover {
+.save-changes-button:hover, .save-changes-button:focus:hover {
     outline: 3px solid #1E965C;
     outline-offset: -3px;
     background-color: white;
     color: #1E965C;
-    border: none;
+    border: none !important;
 }

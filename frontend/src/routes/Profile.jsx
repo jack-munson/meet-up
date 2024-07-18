@@ -8,6 +8,7 @@ import { first, last } from "lodash";
 export function Profile() {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     let email = ''
     const auth = getAuth()
     const user = auth.currentUser
@@ -28,6 +29,22 @@ export function Profile() {
 
         // fetchUserInfo()
     }, [user])
+
+    const saveChanges = async () => {
+
+    }
+
+    const handleDeleteClick = () => {
+        console.log(isDeleteOpen)
+        if (isDeleteOpen) {
+            deleteAccount()
+        }
+        setIsDeleteOpen(!isDeleteOpen)
+    }
+
+    const deleteAccount = async () => {
+
+    }
 
     return (
         <div className="profile-page">
@@ -61,10 +78,15 @@ export function Profile() {
                         </div>
                         <div className="profile-section">
                             <div className="profile-section-header">Delete account</div>
-                            <button className="delete-account-button">Delete</button>
+                            <button className="delete-account-button" onClick={() => handleDeleteClick()}>Delete</button>
                         </div>
                     </div>
-                    <button className="save-changes-button">Save changes</button>
+                    {isDeleteOpen && 
+                        <div className="overlay">
+
+                        </div>
+                    }
+                    <button className="save-changes-button" onClick={() => saveChanges()}>Save changes</button>
                 </div>
             </div>
         </div>
