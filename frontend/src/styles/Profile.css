@@ -2,12 +2,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .page-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -102,4 +101,12 @@
     background-color: white;
     color: #1E965C;
     border: none !important;
+}
+
+.save-changes-button.disabled {
+    background-color: #E0E0E0 !important;
+    color: white !important;
+    border: none !important;
+    outline: none !important;
+    cursor: not-allowed !important;
 }

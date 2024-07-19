@@ -27,6 +27,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
     const [errors, setErrors] = useState(false)
     const [titleError, setTitleError] = useState(false)
     const [daysError, setDaysError] = useState(false)
+    const [hasHitSumbit, setHasHitSubmit] = useState(false)
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -47,10 +48,25 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
     }
 
     useEffect(() => {
-        if (!titleError && !daysError) {
-            setErrors(false)
+        let hasErrors = false;
+    
+        if (meetingTitle.length === 0 && hasHitSumbit) {
+            setTitleError(true);
+            hasErrors = true;
+        } else {
+            setTitleError(false);
         }
-    }, [titleError, daysError])
+    
+        if ((days.length === 0 && frequency === 'recurring' && hasHitSumbit) || (dates.length === 0 && frequency === 'one-time' && hasHitSumbit)) {
+            setDaysError(true);
+            hasErrors = true;
+        } else {
+            setDaysError(false);
+        }
+    
+        setErrors(hasErrors);
+    
+    }, [meetingTitle, days, frequency, dates, hasHitSumbit]);
 
     const handleFocus = (input) => {
         if (input === "title") {
@@ -76,7 +92,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
 
     const handleCreate = async (e) => {
         e.preventDefault()
-
+        setHasHitSubmit(true)
         const selectedDays = []
         if (frequency === 'one-time') {
             dates.forEach(date => selectedDays.push(formatDate(date)))
@@ -195,7 +211,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
                             </div>
                         )}
                         {daysError && 
-                            <div className='small-error-message'>Please select {frequency === 'one-time' ? "dates" : "days"}</div>
+                            <div className='small-error-message'>Please select at least one {frequency === 'one-time' ? "date" : "day"}</div>
                         }
                     </div>
 

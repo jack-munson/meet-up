@@ -4,8 +4,10 @@ import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import { getAuth } from "firebase/auth"
 import "../styles/Profile.css"
+import { Footer } from "../components/Footer";
 
 export function Profile() {
+    const [originalName, setOriginalName] = useState(null)
     const [firstName, setFirstName] = useState(null)
     const [lastName, setLastName] = useState(null)
     const [email, setEmail] = useState(null)
@@ -24,6 +26,7 @@ export function Profile() {
                 console.log(userInfo.data.email)
                 setFirstName(userInfo.data.firstName)
                 setLastName(userInfo.data.lastName)
+                setOriginalName(userInfo.data.firstName + ' ' + userInfo.data.lastName)
                 setEmail(userInfo.data.email)
                 setMeetings(userInfo.data.meetings)
             } catch (error) {
@@ -62,7 +65,7 @@ export function Profile() {
 
     return (
         <div className="profile-page">
-            <HomeHeader></HomeHeader>
+            <HomeHeader/>
             <div className="page-content">
                 <div className="sub-header">
                     <div className="sub-header-text">Profile</div>
@@ -85,6 +88,12 @@ export function Profile() {
                                     placeholder="Last name"
                                 />
                             </div>
+                            <button 
+                                className={`save-changes-button ${originalName === firstName + ' ' + lastName ? 'disabled' : ''}`}
+                                onClick={() => saveChanges()}
+                                disabled={originalName === firstName + ' ' + lastName}>
+                                    Save changes
+                            </button>
                         </div>
                         <div className="profile-section">
                             <div className="profile-section-header">Email</div>
@@ -100,9 +109,9 @@ export function Profile() {
 
                         </div>
                     }
-                    <button className="save-changes-button" onClick={() => saveChanges()}>Save changes</button>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }
