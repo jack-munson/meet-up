@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { HomeHeader } from "../components/HomeHeader"
 import axios from "axios"
+import { useNavigate } from 'react-router-dom'
 import { getAuth } from "firebase/auth"
 import "../styles/Profile.css"
-import { first, last } from "lodash";
 
 export function Profile() {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+    const [firstName, setFirstName] = useState(null)
+    const [lastName, setLastName] = useState(null)
+    const [email, setEmail] = useState(null)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-    let email = ''
+    const [meetings, setMeetings] = useState(null)
     const auth = getAuth()
     const user = auth.currentUser
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -19,19 +21,31 @@ export function Profile() {
                 const userInfo = await axios.get("http://localhost:3000/api/get-user-info", {
                     params: { userId: user.uid }
                 })
-                setFirstName(userInfo.data.first_name)
-                setLastName(userInfo.data.last_name)
-                email = userInfo.data.email
+                console.log(userInfo.data.email)
+                setFirstName(userInfo.data.firstName)
+                setLastName(userInfo.data.lastName)
+                setEmail(userInfo.data.email)
+                setMeetings(userInfo.data.meetings)
             } catch (error) {
                 console.error("Error fetching user info: ", error)
             }
         }
 
-        // fetchUserInfo()
+        fetchUserInfo()
     }, [user])
 
     const saveChanges = async () => {
-
+        try {
+            await axios.post("http://localhost:3000/api/change-name", {
+                newFirstName: firstName,
+                newLastName: lastName,
+                userId: user.uid, 
+                meetings: meetings
+            })
+            navigate('/home')
+        } catch (error) {
+            console.error("Error changing user info: ", error)
+        }
     }
 
     const handleDeleteClick = () => {
@@ -74,7 +88,7 @@ export function Profile() {
                         </div>
                         <div className="profile-section">
                             <div className="profile-section-header">Email</div>
-                            <div>{email || "jack.munson21@gmail.com"}</div>
+                            <div>{email || "Email"}</div>
                         </div>
                         <div className="profile-section">
                             <div className="profile-section-header">Delete account</div>

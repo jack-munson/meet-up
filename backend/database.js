@@ -106,7 +106,7 @@ const getMeetingsByUserId = async (userId) => {
             WHERE id = ANY($1)
         `
         const meetingResult = await client.query(meetingQuery, [userMeetings]);
-        console.log("Meetings in db.js: ", meetingResult.rows)
+        
         return meetingResult.rows;
     } finally {
         client.release()
@@ -313,6 +313,61 @@ const editMeetingTimes = async (meetingId, newStartTime, newEndTime) => {
     }
 }
 
+const getUserInfo = async (userId) => {
+    const client = await pool.connect()
+    
+    try {
+        const query = `
+            SELECT first_name, last_name, email, user_meetings
+            FROM users
+            WHERE user_id = $1
+        `
+        const result = await client.query(query, [userId])
+        const { first_name, last_name, email, user_meetings } = result.rows[0]
+
+        return { first_name, last_name, email, user_meetings }
+    } finally {
+        client.release()
+    }
+}
+
+const updateUserName = async (newFirstName, newLastName, userId, meetings) => {
+    const client = await pool.connect()
+    console.log(userId)
+    try {
+        const userQuery = `
+            UPDATE users
+            SET first_name = $1, last_name = $2
+            WHERE user_id = $3
+        `
+        const values = [newFirstName, newLastName, userId]
+        client.query(userQuery, values)
+        
+        const name = newFirstName + ' ' + newLastName
+        console.log(name)
+        for (const meetingId of meetings) {
+            const meetingQuery = `
+                UPDATE meetings
+                SET accepted = jsonb_set(
+                    accepted,
+                    ARRAY[$1]::text[],
+                    jsonb_set(
+                        COALESCE(accepted->$1, '{}'::jsonb),
+                        '{name}',
+                        to_jsonb($2::text)
+                    )
+                )
+                WHERE id = $3
+            `;
+
+            const meetingValues = [userId, name, meetingId];
+            await client.query(meetingQuery, meetingValues);
+        }
+    } finally {
+        client.release()
+    }
+}
+
 module.exports = {
-    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes
+    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes, getUserInfo, updateUserName
 };

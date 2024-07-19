@@ -147,7 +147,7 @@ router.get('/invite/:token', async (req, res) => {
     
     try {
         const invite = await db.validateInvite(token)
-        console.log(invite)
+        
         if (invite) {
             res.status(200).json({ message: 'Invite valid', valid: true, token: token })
         }
@@ -175,9 +175,9 @@ router.post('/accept-invite', async (req, res) => {
 })
 
 router.delete('/delete-meeting', async (req, res) => {
-    try {
-        const { meetingId } = req.body
+    const { meetingId } = req.body
 
+    try {
         await db.deleteMeeting(meetingId)
 
         res.status(200).json({ message: 'Meeting deleted successfully' })
@@ -207,16 +207,13 @@ router.post('/edit-meeting-time', async (req, res) => {
         console.log("result (routes.js): ", result)
         res.status(200).json({ message: "Successfully edited meeting times", updatedStartTime: result.meeting_start, updatedEndTime: result.meeting_end })
     } catch (error) {
-        console.error("Error (routes.js): ", error)
         res.status(500).json({ error: 'Internal server error'})
     }
 })
 
 router.post('/create-zoom-meeting', async (req, res) => {
-    console.log("Made it to /create-zoom-meeting")
     const { accessToken, meetingDetails } = req.body
-    console.log("accessToken (routes.js): ", accessToken)
-    console.log("meetingDetails (routes.js): ", meetingDetails)
+    
     try {
         const response = await axios.post('https://api.zoom.us/v2/users/me/meetings', meetingDetails, {
             headers: {
@@ -224,11 +221,36 @@ router.post('/create-zoom-meeting', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log("response.data (routes.js): ", response.data)
+        
         res.status(200).json({ message: "Successfully created Zoom meeting", joinURL: response.data.join_url});
     } catch (error) {
         console.log(error.response ? error.response.data : error.message)
         res.status(500).json({ error: 'Internal server error'});
+    }
+})
+
+router.get('/get-user-info', async (req, res) => {
+    const { userId } = req.query
+    
+    try {
+        const userInfo = await db.getUserInfo(userId)
+
+        res.status(200).json({ firstName: userInfo.first_name, lastName: userInfo.last_name, email: userInfo.email, meetings: userInfo.user_meetings})
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
+router.post('/change-name', async (req, res) => {
+    const { newFirstName, newLastName, userId, meetings } = req.body
+
+    try {
+        await db.updateUserName(newFirstName, newLastName, userId, meetings)
+
+        res.status(200).json({ message: "Successfully updated user information"})
+    } catch (error) {
+        console.log("Error updating user information: ", error)
+        res.status(500).json({ error: 'Internal server error'})
     }
 })
 
