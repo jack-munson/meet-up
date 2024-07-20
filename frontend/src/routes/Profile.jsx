@@ -61,7 +61,6 @@ export function Profile() {
     }
 
     const handleDeleteClick = () => {
-        console.log(isDeleteOpen)
         if (isDeleteOpen) {
             deleteAccount()
         }
@@ -84,10 +83,10 @@ export function Profile() {
 
     const deleteAccount = async () => {
         try {
+            await deleteUser(user)
             await axios.delete("http://localhost:3000/api/delete-account", {
                 data: { userId: user.uid }
             })
-            await deleteUser(user)
             await signOut(auth)
             navigate("/")
         } catch (error) {
@@ -196,7 +195,7 @@ export function Profile() {
                                             <Icon onClick={() => {handleToggle()}} icon={icon} className="eye-icon"/>
                                         </div>
                                     </div> :
-                                    <div className="delete-meeting-text">To confirm, please click the button below and authenticate with Google</div>
+                                    <div className="delete-meeting-text" style={{lineHeight: "1.2"}}>To confirm, please click the button below and authenticate with Google</div>
                                 }
                                 <button className="save-changes-button" onClick={providerId === "password" ? () => handleAuthenticateAndDelete(password) : () => handleAuthenticateAndDelete()}>Confirm</button>
                             </div>
