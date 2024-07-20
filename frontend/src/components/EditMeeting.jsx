@@ -174,7 +174,7 @@ export function EditMeeting({ onCancel, onSubmit, meetingDetails }) {
                 >
                     Update meeting
                 </button>
-                {daysError || titleError && 
+                {errors && 
                     <div className='small-error-message'>Fix errors before continuing</div>
                 }
             </div>
