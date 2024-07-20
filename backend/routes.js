@@ -249,7 +249,19 @@ router.post('/change-name', async (req, res) => {
 
         res.status(200).json({ message: "Successfully updated user information"})
     } catch (error) {
-        console.log("Error updating user information: ", error)
+        res.status(500).json({ error: 'Internal server error'})
+    }
+})
+
+router.delete('/delete-account', async (req, res) => {
+    const { userId } = req.body
+
+    try {
+        await db.deleteAccount(userId)
+
+        res.status(200).json({ message: "Successfully deleted account"})
+    } catch (error) {
+        console.error("Error deleting account (routes.js): ", error)
         res.status(500).json({ error: 'Internal server error'})
     }
 })

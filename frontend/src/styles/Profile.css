@@ -5,7 +5,7 @@
     min-height: 100vh;
 }
 
-.page-content {
+.profile-page-content {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -109,4 +109,17 @@
     border: none !important;
     outline: none !important;
     cursor: not-allowed !important;
+}
+
+.delete-account-box {
+    width: 500px;
+    height: fit-content;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 25px;
+    gap: 30px;
 }

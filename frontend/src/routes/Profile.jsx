@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { HomeHeader } from "../components/HomeHeader"
+import { Footer } from "../components/Footer";
+import { IoClose } from "react-icons/io5"
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
-import { getAuth } from "firebase/auth"
+import { getAuth, signOut, deleteUser } from "firebase/auth"
 import "../styles/Profile.css"
-import { Footer } from "../components/Footer";
 
 export function Profile() {
     const [originalName, setOriginalName] = useState(null)
@@ -59,14 +60,47 @@ export function Profile() {
         setIsDeleteOpen(!isDeleteOpen)
     }
 
-    const deleteAccount = async () => {
+    const reauthenticate = async () => {
+        try {
+            const providerId = user.providerData[0]?.providerId;
+            console.log("providerData: ", user.providerData)
+            if (providerId === 'password') {
+                console.log("Password")
+                const password = prompt("Please enter your password to re-authenticate:");
+                const credential = EmailAuthProvider.credential(user.email, password);
+                await reauthenticateWithCredential(user, credential);
+            } else if (providerId === 'google.com') {
+                console.log("Google")
+                const provider = new GoogleAuthProvider();
+                await reauthenticateWithPopup(user, provider);
+            }
+        } catch (error) {
+            console.error("Error re-authenticating:", error);
+        }
+    }
 
+    const deleteAccount = async () => {
+        try {
+            await axios.delete("http://localhost:3000/api/delete-account", {
+                data: { userId: user.uid }
+            })
+            await deleteUser(user)
+            await signOut(auth)
+            navigate("/")
+        } catch (error) {
+            if (error.code === 'auth/requires-recent-login') {
+                await reauthenticate();
+                deleteAccount()
+            } else {
+                console.error("Error deleting account")
+            }
+        }
     }
 
     return (
         <div className="profile-page">
             <HomeHeader/>
-            <div className="page-content">
+            <div className="profile-page-content">
                 <div className="sub-header">
                     <div className="sub-header-text">Profile</div>
                 </div>
@@ -106,7 +140,17 @@ export function Profile() {
                     </div>
                     {isDeleteOpen && 
                         <div className="overlay">
-
+                            <div className="delete-account-box">
+                                <div className='zoom-box-header'>
+                                    <div className='zoom-box-title'>Delete account</div>
+                                    <IoClose size={20} className='close-zoom-button' onClick={() => setIsDeleteOpen(false)}/>
+                                </div>
+                                <div className="delete-meeting-dialog">
+                                    <div className="delete-meeting-text">Are you sure you want to delete your account?</div>
+                                    <div className="delete-meeting-subtext">This action cannot be undone</div>
+                                </div>
+                                <button className="delete-button" onClick={handleDeleteClick}>Yes, delete</button>
+                            </div>
                         </div>
                     }
                 </div>

@@ -333,7 +333,7 @@ const getUserInfo = async (userId) => {
 
 const updateUserName = async (newFirstName, newLastName, userId, meetings) => {
     const client = await pool.connect()
-    console.log(userId)
+
     try {
         const userQuery = `
             UPDATE users
@@ -344,7 +344,6 @@ const updateUserName = async (newFirstName, newLastName, userId, meetings) => {
         client.query(userQuery, values)
         
         const name = newFirstName + ' ' + newLastName
-        console.log(name)
         for (const meetingId of meetings) {
             const meetingQuery = `
                 UPDATE meetings
@@ -368,6 +367,21 @@ const updateUserName = async (newFirstName, newLastName, userId, meetings) => {
     }
 }
 
+const deleteAccount = async (userId) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            DELETE FROM users
+            WHERE user_id = $1
+        `
+        const values = [userId]
+        await client.query(query, values)
+    } finally {
+        client.release()
+    }
+}
+
 module.exports = {
-    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes, getUserInfo, updateUserName
+    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes, getUserInfo, updateUserName, deleteAccount
 };
