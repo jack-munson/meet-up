@@ -50,7 +50,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
     useEffect(() => {
         let hasErrors = false;
     
-        if (meetingTitle.length === 0 && hasHitSumbit) {
+        if (meetingTitle === '' && hasHitSumbit) {
             setTitleError(true);
             hasErrors = true;
         } else {
@@ -163,12 +163,12 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
                     <input 
                         onChange={(e) => {setMeetingTitle(e.target.value)}}
                         onFocus={() => handleFocus('title')}
-                        className="meeting-title-input" 
+                        className={`meeting-title-input ${titleError || (meetingTitle === '' && hasHitSumbit) ? 'error' : ''}`} 
                         type="text" 
                         maxLength="55"
                         placeholder="Enter meeting title"
                     />
-                    {titleError && 
+                    {(titleError || (meetingTitle === '' && hasHitSumbit)) && 
                         <div className='small-error-message'>Please enter a title for your meeting</div>
                     }
                 </div>
@@ -198,9 +198,9 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
                             <div className="meeting-description-text">What days might work?</div>
                         )}
                         {frequency === 'one-time' ? (
-                            <DatePicker handleDateChange={handleDateChange} dates={dates}/>
+                            <DatePicker handleDateChange={handleDateChange} dates={dates} daysError={daysError}/>
                         ) : (
-                            <div className="days-of-the-week">
+                            <div className={`days-of-the-week ${daysError ? 'error' : ''}`}>
                                 <div className={`day ${days.includes("SUN") ? "selected" : ""}`} onClick={() => toggleDay("SUN")}>S</div>
                                 <div className={`day ${days.includes("MON") ? "selected" : ""}`} onClick={() => toggleDay("MON")}>M</div>
                                 <div className={`day ${days.includes("TUE") ? "selected" : ""}`} onClick={() => toggleDay("TUE")}>T</div>

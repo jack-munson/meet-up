@@ -89,7 +89,7 @@ export function EditMeeting({ onCancel, onSubmit, meetingDetails }) {
                 <div className='meeting-title'>
                     <input 
                         onChange={(e) => {setUpdatedTitle(e.target.value)}}
-                        className="meeting-title-input" 
+                        className={`meeting-title-input ${titleError ? 'error' : ''}`}
                         type="text" 
                         maxLength="55"
                         value={updatedTitle}
@@ -117,7 +117,7 @@ export function EditMeeting({ onCancel, onSubmit, meetingDetails }) {
                             <div className="meeting-description-text">What days might work?</div>
                         )}
                         {frequency === 'one-time' ? (
-                            <DatePicker handleDateChange={handleDateChange} dates={updatedDays.map(day => getDateAsObject(day))}/>
+                            <DatePicker handleDateChange={handleDateChange} dates={updatedDays.map(day => getDateAsObject(day))} daysError={daysError}/>
                         ) : (
                             <div className="days-of-the-week">
                                 <div className={`day ${updatedDays.includes("SUN") ? "selected" : ""}`} onClick={() => toggleDay("SUN")}>S</div>
@@ -174,7 +174,7 @@ export function EditMeeting({ onCancel, onSubmit, meetingDetails }) {
                 >
                     Update meeting
                 </button>
-                {errors && 
+                {(daysError || titleError) && 
                     <div className='small-error-message'>Fix errors before continuing</div>
                 }
             </div>

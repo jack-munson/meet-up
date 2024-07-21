@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Calendar } from "react-multi-date-picker"
 import "./DatePicker.css"
 
-export function DatePicker({ handleDateChange, dates}) {
+export function DatePicker({ handleDateChange, dates, daysError}) {
   const today = new Date();
   const oneYearLater = new Date();
   oneYearLater.setMonth(oneYearLater.getMonth() + 12);
@@ -10,6 +10,7 @@ export function DatePicker({ handleDateChange, dates}) {
   return (
     <Calendar 
         value={dates.map(date => new Date(date))} 
+        style={{border: daysError ? '2px solid red' : '2px solid white'}}
         onChange={handleDateChange} 
         multiple="true"
         disableMonthPicker
