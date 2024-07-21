@@ -9,6 +9,8 @@ import { SiZoom } from "react-icons/si"
 import { FaRedoAlt } from "react-icons/fa"
 import { FaRegCopy } from "react-icons/fa6"
 import { IoClose } from "react-icons/io5"
+import { IoChevronForward } from "react-icons/io5"
+import { IoChevronBack } from "react-icons/io5"
 import { Alert, Snackbar, styled } from "@mui/material"
 import './AvailabilityCalendar.css'
 import axios from 'axios'
@@ -37,6 +39,15 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
         offset: -4,
         value: "America/Detroit"
     })
+    const [startIndex, setStartIndex] = useState(0)
+
+    const handlePrev = () => {
+        setStartIndex((prevIndex) => Math.max(prevIndex - 7, 0))
+    };
+
+    const handleNext = () => {
+        setStartIndex((prevIndex) => Math.min(prevIndex + 7, days.length - 7))
+    };
 
     const findBestTimes = (availability) => {
         let maxCount = 0; 
@@ -117,13 +128,13 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
             }
         };
 
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call to set the size
+        window.addEventListener('resize', handleResize)
+        handleResize()
 
         return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [meetingStartSlot, meetingEndSlot, days])
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [meetingStartSlot, meetingEndSlot, days, startIndex])
 
     let times = [];
     for (let i = parseInt(startTime) * 2; i < parseInt(endTime) * 2; i++) {
@@ -527,7 +538,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     }
 
     const renderDays = () => {
-        return sortDays(days).map((day) => (
+        return sortDays(days).slice(startIndex, startIndex + 7).map((day) => (
             <div key={day} className="calendar-day">
                 <div className="calendar-day-label">{day}</div>
                 <div className="day-slots">{renderTimeSlots(day)}</div>
@@ -574,18 +585,38 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
 
     return (
         <div className='availability-info'>
-            <div className="time-axis">
-                {times.map((time, index) => (
-                    <div key={index} className="hour-label">
-                        {index % 2 === 0 && formatTime(time)}
+            <div className='calendar-with-nav'>
+                {days.length > 7 && 
+                    <IoChevronBack 
+                        className={`calendar-nav-button ${startIndex === 0 ? 'disabled' : ''}`} 
+                        onClick={handlePrev} 
+                        size={30}
+                        disabled={startIndex === 0}
+                    />
+                }
+                <div className='times-and-calendar'>
+                    <div className="time-axis">
+                        {times.map((time, index) => (
+                            <div key={index} className="hour-label">
+                                {index % 2 === 0 && formatTime(time)}
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className="calendar">
-                <div className="calendar-grid" onMouseLeave={handleMouseUp}>
-                    {renderDays()}
-                    {renderMeetingBlock()}
+                    <div className="calendar">
+                        <div className="calendar-grid" onMouseLeave={handleMouseUp}>
+                            {renderDays()}
+                            {renderMeetingBlock()}
+                        </div>
+                    </div>      
                 </div>
+                {days.length > 7 && 
+                    <IoChevronForward 
+                        className={`calendar-nav-button ${startIndex === days.length - 7 ? 'disabled' : ''}`}
+                        onClick={handleNext} 
+                        size={30}
+                        disabled={startIndex === days.length - 7}
+                    />
+                }
             </div>
             <div className='right-panel-content'>
                 <AvailabilityViewer
