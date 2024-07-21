@@ -1,9 +1,11 @@
+import { FrontHeader } from "../components/FrontHeader"
 import { HomeHeader } from "../components/HomeHeader"
 import { Footer } from "../components/Footer"
 import "../styles/Feedback.css"
 import { useState } from "react"
 import { Alert, Snackbar, styled } from "@mui/material"
 import axios from "axios"
+import { getAuth } from "firebase/auth"
 
 export function Feedback() {
     const [name, setName] = useState('')
@@ -11,6 +13,8 @@ export function Feedback() {
     const [feedback, setFeedback] = useState('')
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] =useState('')
+    const auth = getAuth()
+    const user = auth.currentUser
 
     const handleSubmitFeedback = async () => {
         try {
@@ -48,7 +52,7 @@ export function Feedback() {
 
     return (
         <div className="feedback-page">
-            <HomeHeader/>
+            {user ? <HomeHeader /> : <FrontHeader />}
             <div className="feedback-page-content">
                 <div className="sub-header">
                     <div className="sub-header-text">Feedback</div>

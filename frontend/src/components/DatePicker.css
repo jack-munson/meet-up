@@ -118,3 +118,7 @@
 .rmdp-day.rmdp-day-hidden:hover {
     visibility: hidden !important;
 }
+
+.rmdp-wrapper.rmdp-shadow {
+    transition: border-color 0.1s !important;
+}

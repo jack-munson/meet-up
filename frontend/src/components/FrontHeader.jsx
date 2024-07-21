@@ -31,7 +31,7 @@ export function FrontHeader() {
 
     return (
         <div className="banner">
-            <img src={MainLogo} className="header-logo" alt="MeetUp logo"/>
+            <img src={MainLogo} className="header-logo" alt="MeetUp logo" onClick={() => navigate("/")}/>
             <div className = "nav-buttons">
                 <div className="menu-button" >HOW TO USE</div>
                 <div className="menu-button" onClick={() => {checkSignUp()}}>SIGN UP</div>
