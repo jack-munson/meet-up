@@ -9,6 +9,8 @@ import { AuthContext } from './context/AuthContext'
 import { Protected } from './routes/Protected'
 import { MeetingPage } from './routes/MeetingPage'
 import { Invite } from './routes/Invite'
+import { Feedback } from './routes/Feedback'
+import { Privacy } from './routes/Privacy'
 
 function App() {
   const router = createBrowserRouter([
@@ -39,6 +41,14 @@ function App() {
     {
       path: "/invite/:token",
       element: <Invite/>
+    },
+    {
+      path: "/privacy",
+      element: <Privacy/>
+    },
+    {
+      path: "/feedback",
+      element: <Feedback/>
     }
   ])
 

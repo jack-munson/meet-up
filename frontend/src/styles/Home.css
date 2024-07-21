@@ -3,11 +3,17 @@
 .home-page {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
-    padding-bottom: 100px;
+    min-height: 100vh;
+}
+
+.home-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 68vw;
+    padding-bottom: 60px;
 }
 
 .meetings {

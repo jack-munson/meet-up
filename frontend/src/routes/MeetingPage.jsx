@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { HomeHeader } from "../components/HomeHeader"
+import { Footer } from "../components/Footer"
 import "../styles/MeetingPage.css"
 import { EditMeeting } from "../components/EditMeeting"
 import { DeleteMeeting } from "../components/DeleteMeeting"
@@ -245,69 +246,114 @@ export function MeetingPage() {
     return (
         <div className="meeting-page">
             <HomeHeader></HomeHeader>
-            <div className="meeting-sub-header">
-                <div className="sub-header-first-row">
-                    <div className="meeting-sub-header-text">{meetingDetails.title}</div>
-                        {isAdmin(user.uid) &&
-                        <div className="meeting-sub-header-buttons">
-                            <FiEdit size={40} className="meeting-edit-button" onClick={handleEditMeetingClick} alt="Edit"/>
-                            <MdDeleteForever size={48} className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete"/>
-                        </div>
-                        }
-                    </div>
-                {isAdmin(user.uid) &&
-                    <div className="meeting-info-invites">
-                        {inviteList.length > 0 && (
-                            <div className="invite-icons">
-                                {inviteList.map((invite, index) => (
-                                    <div key={index} className="invite">
-                                        <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
-                                        <span className="tooltip">{invite}</span>
-                                    </div>
-                                ))}
+            <div className="meeting-page-content">
+                <div className="meeting-sub-header">
+                    <div className="sub-header-first-row">
+                        <div className="meeting-sub-header-text">{meetingDetails.title}</div>
+                            {isAdmin(user.uid) &&
+                            <div className="meeting-sub-header-buttons">
+                                <FiEdit size={40} className="meeting-edit-button" onClick={handleEditMeetingClick} alt="Edit"/>
+                                <MdDeleteForever size={48} className="meeting-delete-button" onClick={handleDeleteMeetingClick} alt="Delete"/>
                             </div>
-                        )}
-                        {inviteList.length < 10 && (
-                            <div className="add-invite-container">                                
-                                <div className="invite-modal">
-                                    <div className="invite-modal-content">
-                                        <input 
-                                            type="email" 
-                                            value={newInvite} 
-                                            style={{marginBottom: "0px"}}
-                                            className="invite-modal-popout"
-                                            onChange={(e) => handleInviteChange(e)}
-                                            onClick={handleInputClick}
-                                            placeholder="email@domain.com" 
-                                        />
-                                    </div>
-                                    <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                }
-                <div className="admin-buttons">
-                    <button 
-                        className={`edit-availability-button ${isScheduleMeetingOpen ? 'disabled' : ''} `} 
-                        onClick={handleEditAvailabilityClick}
-                        disabled={isScheduleMeetingOpen}>
-                        {isEditingAvailability ? "Save availability" : "Edit availability"}
-                    </button>
-                    {isAdmin(user.uid) && 
-                        <div className="schedule-buttons">
-                            <button 
-                                className={`edit-availability-button ${isEditingAvailability ? 'disabled' : ''} `} 
-                                onClick={handleScheduleMeetingClick}
-                                disabled={isEditingAvailability}>
-                                {isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}
-                            </button>
-                            {isScheduleMeetingOpen && 
-                                <button className="close-scheduling-button" onClick={() => handleCloseSchedule()}>Cancel</button>
                             }
                         </div>
+                    {isAdmin(user.uid) &&
+                        <div className="meeting-info-invites">
+                            {inviteList.length > 0 && (
+                                <div className="invite-icons">
+                                    {inviteList.map((invite, index) => (
+                                        <div key={index} className="invite">
+                                            <BsPersonFill className={isAccepted(invite) ? "invite-icon-accepted" : "invite-icon"}/>
+                                            <span className="tooltip">{invite}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {inviteList.length < 10 && (
+                                <div className="add-invite-container">                                
+                                    <div className="invite-modal">
+                                        <div className="invite-modal-content">
+                                            <input 
+                                                type="email" 
+                                                value={newInvite} 
+                                                style={{marginBottom: "0px"}}
+                                                className="invite-modal-popout"
+                                                onChange={(e) => handleInviteChange(e)}
+                                                onClick={handleInputClick}
+                                                placeholder="email@domain.com" 
+                                            />
+                                        </div>
+                                        <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     }
+                    <div className="admin-buttons">
+                        <button 
+                            className={`edit-availability-button ${isScheduleMeetingOpen ? 'disabled' : ''} `} 
+                            onClick={handleEditAvailabilityClick}
+                            disabled={isScheduleMeetingOpen}>
+                            {isEditingAvailability ? "Save availability" : "Edit availability"}
+                        </button>
+                        {isAdmin(user.uid) && 
+                            <div className="schedule-buttons">
+                                <button 
+                                    className={`edit-availability-button ${isEditingAvailability ? 'disabled' : ''} `} 
+                                    onClick={handleScheduleMeetingClick}
+                                    disabled={isEditingAvailability}>
+                                    {isScheduleMeetingOpen ? "Schedule" : "Schedule meeting"}
+                                </button>
+                                {isScheduleMeetingOpen && 
+                                    <button className="close-scheduling-button" onClick={() => handleCloseSchedule()}>Cancel</button>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
+                {!isEditingAvailability && (
+                    <AvailabilityCalendar 
+                        userId={user.uid}
+                        admin={isAdmin(user.uid)}
+                        title={meetingDetails.title || "New meeting"}
+                        description={meetingDetails.description || "Event from MeetUp"}
+                        invites={meetingDetails.invites || []}
+                        days={meetingDetails.days || []}
+                        frequency={meetingDetails.frequency}
+                        display={'all'}
+                        availability={memoAvailability}
+                        updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
+                        startTime={meetingDetails.start_time}
+                        endTime={meetingDetails.end_time}
+                        meetingStart={meetingStart}
+                        meetingEnd={meetingEnd}
+                        updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
+                        accepted={meetingDetails.accepted || []}
+                        flashEditButton={flashEditButton}
+                        isScheduling={isScheduleMeetingOpen}>
+                    </AvailabilityCalendar>
+                )}
+                {isEditingAvailability &&(
+                    <AvailabilityCalendar 
+                        userId={user.uid}
+                        admin={isAdmin(user.uid)}
+                        title={meetingDetails.title || "New meeting"}
+                        description={meetingDetails.description || "Event from MeetUp"}
+                        invites={meetingDetails.invites || []}
+                        days={meetingDetails.days || []}
+                        frequency={meetingDetails.frequency}
+                        display={'user'}
+                        availability={memoAvailability}
+                        updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
+                        startTime={meetingDetails.start_time}
+                        endTime={meetingDetails.end_time}
+                        meetingStart={null}
+                        meetingEnd={null}
+                        updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
+                        accepted={meetingDetails.accepted || []}
+                        >
+                    </AvailabilityCalendar> 
+                )}
             </div>
             {isEditMeetingOpen && (
                 <div className="overlay">
@@ -322,49 +368,6 @@ export function MeetingPage() {
                     <DeleteMeeting onDelete={handleDeleteMeeting} onCancel={handleDeleteMeetingClick}/>
                 </div>
             )}
-            {!isEditingAvailability && (
-                <AvailabilityCalendar 
-                    userId={user.uid}
-                    admin={isAdmin(user.uid)}
-                    title={meetingDetails.title || "New meeting"}
-                    description={meetingDetails.description || "Event from MeetUp"}
-                    invites={meetingDetails.invites || []}
-                    days={meetingDetails.days || []}
-                    frequency={meetingDetails.frequency}
-                    display={'all'}
-                    availability={memoAvailability}
-                    updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
-                    startTime={meetingDetails.start_time}
-                    endTime={meetingDetails.end_time}
-                    meetingStart={meetingStart}
-                    meetingEnd={meetingEnd}
-                    updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
-                    accepted={meetingDetails.accepted || []}
-                    flashEditButton={flashEditButton}
-                    isScheduling={isScheduleMeetingOpen}>
-                </AvailabilityCalendar>
-            )}
-            {isEditingAvailability &&(
-                <AvailabilityCalendar 
-                    userId={user.uid}
-                    admin={isAdmin(user.uid)}
-                    title={meetingDetails.title || "New meeting"}
-                    description={meetingDetails.description || "Event from MeetUp"}
-                    invites={meetingDetails.invites || []}
-                    days={meetingDetails.days || []}
-                    frequency={meetingDetails.frequency}
-                    display={'user'}
-                    availability={memoAvailability}
-                    updateSelectedSlots={(slots) => updateSelectedSlots(slots)}
-                    startTime={meetingDetails.start_time}
-                    endTime={meetingDetails.end_time}
-                    meetingStart={null}
-                    meetingEnd={null}
-                    updateMeetingTimes={(meetingStart, meetingEnd) => updateMeetingTimes(meetingStart, meetingEnd)}
-                    accepted={meetingDetails.accepted || []}
-                    >
-                </AvailabilityCalendar> 
-            )}
             <Snackbar
                 open={alertOpen}
                 autoHideDuration={5000}
@@ -375,6 +378,7 @@ export function MeetingPage() {
                     {alertMessage}
                 </CustomAlert>
             </Snackbar>
+            <Footer/>
         </div>
     )
 }

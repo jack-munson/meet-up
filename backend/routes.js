@@ -11,42 +11,40 @@ const { last } = require('lodash')
 router.use(bodyParser.json())
 
 router.post('/create-meeting', async (req, res) => {
+    const { userId, title, description, startTime, endTime, frequency, days, accepted } = req.body
+
     try {
-        const { userId, title, description, startTime, endTime, frequency, days, accepted } = req.body
-        
         const result = await db.createMeeting(userId, title, description, startTime, endTime, frequency, days, accepted)
         
         res.status(200).json({ message: 'Meeting created successfully', newMeeting: result.newMeeting, userMeetings: result.userMeetings })
     } catch (error) {
-        console.error('Error creating meeting (routes.js):', error)
-
+        console.log('Error creating meeting (routes.js):', error)
         res.status(500).json({ error: 'Internal server error' })
     }
 })
 
 router.post('/edit-meeting', async (req, res) => {
+    const { id, newTitle, newDescription, newDays, newStartTime, newEndTime } = req.body
+
     try {
-        console.log("Request body: ", req.body)
-        const { id, newTitle, newDescription, newDays, newStartTime, newEndTime } = req.body
         const result = await db.editMeeting(id, newTitle, newDescription, newDays, newStartTime, newEndTime)
 
         res.status(200).json({ message: 'Meeting edited successfully', newTitle: result.title, newDescription: result.description, newDays: result.days, newStartTime: result.start_time, newEndTime: result.end_time })
     } catch (error) {
-        console.error('Error editing meeting (routes.js): ', error)
-
+        console.log('Error editing meeting (routes.js): ', error)
         res.status(500).json({ error: 'Internal server error' })
     }
 })
 
 router.post('/create-user', async (req, res) => {
-    try {
-        const { userId, firstName, lastName, email } = req.body
+    const { userId, firstName, lastName, email } = req.body
 
+    try {
         const user = await db.createUser(userId, firstName, lastName, email)
-        console.log(user)
+        
         res.status(201).json({ message: 'User created successfully: ', userId: user.user_id, firstName: user.first_name, lastName: user.last_name, email: user.email })
     } catch (error) {
-        console.error('Error creating user (Routes.js): ', error)
+        console.log('Error creating user (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error'})
     }
 })
@@ -59,7 +57,7 @@ router.get('/get-meetings', async (req, res) => {
 
         res.status(200).json({ meetings: meetings })
     } catch (error) {
-        console.error('Error fetching meetings (Routes.js): ', error)
+        console.log('Error fetching meetings (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error' })
     }
 })
@@ -79,25 +77,24 @@ router.get('/get-meeting-details', async (req, res) => {
         console.log("Meeting (/get-meeting-details, routes.js): ", meeting)
         res.status(200).json({ meeting: meeting })
     } catch (error) {
-        console.error('Error fetching meeting details (Routes.js): ', error)
+        console.log('Error fetching meeting details (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error '})
     }
 })
 
 router.get('/get-user-name', async (req, res) => {
     const { userId } = req.query
-    console.log("userId in routes.js: ", userId)
+    
     try {
         const name = await db.getUserName(userId)
         let firstName = ''
         let lastName = ''
-        console.log("name: ", name)
+        
         if (name) {
             firstName = name.first_name
             lastName = name.last_name
         }
-        console.log("firstName: ", firstName)
-        console.log("lastName: ", lastName)
+        
         res.status(200).json({ firstName: firstName, lastName: lastName})
     } catch (error) {
         res.status(500).json({ error: 'Internal server error'})
@@ -129,9 +126,9 @@ async function sendInviteEmail(email, token) {
 }
 
 router.post('/add-invite', async (req, res) => {
-    try {
-        const { meetingId, newInvite} = req.body
+    const { meetingId, newInvite} = req.body
 
+    try {
         await db.addInvite(meetingId, newInvite)
         const token = await db.createInvite(meetingId, newInvite)
         await sendInviteEmail(newInvite, token)
@@ -193,7 +190,7 @@ router.post('/edit-availability', async (req, res) => {
         const result = await db.updateAvailability(meetingId, userId, newAvailability)
         res.status(200).json({ message: "Successfully removed availability", updatedAvailability: result })
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error'})
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 
@@ -207,7 +204,7 @@ router.post('/edit-meeting-time', async (req, res) => {
         console.log("result (routes.js): ", result)
         res.status(200).json({ message: "Successfully edited meeting times", updatedStartTime: result.meeting_start, updatedEndTime: result.meeting_end })
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error'})
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 
@@ -224,8 +221,7 @@ router.post('/create-zoom-meeting', async (req, res) => {
         
         res.status(200).json({ message: "Successfully created Zoom meeting", joinURL: response.data.join_url});
     } catch (error) {
-        console.log(error.response ? error.response.data : error.message)
-        res.status(500).json({ error: 'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
     }
 })
 
@@ -237,7 +233,7 @@ router.get('/get-user-info', async (req, res) => {
 
         res.status(200).json({ firstName: userInfo.first_name, lastName: userInfo.last_name, email: userInfo.email, meetings: userInfo.user_meetings})
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error'})
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 
@@ -249,7 +245,7 @@ router.post('/change-name', async (req, res) => {
 
         res.status(200).json({ message: "Successfully updated user information"})
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error'})
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 
@@ -261,8 +257,21 @@ router.delete('/delete-account', async (req, res) => {
 
         res.status(200).json({ message: "Successfully deleted account"})
     } catch (error) {
-        console.error("Error deleting account (routes.js): ", error)
-        res.status(500).json({ error: 'Internal server error'})
+        console.log("Error deleting account (routes.js): ", error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+})
+
+router.post('/add-feedback', async (req, res) => {
+    const { name, email, feedback } = req.body
+
+    try {
+        await db.addFeedback(name, email, feedback)
+
+        res.status(200).json({ message: "Successfully added feedback"})
+    } catch (error) {
+        console.log("Error adding feedback (routes.js): ", error)
+        res.status(500).json({ error: 'Internal server error' })
     }
 })
 

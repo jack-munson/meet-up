@@ -1,0 +1,15 @@
+.privacy-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.privacy-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 68vw;
+    padding-bottom: 60px;
+}

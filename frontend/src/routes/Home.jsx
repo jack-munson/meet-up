@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { HomeHeader } from "../components/HomeHeader"
+import { Footer } from "../components/Footer";
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
 import { IoAddOutline } from "react-icons/io5"
@@ -72,7 +73,7 @@ export function Home() {
     return (
         <div className="home-page">
             <HomeHeader></HomeHeader>
-            <div className="page-content">
+            <div className="home-page-content">
                 <div className="sub-header">
                     <div className="sub-header-text">Your MeetUps</div>
                     <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
@@ -116,6 +117,7 @@ export function Home() {
                     {alertMessage}
                 </CustomAlert>
             </Snackbar>
+            <Footer/>
         </div>
     )
 }

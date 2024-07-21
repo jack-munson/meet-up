@@ -1,0 +1,93 @@
+.feedback-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.feedback-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 68vw;
+    padding-bottom: 60px;
+}
+
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.feedback-info-input {
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    outline: 2px solid white;     
+    outline-offset: -2px;
+    transition: outline-color 0.3s ease-out; 
+    color: #373737;
+}
+
+.feedback-info-input:focus {
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
+    outline: 2px solid #1E965C !important;
+    outline-offset: -2px;   
+    transition: outline-color 0.5s ease-in!important; 
+}
+
+.feedback-info-input::placeholder, .feedback-info-input::placeholder {
+    color: #828282;
+}
+
+.feedback-input {
+    width: 500px;
+    height: 75px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
+    outline: 2px solid white;     
+    outline-offset: -2px;       
+    transition: outline-color 0.3s ease-out; 
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: text;
+    resize: none;
+}
+
+.feedback-input:focus {
+    box-shadow: rgba(109, 109, 109, 0.2) 0px 2px 5px 2px;
+    outline: 2px solid #1E965C !important;
+    outline-offset: -2px;   
+    transition: outline-color 0.5s ease-in!important;   
+}
+
+.submit-feedback-button, .submit-feedback-button:focus {
+    width: 175px;
+    background-color: #1E965C;
+    transition: background-color 0.3s;
+    color: white;
+    border: none !important;
+    outline: none;
+}
+
+.submit-feedback-button:hover, .submit-feedback-button:focus:hover {
+    outline: 3px solid #1E965C;
+    outline-offset: -3px;
+    background-color: white;
+    color: #1E965C;
+    border: none !important;
+}
+
+.submit-feedback-button.disabled {
+    background-color: #E0E0E0 !important;
+    color: white !important;
+    border: none !important;
+    outline: none !important;
+    cursor: not-allowed !important;
+}

@@ -382,6 +382,21 @@ const deleteAccount = async (userId) => {
     }
 }
 
+const addFeedback = async (name, email, feedback) => {
+    const client = await pool.connect()
+
+    try {
+        const query = `
+            INSERT INTO feedback (name, email, feedback)
+            VALUES ($1, $2, $3)
+        `
+        const values = [name, email, feedback]
+        await client.query(query, values)
+    } finally {
+        client.release()
+    }
+}
+
 module.exports = {
-    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes, getUserInfo, updateUserName, deleteAccount
+    createMeeting, editMeeting, createUser, getMeetingsByUserId, addInvite, createInvite, validateInvite, getMeetingDetails, getUserName, acceptInvite, getMeetingId, deleteMeeting, updateAvailability, editMeetingTimes, getUserInfo, updateUserName, deleteAccount, addFeedback
 };

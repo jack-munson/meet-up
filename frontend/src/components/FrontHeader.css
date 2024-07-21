@@ -29,6 +29,6 @@
     cursor: pointer;
 }
 
-.menu-button:hover {
+.menu-button:hover, .menu-button:active, .menu-button:focus {
     color: #1E965C;
 }
