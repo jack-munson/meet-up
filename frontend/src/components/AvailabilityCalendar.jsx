@@ -42,11 +42,11 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     const [startIndex, setStartIndex] = useState(0)
 
     const handlePrev = () => {
-        setStartIndex((prevIndex) => Math.max(prevIndex - 7, 0))
+        setStartIndex((prevIndex) => Math.max(prevIndex - 7, 0));
     };
 
     const handleNext = () => {
-        setStartIndex((prevIndex) => Math.min(prevIndex + 7, days.length - 7))
+        setStartIndex((prevIndex) => Math.min(prevIndex + 7, days.length - 7));
     };
 
     const findBestTimes = (availability) => {
@@ -112,6 +112,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
 
                 if (startSlotElement && endSlotElement) {
+                    console.log("Start and end slots")
                     const top = startSlotElement.offsetTop;
                     const left = startSlotElement.offsetLeft;
                     const width = endSlotElement.offsetWidth;
@@ -119,10 +120,18 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
 
                     const meetingBlock = document.querySelector('.meeting-block');
                     if (meetingBlock) {
+                        console.log("Meeting block")
+                        meetingBlock.style.display = 'block'
                         meetingBlock.style.top = `${top}px`;
                         meetingBlock.style.left = `${left}px`;
                         meetingBlock.style.height = `${height}px`;
                         meetingBlock.style.width = `${width}px`;
+                    }
+                } else {
+                    const meetingBlock = document.querySelector('.meeting-block');
+
+                    if (meetingBlock) {
+                        meetingBlock.style.display = 'none';
                     }
                 }
             }
@@ -547,12 +556,24 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     };
 
     const renderMeetingBlock = () => {
-        if (!meetingStartSlot || !meetingEndSlot) return null;
+        console.log("Rendering")
+        if (!meetingStartSlot || !meetingEndSlot) return null
         const startSlotElement = document.querySelector(`[data-slot="${meetingStartSlot}"]`);
         const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
 
         if (!startSlotElement || !endSlotElement) { // Scheduled meeting is no longer within user's selected days/times
-            return
+            return (
+                <div
+                className={`meeting-block ${isScheduling ? 'transparent' : ''} `}
+                style={{
+                    top: 0,
+                    left: 0,
+                    height: 0,
+                    width: 0
+                }}>
+                    Meeting
+            </div>
+            )
         }
 
         const top = startSlotElement.offsetTop;
@@ -568,8 +589,8 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                     left: `${left}px`,
                     height: `${height}px`,
                     width: `${width}px`
-                }}
-            >Meeting
+                }}>
+                    Meeting
             </div>
         );
     };
