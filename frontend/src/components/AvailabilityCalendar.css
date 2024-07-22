@@ -100,10 +100,6 @@
   background-color: #FFE0E0; /* Light red color for slots being deselected */
 }
 
-.calendar-time-slot.best-time, .calendar-time-slot.best-time:hover {
-  background-color: gold; /* Light red color for slots being deselected */
-}
-
 .calendar-time-slot:hover {
   outline: 1px dashed #373737; /* Light gray on hover */
   outline-offset: -1px;

@@ -5,7 +5,7 @@ import { Footer } from "../components/Footer";
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
 import { IoAddOutline } from "react-icons/io5"
-import { Alert, Snackbar, styled } from "@mui/material"
+import { Alert, Snackbar, styled, CircularProgress, Box } from "@mui/material"
 import "../styles/Home.css"
 import axios from "axios"
 import { getAuth } from "firebase/auth"
@@ -15,6 +15,7 @@ export function Home() {
     const [meetings, setMeetings] = useState([])
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
     const auth = getAuth()
     const user = auth.currentUser
     const navigate = useNavigate()
@@ -55,6 +56,8 @@ export function Home() {
                 setMeetings(sortedMeetings);
             } catch (error) {
                 console.error('Error fetching meetings: ', error)
+            } finally {
+                setIsLoading(false)
             }
         };
 
@@ -69,6 +72,14 @@ export function Home() {
           color: 'white',
         },
     }));
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress size={75} sx={{ color: '#1E965C' }}/>
+            </Box>
+        )
+    }
     
     return (
         <div className="home-page">
@@ -87,7 +98,7 @@ export function Home() {
                 )}
                 {meetings.length === 0 && (
                     <div className="no-meetings-blurb">
-                        Looks like you don't have any meetings yet!
+                        Looks like you don't have any MeetUps yet!
                     </div>
                 )}
                 <div className="meetings">

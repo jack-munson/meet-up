@@ -7,6 +7,7 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff'
 import { eye } from 'react-icons-kit/feather/eye'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
+import { CircularProgress, Box } from "@mui/material";
 import { getAuth, signOut, deleteUser, reauthenticateWithCredential, EmailAuthProvider, GoogleAuthProvider, reauthenticateWithPopup } from "firebase/auth"
 import "../styles/Profile.css"
 
@@ -21,6 +22,7 @@ export function Profile() {
     const [type, setType] = useState('password')
     const [icon, setIcon] = useState(eyeOff)
     const [meetings, setMeetings] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
     const auth = getAuth()
     const user = auth.currentUser
     const providerId = user.providerData[0]?.providerId
@@ -40,6 +42,8 @@ export function Profile() {
                 setMeetings(userInfo.data.meetings)
             } catch (error) {
                 console.error("Error fetching user info: ", error)
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -115,6 +119,14 @@ export function Profile() {
            setIcon(eyeOff)
            setType('password')
         }
+    }
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress size={75} sx={{ color: '#1E965C' }}/>
+            </Box>
+        )
     }
 
     return (

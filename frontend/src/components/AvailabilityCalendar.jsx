@@ -507,13 +507,13 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 <div
                     key={slot}
                     data-slot={slot}
-                    className={`calendar-time-slot ${isSelected ? 'selected' : ''} ${isDeselected ? 'deselecting' : ''} ${shouldBeSelected ? 'temp-selected' : ''} ${isHourSlot ? 'dashed' : ''}`}
+                    className={`calendar-time-slot ${isSelected ? 'selected' : ''} ${isDeselected ? 'deselecting' : ''} ${shouldBeSelected ? 'temp-selected' : ''} ${isHourSlot ? 'dashed' : ''} ${isBestTime ? 'best' : ''}`}
                     onMouseDown={() => handleMouseDown(day, time)}
                     onMouseEnter={() => handleMouseEnter(day, time)}
                     onMouseUp={handleMouseUp}
                     style={{ backgroundColor }}
                 >
-                    {isBestTime && <img src={SuggestedIcon} alt='Suggested time' className='suggested-time-icon' />}
+                    {/* {isBestTime && <img src={SuggestedIcon} alt='Suggested time' className='suggested-time-icon' />} */}
                 </div>
             );
         });

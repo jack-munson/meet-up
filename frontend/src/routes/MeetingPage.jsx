@@ -12,7 +12,7 @@ import { BsPersonFill, BsPlusCircle } from "react-icons/bs"
 import { MdSend } from "react-icons/md"
 import { FiEdit } from "react-icons/fi"
 import { MdDeleteForever } from "react-icons/md"
-import { Alert, Snackbar, styled } from "@mui/material"
+import { Alert, Snackbar, styled, CircularProgress, Box } from "@mui/material"
 import { getAuth } from "firebase/auth"
 
 export function MeetingPage() {
@@ -28,6 +28,7 @@ export function MeetingPage() {
     const [meetingEnd, setMeetingEnd] = useState(null)
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const auth = getAuth()
     const user = auth.currentUser
@@ -219,6 +220,8 @@ export function MeetingPage() {
                 setMeetingEnd(response.data.meeting.meeting_end || null)
             } catch (error) {
                 console.error('Error fetching meeting details (MeetingPage.jsx): ', error)
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -242,6 +245,14 @@ export function MeetingPage() {
     };
 
     const memoAvailability = useMemo(() => meetingDetails.availability || [], [meetingDetails.availability])
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress size={75} sx={{ color: '#1E965C' }}/>
+            </Box>
+        )
+    }
 
     return (
         <div className="meeting-page">
