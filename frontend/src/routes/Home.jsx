@@ -5,7 +5,7 @@ import { Footer } from "../components/Footer";
 import { CreateMeeting } from "../components/CreateMeeting"
 import { Meeting } from "../components/Meeting"
 import { IoAddOutline } from "react-icons/io5"
-import { Alert, Snackbar, styled, CircularProgress, Box } from "@mui/material"
+import { Alert, Snackbar, styled, CircularProgress, Box, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import "../styles/Home.css"
 import axios from "axios"
 import { getAuth } from "firebase/auth"
@@ -13,6 +13,10 @@ import { getAuth } from "firebase/auth"
 export function Home() {
     const [isCreateMeetingOpen, setIsCreateMeetingOpen] = useState(false)
     const [meetings, setMeetings] = useState([])
+    const [createdMeetings, setCreatedMeetings] = useState([])
+    const [joinedMeetings, setJoinedMeetings] = useState([])
+    const [view, setView] = useState('all')
+    const [currentViewingMeetings, setCurrentViewingMeetings] = useState([])
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [isLoading, setIsLoading] = useState(true)
@@ -51,9 +55,12 @@ export function Home() {
             try {
                 const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
                         params: { userId: user.uid }
-                    });
-                const sortedMeetings = response.data.meetings.sort((a, b) => a.id - b.id);
-                setMeetings(sortedMeetings);
+                    })
+                const sortedMeetings = response.data.meetings.sort((a, b) => a.id - b.id)
+                setMeetings(sortedMeetings)
+                setCurrentViewingMeetings(sortedMeetings)
+                setCreatedMeetings(response.data.createdIds)
+                setJoinedMeetings(response.data.joinedIds)
             } catch (error) {
                 console.error('Error fetching meetings: ', error)
             } finally {
@@ -63,6 +70,30 @@ export function Home() {
 
         fetchMeetings()
     }, [user, isCreateMeetingOpen])
+
+    const handleViewChange = (view) => {
+        console.log(view)
+        setIsLoading(true)
+        if (view === 'all') {
+            setView('all')
+            setCurrentViewingMeetings(meetings)
+        } else if (view === 'created') {
+            setView('created')
+            if (createdMeetings) {
+                setCurrentViewingMeetings(meetings.filter((meeting) => createdMeetings.includes(meeting.id)) || [])
+            } else {
+                setCurrentViewingMeetings([])
+            }
+        } else if (view === 'joined') {
+            setView('joined')
+            if (joinedMeetings) {
+                setCurrentViewingMeetings(meetings.filter((meeting) => joinedMeetings.includes(meeting.id)) || [])
+            } else {
+                setCurrentViewingMeetings([])
+            }
+        }
+        setIsLoading(false)
+    }
 
     const CustomAlert = styled(Alert)(({ theme }) => ({
         backgroundColor: 'rgba(0, 123, 255)',
@@ -89,6 +120,17 @@ export function Home() {
                     <div className="sub-header-text">Your MeetUps</div>
                     <IoAddOutline onClick={handleCreateMeeting} className="sub-header-icon"></IoAddOutline>
                 </div>
+                <ToggleButtonGroup 
+                    className="frequency-options" 
+                    style={{ marginBottom: "25px", height: "40px" }} 
+                    onChange={(e) => handleViewChange(e.target.value)} 
+                    value={view} 
+                    exclusive
+                >
+                    <ToggleButton className="frequency-option one-time" style={{ height: "40px", fontSize: "15px" }} disableRipple value="all">All</ToggleButton>
+                    <ToggleButton className="frequency-option" style={{ height: "40px", fontSize: "15px" }} disableRipple value="created">Created</ToggleButton>
+                    <ToggleButton className="frequency-option recurring" style={{ height: "40px", fontSize: "15px" }} disableRipple value="joined">Joined</ToggleButton>
+                </ToggleButtonGroup>
                 {isCreateMeetingOpen && (
                     <div className="overlay">
                         <div className="create-meeting-container">
@@ -96,13 +138,13 @@ export function Home() {
                         </div>
                     </div>
                 )}
-                {meetings.length === 0 && (
+                {currentViewingMeetings.length === 0 && 
                     <div className="no-meetings-blurb">
-                        Looks like you don't have any MeetUps yet!
+                        No MeetUps to display
                     </div>
-                )}
+                }
                 <div className="meetings">
-                    {meetings.map(meeting => (
+                    {currentViewingMeetings.map(meeting => (
                         <Meeting
                             key={meeting.id}
                             meetingId={meeting.id}

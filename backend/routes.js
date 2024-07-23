@@ -53,9 +53,9 @@ router.get('/get-meetings', async (req, res) => {
     const { userId } = req.query
 
     try {
-        const meetings = await db.getMeetingsByUserId(userId)
+        const meetingInfo = await db.getMeetingsByUserId(userId)
 
-        res.status(200).json({ meetings: meetings })
+        res.status(200).json({ meetings: meetingInfo.allMeetings, createdIds: meetingInfo.createdMeetings, joinedIds: meetingInfo.joinedMeetings })
     } catch (error) {
         console.log('Error fetching meetings (Routes.js): ', error)
         res.status(500).json({ error: 'Internal server error' })

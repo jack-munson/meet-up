@@ -30,7 +30,7 @@
     align-items: center;
     justify-content: space-between;
     margin-top: 35px;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
 }
 
 .sub-header-text {
@@ -60,7 +60,7 @@
     color: #1E965C;
     font-size: 25px;
     font-weight: 500;
-    margin-top: 250px;
+    margin-top: 200px;
 }
 
 .overlay {

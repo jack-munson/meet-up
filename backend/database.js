@@ -25,7 +25,8 @@ const createMeeting = async (userId, title, description, startTime, endTime, fre
 
         const userQuery = `
             UPDATE users
-            SET user_meetings = array_append(COALESCE(user_meetings, '{}'), $1)
+            SET user_meetings = array_append(COALESCE(user_meetings, '{}'), $1),
+                created_meetings = array_append(COALESCE(created_meetings, '{}'), $1)
             WHERE user_id = $2
             RETURNING user_meetings;
         `
@@ -86,18 +87,15 @@ const getMeetingsByUserId = async (userId) => {
 
     try {
         const userQuery = `
-            SELECT user_meetings FROM users
+            SELECT user_meetings, created_meetings, joined_meetings
+            FROM users
             WHERE user_id = $1
         `
         const userResult = await client.query(userQuery, [userId])
 
-        if (userResult.rows.length === 0) {
-            return []
-        }
+        const { user_meetings, created_meetings, joined_meetings } = userResult.rows[0]
 
-        const userMeetings = userResult.rows[0].user_meetings
-
-        if (!userMeetings || userMeetings.length === 0) {
+        if (!user_meetings || user_meetings.length === 0) {
             return []
         }
 
@@ -105,9 +103,9 @@ const getMeetingsByUserId = async (userId) => {
             SELECT * FROM meetings
             WHERE id = ANY($1)
         `
-        const meetingResult = await client.query(meetingQuery, [userMeetings]);
+        const meetingResult = await client.query(meetingQuery, [user_meetings]);
         
-        return meetingResult.rows;
+        return { allMeetings: meetingResult.rows, createdMeetings: created_meetings, joinedMeetings: joined_meetings };
     } finally {
         client.release()
     }
@@ -223,7 +221,8 @@ const acceptInvite = async (userId, email, name, meetingId) => {
 
         const userQuery = `
             UPDATE users
-            SET user_meetings = array_append(COALESCE(user_meetings, '{}'), $1)
+            SET user_meetings = array_append(COALESCE(user_meetings, '{}'), $1),
+                joined_meetings = array_append(COALESCE(joined_meetings, '{}'), $1)
             WHERE user_id = $2
             RETURNING user_meetings
         `
