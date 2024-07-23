@@ -221,6 +221,11 @@
     cursor: pointer;
 }
 
+.sending-icon {
+    position: absolute;
+    right: 10px;
+}
+
 .send-invite-icon:hover, .send-invite-icon:active {
     position: absolute;
     right: 10px;

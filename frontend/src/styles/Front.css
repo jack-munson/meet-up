@@ -4,12 +4,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100vw;
+    min-height: 100vh;
 }
 
-.page-content {
+.main-page-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 68vw;
     padding-bottom: 60px;
 }
@@ -35,7 +37,7 @@
     font-weight: 500;
     color: #1E965C;
     margin-top: -20px;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
 }
 
 .welcome-message-text-steps {
@@ -48,48 +50,57 @@
 
 .main-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
+    width: 100%;
 }
 
-.how-to {
+.step-buttons {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-.how-to-heading {
-    font-size: 2.5rem; /* Responsive text size */
-    font-weight: 600;
-    color: #373737;
-}
-
-.how-to-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.step {
-    display: flex;
-    flex-direction: row;
-    background-color: #1E965C;
-    border-radius: 20px;
-    color: white;
     align-items: center;
-    padding: 10px;
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 15px;
 }
 
-.step-number {
-    font-size: 45px;
+.step-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #D9D9D9;
+    font-size: 25px;
     font-weight: 500;
-    margin-right: 15px;
+    transition: color 0.3s;
+    cursor: pointer;
 }
 
-.step-text {
-    font-size: 30px;
+.step-button.selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #373737;
+    font-size: 25px;
     font-weight: 500;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.step-button:hover, .step-button:active, .step-button:focus {
+    color: #1E965C;
+}
+
+.step-sub-text {
+    color: #373737;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.step-image {
+    border-radius: 30px;
+    width: 75%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 5px 0px;
 }
 
 /* Media queries for different screen sizes */
@@ -143,7 +154,6 @@
         padding-bottom: 100px;
     }
 }
-
 
 /* Important for making sure everything is centered */
 #root {

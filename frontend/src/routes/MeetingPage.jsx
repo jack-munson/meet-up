@@ -29,6 +29,7 @@ export function MeetingPage() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [isLoading, setIsLoading] = useState(true)
+    const [isSending, setIsSending] = useState(false)
     const inviteList = Array.isArray(meetingDetails.invites) ? meetingDetails.invites : []
     const auth = getAuth()
     const user = auth.currentUser
@@ -106,6 +107,7 @@ export function MeetingPage() {
         e.stopPropagation()
 
         if (newInvite) {
+            setIsSending(true)
             try {
                 const response = await axios.post('http://localhost:3000/api/add-invite', {
                     meetingId: meetingId,
@@ -128,6 +130,8 @@ export function MeetingPage() {
             }
             catch (error) {
                 console.error('Error adding invite: ', error)
+            } finally {
+                setIsSending(false)
             }
         }
     }
@@ -294,7 +298,10 @@ export function MeetingPage() {
                                                 placeholder="email@domain.com" 
                                             />
                                         </div>
-                                        <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                                        {isSending ? 
+                                            <CircularProgress size={15} className="sending-icon" sx={{ color: '#1E965C' }}/> :
+                                            <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
+                                        }
                                     </div>
                                 </div>
                             )}
