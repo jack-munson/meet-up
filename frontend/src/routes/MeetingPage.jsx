@@ -299,7 +299,7 @@ export function MeetingPage() {
                                             />
                                         </div>
                                         {isSending ? 
-                                            <CircularProgress size={15} className="sending-icon" sx={{ color: '#1E965C' }}/> :
+                                            <CircularProgress size={16} className="sending-icon" sx={{ color: '#1E965C' }}/> :
                                             <MdSend className="send-invite-icon" onClick={handleAddNewInvite}></MdSend>
                                         }
                                     </div>
