@@ -13,3 +13,34 @@
     width: 68vw;
     padding-bottom: 60px;
 }
+
+.privacy-policy {
+    text-align: left;
+    align-items: flex-start;
+}
+
+.privacy-header {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1E965C;
+}
+
+.privacy-sub-header {
+    font-size: 22px;
+    font-weight: 550;
+    color: #373737;
+}
+
+.privacy-sub-sub-header {
+    font-size: 20px;
+    font-weight: 500;
+    color: #373737;
+}
+
+.privacy-link {
+    color: #1E965C;
+}
+
+.privacy-link:hover {
+    color: #2fae71;
+}

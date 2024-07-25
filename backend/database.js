@@ -228,7 +228,6 @@ const acceptInvite = async (userId, email, name, meetingId) => {
         `
         const userValues = [meetingId, userId]
         const userResult = await client.query(userQuery, userValues)
-        console.log("user_meeting in db.js: ", userResult.rows[0].user_meetings)
         return userResult.rows[0].user_meetings
     } finally {
         client.release()

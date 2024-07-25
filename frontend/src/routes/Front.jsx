@@ -43,7 +43,7 @@ export function Front() {
                         </div>
                     </div>
                     {view === 'create' &&
-                        <div>
+                        <div className="step-content">
                             <div className="step-sub-text"> 
                                 Start by entering the details for your MeetUp event.
                             </div>
@@ -51,7 +51,7 @@ export function Front() {
                         </div>
                     }
                     {view === 'invite' &&
-                        <div>
+                        <div className="step-content">
                             <div className="step-sub-text"> 
                                 Invite your friends, colleagues, or classmates to join by simply adding their email addresses.
                             </div>
@@ -59,7 +59,7 @@ export function Front() {
                         </div>
                     }
                     {view === 'add' &&
-                        <div>
+                        <div className="step-content">
                             <div className="step-sub-text"> 
                                 Use our intuitive calendar to highlight your availability, making it easy for others to see when you're free.
                             </div>
@@ -67,7 +67,7 @@ export function Front() {
                         </div>
                     }
                     {view === 'schedule' &&
-                        <div>
+                        <div className="step-content">
                             <div className="step-sub-text"> 
                                 Find the best time to meet based on everyone's availability and schedule your meeting. It's that easy!
                             </div>
