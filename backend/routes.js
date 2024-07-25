@@ -146,10 +146,13 @@ router.get('/invite/:token', async (req, res) => {
         const invite = await db.validateInvite(token)
         
         if (invite) {
+            console.log("Invite")
             res.status(200).json({ message: 'Invite valid', valid: true, token: token })
         }
         else {
-            res.status(404).json({ valid: false, message: 'Invalid invite' })
+            console.log("No invite")
+            res.status(200).json({ message: 'Invalid invite', valid: false })
+            console.log("hi")
         }
     } catch (error) {
         console.error('Error processing invitation: ', error)
@@ -163,7 +166,7 @@ router.post('/accept-invite', async (req, res) => {
     try {
         const meeting = await db.getMeetingId(token)
         console.log("meeting (routes.js): ", meeting)
-        await db.acceptInvite(userId, email, name, meeting.meeting_id)
+        await db.acceptInvite(userId, email, name, meeting.meeting_id, token)
 
         res.status(200).json({ message: 'Invite accepted successfully' })
     } catch (error) {

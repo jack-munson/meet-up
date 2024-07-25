@@ -172,10 +172,10 @@ const createInvite = async (meetingId, email) => {
     
     try {
         const query = `
-            INSERT INTO invites (token, meeting_id, email)
-            VALUES ($1, $2, $3)
+            INSERT INTO invites (token, meeting_id, email, accepted)
+            VALUES ($1, $2, $3, $4)
         `
-        const values = [token, meetingId, email]
+        const values = [token, meetingId, email, false]
         await client.query(query, values)
         return token
     } finally {
@@ -193,17 +193,25 @@ const validateInvite = async (token) => {
         `;
         const values = [token]
         const result = await client.query(query, values)
-        console.log(result.rows[0])
-        return result.rows.length > 0 ? result.rows[0] : null
+        console.log("result.rows[0] in validateInvite: ", result.rows[0])
+        return (result.rows.length > 0 && result.rows[0].accepted === false) ? result.rows[0] : null
     } finally {
         client.release()
     }
 }
 
-const acceptInvite = async (userId, email, name, meetingId) => {
+const acceptInvite = async (userId, email, name, meetingId, token) => {
     const client = await pool.connect()
 
     try {
+        const inviteQuery = `
+            UPDATE invites
+            SET accepted = $1
+            WHERE token = $2
+        `
+        const inviteValues = [true, token]
+        await client.query(inviteQuery, inviteValues)
+
         const meetingQuery = `
             UPDATE meetings
             SET accepted = jsonb_set(
@@ -216,8 +224,8 @@ const acceptInvite = async (userId, email, name, meetingId) => {
         `;
         const path = `{${userId}}`
         const info = { email: email, name: name }
-        const values = [path, info, meetingId];
-        const meetingResult = await client.query(meetingQuery, values)
+        const meetingValues = [path, info, meetingId];
+        await client.query(meetingQuery, meetingValues)
 
         const userQuery = `
             UPDATE users
