@@ -162,7 +162,6 @@ router.post('/accept-invite', async (req, res) => {
     
     try {
         const meeting = await db.getMeetingId(token)
-        console.log("meeting (routes.js): ", meeting)
         await db.acceptInvite(userId, email, name, meeting.meeting_id, token)
 
         res.status(200).json({ message: 'Invite accepted successfully' })

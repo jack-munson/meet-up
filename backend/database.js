@@ -20,7 +20,7 @@ const createMeeting = async (userId, title, description, startTime, endTime, fre
             RETURNING user_id, title, id, description, frequency, days
         `
         const meetingValues = [userId, title, description, startTime, endTime, frequency, days, accepted]
-        const meetingResult = await client.query(meetingQuery, meetingValues)
+        const meetingResult = await client.query(meetingQuery, meetingValues) // Initialize meeting
         const newMeeting =  meetingResult.rows[0]
 
         const userQuery = `
@@ -31,7 +31,7 @@ const createMeeting = async (userId, title, description, startTime, endTime, fre
             RETURNING user_meetings;
         `
         const userValues = [newMeeting.id, userId]
-        const userResult = await client.query(userQuery, userValues)
+        const userResult = await client.query(userQuery, userValues) // Add meeting to user's info
 
         return { newMeeting, userMeetings: userResult.rows[0].user_meetings }
     } catch (error) {
@@ -56,7 +56,7 @@ const editMeeting = async (id, newTitle, newDescription, newDays, newStartTime, 
             RETURNING title, description, days, start_time, end_time
         `
         const values = [id, newTitle, newDescription, newDays, newStartTime, newEndTime]
-        const result = await client.query(query, values)
+        const result = await client.query(query, values) //  Update meeting info
         const { title, description, days, start_time, end_time } = result.rows[0];
 
         return { title, description, days, start_time, end_time }
@@ -75,7 +75,7 @@ const createUser = async (userId, firstName, lastName, email) => {
             RETURNING user_id, first_name, last_name, email
         `
         const values = [userId, firstName, lastName, email]
-        const result = await client.query(query, values)
+        const result = await client.query(query, values) // Initialize user profile
         return result.rows[0]
     } finally {
         client.release()
@@ -91,7 +91,7 @@ const getMeetingsByUserId = async (userId) => {
             FROM users
             WHERE user_id = $1
         `
-        const userResult = await client.query(userQuery, [userId])
+        const userResult = await client.query(userQuery, [userId]) // Get all meeting ids associated with the user
 
         const { user_meetings, created_meetings, joined_meetings } = userResult.rows[0]
 
@@ -103,9 +103,11 @@ const getMeetingsByUserId = async (userId) => {
             SELECT * FROM meetings
             WHERE id = ANY($1)
         `
-        const meetingResult = await client.query(meetingQuery, [user_meetings]);
-        
-        return { allMeetings: meetingResult.rows, createdMeetings: created_meetings, joinedMeetings: joined_meetings };
+        const meetingResult = await client.query(meetingQuery, [user_meetings]) // Get meeting info for all meetings associated with the suer
+        return { allMeetings: meetingResult.rows, createdMeetings: created_meetings, joinedMeetings: joined_meetings }
+        // allMeetings contains the meeting information for every meeting associated with the user
+        // createdMeetings contains the meeting ids of the meetings which the user created
+        // joinedMeetings contains the meeting ids of the meetings which the user was invited to and accepted
     } finally {
         client.release()
     }
@@ -140,8 +142,6 @@ const getUserName = async(userId) => {
         `
         const values = [userId]
         const result = await client.query(query, values)
-        console.log("db.js: ", result.rows[0].first_name)
-        console.log("AFTER")
         return result.rows[0]
     } finally {
         client.release()
@@ -159,7 +159,7 @@ const addInvite = async (meetingId, newInvite) => {
             RETURNING invites
         `
         const values = [meetingId, newInvite]
-        const result = await client.query(query, values)
+        const result = await client.query(query, values) // Add invitee to invites array
         return result
     } finally {
         client.release()
@@ -176,7 +176,7 @@ const createInvite = async (meetingId, email) => {
             VALUES ($1, $2, $3, $4)
         `
         const values = [token, meetingId, email, false]
-        await client.query(query, values)
+        await client.query(query, values)  // Initialize invite
         return token
     } finally {
         client.release()
@@ -193,7 +193,7 @@ const validateInvite = async (token) => {
         `;
         const values = [token]
         const result = await client.query(query, values)
-        return (result.rows.length > 0 && result.rows[0].accepted === false) ? result.rows[0] : null
+        return (result.rows.length > 0 && result.rows[0].accepted === false) ? result.rows[0] : null // Return null if token does not exist or invite has already been accepted
     } finally {
         client.release()
     }
@@ -209,7 +209,7 @@ const acceptInvite = async (userId, email, name, meetingId, token) => {
             WHERE token = $2
         `
         const inviteValues = [true, token]
-        await client.query(inviteQuery, inviteValues)
+        await client.query(inviteQuery, inviteValues) // Mark invite as accepted
 
         const meetingQuery = `
             UPDATE meetings
@@ -224,7 +224,7 @@ const acceptInvite = async (userId, email, name, meetingId, token) => {
         const path = `{${userId}}`
         const info = { email: email, name: name }
         const meetingValues = [path, info, meetingId];
-        await client.query(meetingQuery, meetingValues)
+        await client.query(meetingQuery, meetingValues) // Add invitee to meeting
 
         const userQuery = `
             UPDATE users
@@ -234,8 +234,7 @@ const acceptInvite = async (userId, email, name, meetingId, token) => {
             RETURNING user_meetings
         `
         const userValues = [meetingId, userId]
-        const userResult = await client.query(userQuery, userValues)
-        console.log("userResult (db.js): ", userResult)
+        const userResult = await client.query(userQuery, userValues) // Add meeting to invitee's info
         return userResult.rows[0].user_meetings
     } finally {
         client.release()
