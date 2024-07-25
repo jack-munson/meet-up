@@ -193,7 +193,6 @@ const validateInvite = async (token) => {
         `;
         const values = [token]
         const result = await client.query(query, values)
-        console.log("result.rows[0] in validateInvite: ", result.rows[0])
         return (result.rows.length > 0 && result.rows[0].accepted === false) ? result.rows[0] : null
     } finally {
         client.release()

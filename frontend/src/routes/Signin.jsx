@@ -85,10 +85,8 @@ export function Signin() {
         signInWithPopup(auth, provider)
         .then(function (result) {
             const user = result.user
-            console.log("User with Google sign in: ", user)
             const additionUserInfo = getAdditionalUserInfo(result)
             if (additionUserInfo.isNewUser) {
-                console.log("New")
                 if (inviteToken) {
                     navigate(`/signup?token=${inviteToken}`)
                 } else {
@@ -96,7 +94,6 @@ export function Signin() {
                 }
             }
             else {
-                console.log("Not new")
                 if (inviteToken) {
                     handleInviteAcceptance(user, inviteToken, "Google");
                 } else {

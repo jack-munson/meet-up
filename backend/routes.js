@@ -146,13 +146,10 @@ router.get('/invite/:token', async (req, res) => {
         const invite = await db.validateInvite(token)
         
         if (invite) {
-            console.log("Invite")
             res.status(200).json({ message: 'Invite valid', valid: true, token: token })
         }
         else {
-            console.log("No invite")
             res.status(200).json({ message: 'Invalid invite', valid: false })
-            console.log("hi")
         }
     } catch (error) {
         console.error('Error processing invitation: ', error)

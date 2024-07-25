@@ -12,11 +12,9 @@ export function Invite() {
                 const response = await axios.get(`http://localhost:3000/api/invite/${token}`);
                 console.log("After call")
                 console.log("response: ", response)
-                if (response.data.valid) {
-                    console.log("Valid")
+                if (response.data.valid) { // Valid invite
                     navigate(`/signin?token=${token}`);
-                } else {
-                    console.log("Not valid")
+                } else { // Invalid invite (likely because it's already been accepted)
                     navigate("/")
                 }
             } catch (error) {
