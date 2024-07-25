@@ -145,11 +145,9 @@ export function Privacy() {
                     <h3 className="privacy-sub-header">Delete Your Personal Data</h3>
                     <p>You have the right to delete or request that We assist in deleting the Personal Data that We have collected about You.</p>
                     <p>Our Service may give You the ability to delete certain information about You from within the Service.</p>
-                    <p>You may update, amend, or delete Your information at any time by signing in to Your Account, if you have one, and visiting the account settings section that allows you to manage Your personal information. You may also contact Us to request access to, correct, or delete any personal information that You have provided to Us.</p>
+                    <p>You may update, amend, or delete Your information at any time by signing in to Your Account, if you have one, and visiting Your profile page. You may also contact Us to request access to, correct, or delete any personal information that You have provided to Us.</p>
                     <p>Please note, however, that We may need to retain certain information when we have a legal obligation or lawful basis to do so.</p>
                     <h3 className="privacy-sub-header">Disclosure of Your Personal Data</h3>
-                    <h4 className="privacy-sub-sub-header">Business Transactions</h4>
-                    <p>If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy Policy.</p>
                     <h4 className="privacy-sub-sub-header">Law enforcement</h4>
                     <p>Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).</p>
                     <h4 className="privacy-sub-sub-header">Other legal requirements</h4>
@@ -174,7 +172,7 @@ export function Privacy() {
                     <p>We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the &quot;Last updated&quot; date at the top of this Privacy Policy.</p>
                     <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
                     <h2 className="privacy-header">Contact Us</h2>
-                    <p>If you have any questions about this Privacy Policy, You can contact us by email at usemeetup.com@gmail.com</p>
+                    <p>If you have any questions about this Privacy Policy, You can contact us by email at usemeetup.com@gmail.com or via Our feedback form.</p>
                 </div>
             </div>
             <Footer/>

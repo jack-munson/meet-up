@@ -86,6 +86,11 @@ export function Signup() {
                 setPasswordError(true)
                 setAlertMessage('Password should be at least 6 characters')
                 setAlertOpen(true)
+            } else if (error.code === "auth/email-already-in-use") {
+                setAlertOpen(false)
+                setEmailError(true)
+                setAlertMessage('Email is already in use')
+                setAlertOpen(true)
             } else {
                 setAlertOpen(false)
                 setAlertMessage('Error signing up')

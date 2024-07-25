@@ -88,13 +88,15 @@ export function Signin() {
             console.log("User with Google sign in: ", user)
             const additionUserInfo = getAdditionalUserInfo(result)
             if (additionUserInfo.isNewUser) {
+                console.log("New")
                 if (inviteToken) {
-                    navigate(`/signup/token=${inviteToken}`)
+                    navigate(`/signup?token=${inviteToken}`)
                 } else {
                     navigate('/signup')
                 }
             }
             else {
+                console.log("Not new")
                 if (inviteToken) {
                     handleInviteAcceptance(user, inviteToken, "Google");
                 } else {
