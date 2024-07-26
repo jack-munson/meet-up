@@ -101,8 +101,9 @@ router.get('/get-user-name', async (req, res) => {
     }
 })
 
-async function sendInviteEmail(email, token) {
-    const inviteLink = `http://localhost:5173/invite/${token}`;
+async function sendInviteEmail(email, token, title) {
+    const inviteLink = `http://localhost:5173/invite/${token}`
+    const logoURL = 'https://i.imgur.com/34Cfm1U.png'
 
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -115,8 +116,21 @@ async function sendInviteEmail(email, token) {
     const mailOptions = {
       from: process.env.AUTH_USER,
       to: email,
-      subject: 'You are invited!',
-      text: `You have been invited to a MeetUp. Click on the link to join: ${inviteLink}`
+      subject: "You're invited!",
+      html: 
+        `<html>
+            <body style="font-family: Inter, sans-serif; background-color: #f4f4f4; padding: 20px; width: 100%; max-width: 600px; margin: auto; border-radius: 10px;">
+                <div style="display:flex;background-color:#1e965c;color:white;padding:10px;border-radius:10px 10px 0 0;justify-content:center;">
+                    <img src="${logoURL}" alt="Logo" style="display: block; max-width: 200px;" />
+                </div>
+                <div style="padding: 20px; background-color: white; border-radius: 0 0 10px 10px;">
+                    <p>You have been invited to join</p>
+                    <h4>${title}</h4>
+                    <p style="margin: 0;">Click on the button below to join:</p>
+                    <a href="${inviteLink}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; color: white; background-color: #1E965C; text-decoration: none; border-radius: 8px; font-size: 16px; text-align: center;">Join MeetUp</a>
+                </div>
+            </body>
+        </html>`
     };
     try {
         await transporter.sendMail(mailOptions);
@@ -126,12 +140,12 @@ async function sendInviteEmail(email, token) {
 }
 
 router.post('/add-invite', async (req, res) => {
-    const { meetingId, newInvite} = req.body
+    const { meetingId, newInvite, meetingTitle } = req.body
 
     try {
         await db.addInvite(meetingId, newInvite)
         const token = await db.createInvite(meetingId, newInvite)
-        await sendInviteEmail(newInvite, token)
+        await sendInviteEmail(newInvite, token, meetingTitle)
 
         res.status(200).json({ message: 'Invite added successfully' })
     } catch (error) {

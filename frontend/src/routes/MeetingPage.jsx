@@ -111,7 +111,8 @@ export function MeetingPage() {
             try {
                 const response = await axios.post('http://localhost:3000/api/add-invite', {
                     meetingId: meetingId,
-                    newInvite: newInvite
+                    newInvite: newInvite,
+                    meetingTitle: meetingDetails.title
                 })
 
                 if (response.status === 200) {
