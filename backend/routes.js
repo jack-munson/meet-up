@@ -4,11 +4,13 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const db = require('./database')
 require('dotenv').config()
-const { google } = require('googleapis')
 const nodemailer = require('nodemailer')
-const { last } = require('lodash')
 
 router.use(bodyParser.json())
+
+router.get('/', (req, res) => {
+    res.send('Welcome to the API!');
+});
 
 router.post('/create-meeting', async (req, res) => {
     const { userId, title, description, startTime, endTime, frequency, days, accepted } = req.body
@@ -86,10 +88,11 @@ router.get('/get-user-name', async (req, res) => {
     const { userId } = req.query
     
     try {
+        console.log("BEFORE")
         const name = await db.getUserName(userId)
         let firstName = ''
         let lastName = ''
-        
+        console.log("NAME: ", name)
         if (name) {
             firstName = name.first_name
             lastName = name.last_name
@@ -97,12 +100,13 @@ router.get('/get-user-name', async (req, res) => {
         
         res.status(200).json({ firstName: firstName, lastName: lastName})
     } catch (error) {
+        console.log("ERROR: ", error)
         res.status(500).json({ error: 'Internal server error'})
     }
 })
 
 async function sendInviteEmail(email, token, title) {
-    const inviteLink = `http://localhost:5173/invite/${token}`
+    const inviteLink = `http://usemeetup.com/invite/${token}`
     const logoURL = 'https://i.imgur.com/34Cfm1U.png'
 
     const transporter = nodemailer.createTransport({

@@ -2,6 +2,10 @@ const express = require('express');
 const axios = require('axios')
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    res.send('Welcome to the site!');
+});
+
 router.get('/callback', async (req, res) => {
     console.log("Made it to /callback")
     const authorizationCode = req.query.code;

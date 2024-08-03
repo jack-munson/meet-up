@@ -53,7 +53,7 @@ export function Home() {
     useEffect(() => {
         const fetchMeetings = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/get-meetings`, {
+                const response = await axios.get(`https://usemeetup-api.com/api/get-meetings`, {
                         params: { userId: user.uid }
                     })
                 const sortedMeetings = response.data.meetings.sort((a, b) => a.id - b.id)

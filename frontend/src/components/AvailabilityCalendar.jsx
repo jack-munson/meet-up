@@ -281,7 +281,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     useEffect(() => {
         const receiveMessage = (event) => {
             console.log("Received message")
-            if (event.origin !== "http://localhost:3000") {
+            if (event.origin !== "https://usemeetup-api.com/") {
                 return;
             }
             if (event.data.zoomAccessToken) {
@@ -379,7 +379,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
         };
 
         try {
-            const response = await axios.post('http://localhost:3000/api/create-zoom-meeting', {
+            const response = await axios.post('https://usemeetup-api.com/api/create-zoom-meeting', {
                 accessToken: zoomAccessToken, 
                 meetingDetails: zoomMeetingDetails
             });

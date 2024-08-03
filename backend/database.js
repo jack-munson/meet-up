@@ -3,11 +3,14 @@ const { v4: uuidv4 } = require('uuid')
 require('dotenv').config()
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT,
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    database: process.env.RDS_DATABASE,
+    password: process.env.RDS_PASSWORD,
+    port: process.env.RDS_PORT,
+    ssl: {
+      rejectUnauthorized: false
+    }
 })
 
 const createMeeting = async (userId, title, description, startTime, endTime, frequency, days, accepted) => {

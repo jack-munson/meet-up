@@ -56,7 +56,7 @@ export function Signup() {
                 email: email
             };
     
-            const response = await axios.post('http://localhost:3000/api/create-user', userData);
+            const response = await axios.post('https://usemeetup-api.com/api/create-user', userData);
             
             if (inviteToken) {
                 handleInviteAcceptance(response.data, inviteToken)
@@ -116,7 +116,7 @@ export function Signup() {
                 email: email
             }
 
-            const response = await axios.post('http://localhost:3000/api/create-user', userData)
+            const response = await axios.post('https://usemeetup-api.com/api/create-user', userData)
             
             if (inviteToken) {
                 handleInviteAcceptance(response.data, inviteToken)
@@ -133,7 +133,7 @@ export function Signup() {
             console.log("User: ", user)
             const name = user.firstName + ' ' + user.lastName
             
-            await axios.post('http://localhost:3000/api/accept-invite', {
+            await axios.post('https://usemeetup-api.com/api/accept-invite', {
                 userId: user.userId,
                 email: user.email,
                 name: name,

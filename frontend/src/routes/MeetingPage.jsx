@@ -109,7 +109,7 @@ export function MeetingPage() {
         if (newInvite) {
             setIsSending(true)
             try {
-                const response = await axios.post('http://localhost:3000/api/add-invite', {
+                const response = await axios.post('https://usemeetup-api.com/api/add-invite', {
                     meetingId: meetingId,
                     newInvite: newInvite,
                     meetingTitle: meetingDetails.title
@@ -139,7 +139,7 @@ export function MeetingPage() {
 
     const handleDeleteMeeting = async () => {
         try {
-            await axios.delete('http://localhost:3000/api/delete-meeting', {
+            await axios.delete('https://usemeetup-api.com/api/delete-meeting', {
                 data: { meetingId }
             })
             navigate('/home')
@@ -158,7 +158,7 @@ export function MeetingPage() {
                 newAvailability: Array.from(slots)
             }
 
-            const response = await axios.post('http://localhost:3000/api/edit-availability', availabilityData)
+            const response = await axios.post('https://usemeetup-api.com/api/edit-availability', availabilityData)
             setMeetingDetails(prevState => ({
                 ...prevState,
                 availability: response.data.updatedAvailability
@@ -179,7 +179,7 @@ export function MeetingPage() {
                 newEndTime: end
             }
 
-            const response = await axios.post('http://localhost:3000/api/edit-meeting-time', meetingTimeData)
+            const response = await axios.post('https://usemeetup-api.com/api/edit-meeting-time', meetingTimeData)
             setMeetingDetails(prevState => ({
                 ...prevState,
                 meeting_start: response.data.updatedStartTime,
@@ -196,7 +196,7 @@ export function MeetingPage() {
     const handleMeetingUpdate = async (newMeetingDetails) => {
         try {
             console.log("newMeetingDetails before API call: ", newMeetingDetails)
-            const response = await axios.post('http://localhost:3000/api/edit-meeting', newMeetingDetails)
+            const response = await axios.post('https://usemeetup-api.com/api/edit-meeting', newMeetingDetails)
             setMeetingDetails(prevState => ({
                 ...prevState,
                 title: response.data.newTitle,
@@ -217,7 +217,7 @@ export function MeetingPage() {
     useEffect(() => {
         const fetchMeetingDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/get-meeting-details`, {
+                const response = await axios.get(`https://usemeetup-api.com/api/get-meeting-details`, {
                     params: { meetingId: meetingId }
                 })
                 setMeetingDetails(response.data.meeting)

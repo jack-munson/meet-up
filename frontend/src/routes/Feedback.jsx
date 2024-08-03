@@ -18,7 +18,7 @@ export function Feedback() {
 
     const handleSubmitFeedback = async () => {
         try {
-            await axios.post("http://localhost:3000/api/add-feedback", {
+            await axios.post("https://usemeetup-api.com/api/add-feedback", {
                 name: name,
                 email: email,
                 feedback: feedback

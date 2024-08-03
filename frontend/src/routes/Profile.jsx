@@ -31,7 +31,7 @@ export function Profile() {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const userInfo = await axios.get("http://localhost:3000/api/get-user-info", {
+                const userInfo = await axios.get("https://usemeetup-api.com/api/get-user-info", {
                     params: { userId: user.uid }
                 })
                 console.log(userInfo.data.email)
@@ -52,7 +52,7 @@ export function Profile() {
 
     const saveChanges = async () => {
         try {
-            await axios.post("http://localhost:3000/api/change-name", {
+            await axios.post("https://usemeetup-api.com/api/change-name", {
                 newFirstName: firstName,
                 newLastName: lastName,
                 userId: user.uid, 
@@ -88,7 +88,7 @@ export function Profile() {
     const deleteAccount = async () => {
         try {
             await deleteUser(user)
-            await axios.delete("http://localhost:3000/api/delete-account", {
+            await axios.delete("https://usemeetup-api.com/api/delete-account", {
                 data: { userId: user.uid }
             })
             await signOut(auth)

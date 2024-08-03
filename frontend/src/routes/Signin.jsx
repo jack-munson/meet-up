@@ -31,7 +31,7 @@ export function Signin() {
         if (token) {
             setInviteToken(token)
             const fetchMeetingTitle = async () => {
-                const response = await axios.get(`http://localhost:3000/api/get-meeting-details`, {
+                const response = await axios.get(`https://usemeetup-api.com/api/get-meeting-details`, {
                 params: { token: token }
                 })
                 setMeetingTitle(response.data.meeting.title)
@@ -111,7 +111,7 @@ export function Signin() {
             const { uid, displayName, email} = user
 
             try {
-                await axios.post('http://localhost:3000/api/accept-invite', {
+                await axios.post('https://usemeetup-api.com/api/accept-invite', {
                     userId: uid,
                     email: email,
                     name: displayName,
@@ -125,7 +125,7 @@ export function Signin() {
             const { uid, email } = user
             console.log(user)
             console.log("uid: ", uid)
-            const response = await axios.get('http://localhost:3000/api/get-user-name', { 
+            const response = await axios.get('https://usemeetup-api.com/api/get-user-name', { 
                 params: { userId: uid }
             })
             const firstName = response.firstName
@@ -133,7 +133,7 @@ export function Signin() {
             const name = firstName + ' ' + lastName
 
             try {
-                await axios.post('http://localhost:3000/api/accept-invite', {
+                await axios.post('https://usemeetup-api.com/api/accept-invite', {
                     userId: uid,
                     email: email,
                     name: name,

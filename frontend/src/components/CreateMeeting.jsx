@@ -113,7 +113,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
         }
 
         try {
-            const nameInfo = await axios.get('http://localhost:3000/api/get-user-name', { 
+            const nameInfo = await axios.get('https://usemeetup-api.com/api/get-user-name', { 
                 params: { userId: user.uid }
             })
             const firstName = nameInfo.data.firstName
@@ -135,7 +135,7 @@ export function CreateMeeting({ onCreateSuccess, onCancel }){
                 }
             }
     
-            const response = await axios.post('http://localhost:3000/api/create-meeting', meetingData)
+            const response = await axios.post('https://usemeetup-api.com/api/create-meeting', meetingData)
     
             console.log('Meeting created successfully (CreateMeeting.jsx)')
             
