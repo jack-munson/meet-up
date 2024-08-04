@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from "fs"
+import path from "path"
 
 const buildDir = path.join(__dirname, 'dist');
 const indexPath = path.join(buildDir, 'index.html');
