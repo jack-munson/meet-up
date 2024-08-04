@@ -13,10 +13,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Navigate to subdirectory
-      working-directory: frontend
-
     - name: Install dependencies
+      working-directory: frontend
       run: npm install
 
     - name: Build project
