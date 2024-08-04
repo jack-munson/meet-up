@@ -19,6 +19,7 @@ jobs:
         node-version: '20'
 
     - name: Install dependencies
+      working-directory: backend
       run: npm install
 
     - name: Install AWS CLI
@@ -38,6 +39,7 @@ jobs:
       run: pip install awsebcli
 
     - name: Deploy to Elastic Beanstalk
+      working-directory: backend
       run: eb deploy
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
