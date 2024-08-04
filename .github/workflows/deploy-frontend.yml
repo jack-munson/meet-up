@@ -1,9 +1,9 @@
-name: Deploy to S3 and Invalidate CloudFront
+name: Deploy Frontend to S3 and Invalidate CloudFront
 
 on:
   push:
     branches:
-      - main  # Deploy when code is pushed to the main branch
+      - main
 
 jobs:
   deploy:
