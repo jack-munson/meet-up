@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-/firebaseconfig.js
+/frontend/src/firebaseconfig.js
 .env
 
 # Editor directories and files

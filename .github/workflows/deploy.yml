@@ -13,6 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Create firebaseconfig.js
+      run: |
+        echo "export default {" > frontend/src/firebaseconfig.js
+        echo "  apiKey: '${{ secrets.VITE_FIREBASE_API_KEY }}'," >> frontend/src/firebaseconfig.js
+        echo "  authDomain: '${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}'," >> frontend/src/firebaseconfig.js
+        echo "  projectId: '${{ secrets.VITE_FIREBASE_PROJECT_ID }}'," >> frontend/src/firebaseconfig.js
+        echo "  storageBucket: '${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}'," >> frontend/src/firebaseconfig.js
+        echo "  messagingSenderId: '${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}'," >> frontend/src/firebaseconfig.js
+        echo "  appId: '${{ secrets.VITE_FIREBASE_APP_ID }}'" >> frontend/src/firebaseconfig.js
+        echo "};" >> frontend/src/firebaseconfig.js
+
     - name: Install dependencies
       working-directory: frontend
       run: npm install
