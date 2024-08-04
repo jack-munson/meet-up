@@ -314,11 +314,13 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     const handleZoomClick = () => {
         console.log("Clicked Zoom")
         if (zoomAccessToken) {
+            console.log("Yes token")
             console.log("zoomAccessToken: ", zoomAccessToken)
             setIsCreateZoomMeetingOpen(true)
             return
         }
-        const url = generateZoomURL();
+        console.log("No token")
+        const url = generateZoomURL()
 
         const width = 550
         const height = 650
@@ -335,7 +337,6 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
         console.log("Clicked create Zoom")
         let recurrence = null
         if (frequency === 'recurring') {
-
             const dayOfWeek = parseDateTime(meetingStart, "start", "Zoom").getDay()
             recurrence = {
                 type: 2,
@@ -376,19 +377,17 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 audio: "both",
                 auto_recording: "none",
                 enforce_login: false,
-                // alternative_hosts: invites.join(',')
             },
-        };
-
+        }
+        console.log("Before call")
         try {
             const response = await axios.post('https://usemeetup-api.com/api/create-zoom-meeting', {
                 accessToken: zoomAccessToken, 
                 meetingDetails: zoomMeetingDetails
-            });
+            })
             setZoomJoinURL(response.data.joinURL)
-            console.log('Meeting created:', response.data);
         } catch (error) {
-            console.error('Error creating Zoom meeting:', error.response ? error.response.data : error.message);
+            console.error('Error creating Zoom meeting:', error.response ? error.response.data : error.message)
         }
 
         setAlertMessage("Zoom meeting created!")

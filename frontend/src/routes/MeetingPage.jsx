@@ -152,6 +152,9 @@ export function MeetingPage() {
 
     const handleSaveAvailability = async (slots) => {
         try {
+            setAlertOpen(false)
+            setAlertMessage("Saving availability...")
+            setAlertOpen(true)
             const availabilityData = {
                 meetingId: meetingDetails.id, 
                 userId: user.uid,

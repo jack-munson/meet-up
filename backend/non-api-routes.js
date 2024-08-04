@@ -33,11 +33,10 @@ router.get('/callback', async (req, res) => {
             </script>
         `;
         
-        // Send the script as the response to the callback request
         res.send(script);
     } catch (error) {
-        console.error('Error exchanging authorization code for access token:', error);
-        res.status(500).send('Internal Server Error');
+        console.log('Error exchanging authorization code for access token:', error);
+        res.status(500).send('Internal server error');
     }
 });
 

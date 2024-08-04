@@ -3,15 +3,16 @@ const meetingRoutes = require('./routes');
 const nonAPIRoutes = require('./non-api-routes')
 const cors = require('cors');
 
+const dev = false;
+
 const app = express();
 app.use(cors())
 
-// Use the meeting routes
 app.use('/api', meetingRoutes);
 app.use('/', nonAPIRoutes)
 
 // Start the server
-const PORT = 8080;
+const PORT = dev ? 3000 : 8080;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });

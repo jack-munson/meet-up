@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Calendar } from "react-multi-date-picker"
 import "./DatePicker.css"
 
@@ -17,6 +17,14 @@ export function DatePicker({ handleDateChange, dates, daysError}) {
         disableYearPicker
         minDate={today}
         maxDate={oneYearLater}
+        mapDays={({ date }) => {
+            const isPastDate = date.valueOf() < today.valueOf()
+            if (isPastDate) {
+              return {
+                disabled: true,
+              };
+            }
+          }}
     />
   )
 } 
