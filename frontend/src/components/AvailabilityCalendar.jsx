@@ -274,6 +274,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     }
 
     const handleGoogleMeetClick = () => {
+        console.log("Clicked Google")
         const url = generateGoogleMeetURL();
         window.open(url);
     };
@@ -311,7 +312,9 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     }
 
     const handleZoomClick = () => {
+        console.log("Clicked Zoom")
         if (zoomAccessToken) {
+            console.log("zoomAccessToken: ", zoomAccessToken)
             setIsCreateZoomMeetingOpen(true)
             return
         }
@@ -329,7 +332,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     };
 
     const handleCreateZoom = async () => {
-        console.log(selectedTimezone)
+        console.log("Clicked create Zoom")
         let recurrence = null
         if (frequency === 'recurring') {
 
@@ -342,7 +345,6 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 first_occurance: parseDateTime(meetingStart, "start", "Zoom").toISOString()
             };
         }
-        console.log(selectedTimezone)
         const zonedStartTime = DateTime.fromJSDate(parseDateTime(meetingStart, "start", "Zoom"), { zone: selectedTimezone.value });
         const formattedStartTime = zonedStartTime.toISO({ includeOffset: true });
 
@@ -556,7 +558,6 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     };
 
     const renderMeetingBlock = () => {
-        console.log("Rendering")
         if (!meetingStartSlot || !meetingEndSlot) return null
         const startSlotElement = document.querySelector(`[data-slot="${meetingStartSlot}"]`);
         const endSlotElement = document.querySelector(`[data-slot="${meetingEndSlot}"]`);
