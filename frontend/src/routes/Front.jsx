@@ -20,7 +20,7 @@ export function Front() {
             <FrontHeader/>
             <div className="main-page-content">
                 <div className="welcome-message">
-                    <div className="welcome-text-main">Welcome to Meet!</div>
+                    <div className="welcome-text-main">Welcome to MeetUp!</div>
                     <div className="welcome-text-sub">We make group scheduling easy</div>
                 </div>
                 <div className="main-content">
