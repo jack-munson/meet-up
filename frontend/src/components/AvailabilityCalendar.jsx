@@ -718,7 +718,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                                 <FaRegCopy className='copy-button' onClick={handleCopy}/>
                             </div>
                         </div>
-                        <div className='url-disclaimer'>Please save this link, as you will not be able to view it again</div>
+                        <div className='url-disclaimer'>Please save this link, as you will not be able to view it again.</div>
                     </div>
                 </div>
             }
