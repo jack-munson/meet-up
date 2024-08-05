@@ -15,6 +15,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Create .env file
+      working-directory: frontend
+      run: |
+        echo "VITE_ZOOM_CLIENT_ID=${{ secrets.VITE_ZOOM_CLIENT_ID }}" > .env
+        echo "VITE_ZOOM_CLIENT_SECRET=${{ secrets.VITE_ZOOM_CLIENT_SECRET }}" >> .env
+        echo "VITE_ZOOM_REDIRECT_URL=${{ secrets.VITE_ZOOM_REDIRECT_URL }}" >> .env
+
     - name: Create firebaseconfig.js
       run: |
         echo "export default {" > frontend/src/firebaseconfig.js
