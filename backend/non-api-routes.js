@@ -16,7 +16,7 @@ router.get('/callback', async (req, res) => {
             params: {
                 grant_type: 'authorization_code',
                 code: authorizationCode,
-                redirect_uri: process.env.ZOOM_REDIRECT_URL
+                redirect_uri: "https://usemeetup-api.com/callback"
             },
             headers: {
                 Authorization: `Basic ${Buffer.from(`${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`).toString('base64')}`
