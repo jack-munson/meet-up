@@ -516,7 +516,6 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                     onMouseUp={handleMouseUp}
                     style={{ backgroundColor }}
                 >
-                    {/* {isBestTime && <img src={SuggestedIcon} alt='Suggested time' className='suggested-time-icon' />} */}
                 </div>
             );
         });
@@ -651,7 +650,6 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                     <div className='scheduling-buttons'>
                         <TimezoneSelect
                             onChange={setSelectedTimezone}
-                            // options={modifiedTimezones}
                             value={selectedTimezone}
                             id="timezone-input"
                             className="meeting-time-input" 
@@ -712,12 +710,15 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                             <div className='zoom-box-title'>Copy meeting URL</div>
                             <IoClose size={20} className='close-zoom-button' onClick={() => setIsJoinURLDisplayed(false)}/>
                         </div>
-                        <div className='url-container'>
-                            <div className='url-container-text'>
-                                <div>{zoomJoinURL}</div>
-                            </div>
-                            <div className='url-container-icon'>
-                                <FaRegCopy className='copy-button' onClick={handleCopy}/>
+                        <div className='url-content'>
+                            <div className='url-disclaimer'>Please save this URL as you will not be able to view it again.</div>
+                            <div className='url-container'>
+                                <div className='url-container-text'>
+                                    <div>{zoomJoinURL}</div>
+                                </div>
+                                <div className='url-container-icon'>
+                                    <FaRegCopy className='copy-button' onClick={handleCopy}/>
+                                </div>
                             </div>
                         </div>
                     </div>
