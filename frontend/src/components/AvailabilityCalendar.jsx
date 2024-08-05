@@ -707,7 +707,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 <div className='overlay'>
                     <div className='create-zoom-box'>
                         <div className='zoom-box-header'>
-                            <div className='zoom-box-title'>Meeting URL</div>
+                            <div className='zoom-box-title'>Copy meeting URL</div>
                             <IoClose size={20} className='close-zoom-button' onClick={() => setIsJoinURLDisplayed(false)}/>
                         </div>
                         <div className='url-container'>
