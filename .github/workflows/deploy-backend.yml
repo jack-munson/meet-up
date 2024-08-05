@@ -20,6 +20,20 @@ jobs:
       with:
         node-version: '20'
 
+    - name: Create .env file
+      working-directory: frontend
+      run: |
+        echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" > .env
+        echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> .env
+        echo "RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}" >> .env
+        echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}" > .env
+        echo "RDS_PORT=${{ secrets.RDS_PORT }}" >> .env
+        echo "AUTH_USER=${{ secrets.AUTH_USER }}" >> .env
+        echo "AUTH_APP_PASSWORD=${{ secrets.AUTH_APP_PASSWORD }}" > .env
+        echo "ZOOM_CLIENT_ID=${{ secrets.ZOOM_CLIENT_ID }}" >> .env
+        echo "ZOOM_CLIENT_SECRET=${{ secrets.ZOOM_CLIENT_SECRET }}" >> .env
+        echo "ZOOM_REDIRECT_URL=${{ secrets.ZOOM_REDIRECT_URL }}" >> .env
+
     - name: Install dependencies
       working-directory: backend
       run: npm install
