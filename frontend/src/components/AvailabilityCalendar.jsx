@@ -282,7 +282,7 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
     useEffect(() => {
         const receiveMessage = (event) => {
             console.log("Received message")
-            if (event.origin !== "https://usemeetup-api.com/") {
+            if (event.origin !== "https://usemeetup-api.com") {
                 console.log("Event origin not correct: ", event.origin)
                 return;
             }
