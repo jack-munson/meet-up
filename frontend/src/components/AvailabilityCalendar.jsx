@@ -283,9 +283,11 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
         const receiveMessage = (event) => {
             console.log("Received message")
             if (event.origin !== "https://usemeetup-api.com/") {
+                console.log("Event origin not correct: ", event.origin)
                 return;
             }
             if (event.data.zoomAccessToken) {
+                console.log("Yes token")
                 setZoomAccessToken(event.data.zoomAccessToken);
                 setIsCreateZoomMeetingOpen(true);
             }
