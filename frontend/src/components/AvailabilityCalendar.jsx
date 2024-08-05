@@ -707,20 +707,18 @@ export function AvailabilityCalendar({ userId, admin, title, description, invite
                 <div className='overlay'>
                     <div className='create-zoom-box'>
                         <div className='zoom-box-header'>
-                            <div className='zoom-box-title'>Copy meeting URL</div>
+                            <div className='zoom-box-title'>Copy meeting link</div>
                             <IoClose size={20} className='close-zoom-button' onClick={() => setIsJoinURLDisplayed(false)}/>
                         </div>
-                        <div className='url-content'>
-                            <div className='url-disclaimer'>Please save this URL as you will not be able to view it again.</div>
-                            <div className='url-container'>
-                                <div className='url-container-text'>
-                                    <div>{zoomJoinURL}</div>
-                                </div>
-                                <div className='url-container-icon'>
-                                    <FaRegCopy className='copy-button' onClick={handleCopy}/>
-                                </div>
+                        <div className='url-container'>
+                            <div className='url-container-text'>
+                                <div>{zoomJoinURL}</div>
+                            </div>
+                            <div className='url-container-icon'>
+                                <FaRegCopy className='copy-button' onClick={handleCopy}/>
                             </div>
                         </div>
+                        <div className='url-disclaimer'>Please save this link, as you will not be able to view it again</div>
                     </div>
                 </div>
             }
